@@ -1,0 +1,1 @@
+Enemy와 관련된 Material, Animation 등을 보관하는 폴더
