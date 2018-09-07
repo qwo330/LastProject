@@ -4,6 +4,9 @@ using UnityEngine;
 using LitJson;
 using System.IO;
 
+// http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=52133
+// 참고링크
+
 public struct PlayerData
 {
     public int Level;
@@ -25,14 +28,29 @@ public class DataManager : MonoBehaviour {
     const string townDataPath = "/LocalData/TownData.json";
     const string systemDataPath = "/LocalData/SystemData.json";
 
+    PlayerData playerInfo;
+    TownData[] townInfos;
+
     /// <summary>
     /// 게임을 시작할 때 필요한 정보들을 Data파일에서 불러온다.
     /// </summary>
     public void LoadGameData()
     {
+        if (File.Exists(Application.dataPath + playerDataPath))
+        {
+            string jsonStr = File.ReadAllText(Application.dataPath + playerDataPath);
+            Debug.Log(jsonStr);
+            PlayerData a = JsonMapper.ToObject<PlayerData>(jsonStr);
 
+            Debug.Log(a.Level);
+            Debug.Log(a.MaxHp);
+            Debug.Log(a.Belongings[2].ItemName);
+
+            Debug.Log("PlayerData Load 완료");
+        }
+        else
+            Debug.Log("PlayerData가 존재하지 않습니다.");
     }
-
 
     /// <summary>
     /// 게임 설정과 관련된 정보들을 Data파일에 저장한다.
@@ -46,7 +64,7 @@ public class DataManager : MonoBehaviour {
     /// <summary>
     /// 플레이어와 관련된 정보들을 Data파일에 저장한다.
     /// </summary>
-    public void SavePlayerData(PlayerData playerInfo)
+    public void SavePlayerData()
     {
         if (!Directory.Exists(Application.dataPath + "/LocalData"))
         {
@@ -55,25 +73,28 @@ public class DataManager : MonoBehaviour {
         }
         JsonData playerData = JsonMapper.ToJson(playerInfo);
         File.WriteAllText(Application.dataPath + playerDataPath, playerData.ToString());
-        Debug.Log("플레이어 데이터 저장 완료");
+
+        Debug.Log("PlayerData Save 완료");
     }
-    PlayerData a;
+
     private void Start()
     {
-        a = new PlayerData();
-        a.Level = 15;
-        a.MaxHp = a.Hp = 40;
-        a.Belongings = new ItemData[Defines.InventorySize];
-        a.Gold = 15101;
-        SavePlayerData(a);
+        playerInfo = new PlayerData();
+        playerInfo.Level = 15;
+        playerInfo.MaxHp = playerInfo.Hp = 40;
+        playerInfo.Belongings = new ItemData[Defines.InventorySize];
+        playerInfo.Gold = 15101;
+        playerInfo.Belongings[2].ItemName = "woodSword";
+        SavePlayerData();
+
+        LoadGameData();
     }
 
     /// <summary>
     /// 마을과 관련된 정보들을 Data파일에 저장한다.
     /// </summary>
-    public void SaveTownData(TownData[] townInfos)
+    public void SaveTownData()
     {
 
     }
-	
 }
