@@ -10,26 +10,7 @@ public class CharacterAnimation : MonoBehaviour
     bool isDead = false;
     bool attacked = false;
 
-    public bool IsAttacked()
-    {
-        return attacked;
-    }
-
-    void StartAttackHit()
-    {
-        Debug.Log("StartAttackHit");
-    }
-
-    void EndHit()
-    {
-        Debug.Log("EndHit");
-    }
-
-    void EndAttack()
-    {
-        attacked = true;
-    }
-
+  
     void Start()
     {
         animator = GetComponent<Animator>();
