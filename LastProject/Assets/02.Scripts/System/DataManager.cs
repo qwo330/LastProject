@@ -82,7 +82,7 @@ public class DataManager : MonoBehaviour {
         playerInfo = new PlayerData();
         playerInfo.Level = 15;
         playerInfo.MaxHp = playerInfo.Hp = 40;
-        playerInfo.Belongings = new ItemData[Defines.InventorySize];
+        playerInfo.Belongings = new ItemData[Defines.InventoryRow * Defines.InventoryColunm];
         playerInfo.Gold = 15101;
         playerInfo.Belongings[2].ItemName = "woodSword";
         SavePlayerData();
