@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ItemCodes
 {
-    Empty = 0,
+    Empty = -1,
 
     WoodSword = 1,
     StoneSword,
