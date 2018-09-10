@@ -1,12 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 참고자료 : https://unity3d.com/kr/learn/tutorials/projects/adventure-game-tutorial/inventory
-public class InventorySystem : MonoBehaviour {
+public class InventorySystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+{
     public GameObject InventoryPanel, CraftPanel;
     public GameObject SlotPrefab;
+
+    public Image EmptyImg;
+    public GraphicRaycaster gr;
+    PointerEventData ped;
 
     //List<GameObject> inventoryObjects = new List<GameObject>();
     List<ItemSlot> inventorySlots = new List<ItemSlot>();
@@ -70,6 +76,9 @@ public class InventorySystem : MonoBehaviour {
     /* ===================================*/
     void CreateInventory()
     {
+        ped = new PointerEventData(null);
+        EmptyImg.gameObject.SetActive(false);
+
         shownSlotCount = 12;
         itemCount = 0;
         for (int i = 0; i < Defines.InventorySize; i++)
@@ -155,5 +164,42 @@ public class InventorySystem : MonoBehaviour {
     public void AddIteminCraft(ItemData item)
     {
 
+    }
+
+    Vector3 defaultposition;
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        defaultposition = transform.position;
+        Debug.Log("drag Start");
+        ped.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        gr.Raycast(ped, results);
+        if (results.Count != 0)
+        {
+            Debug.Log(results[0].gameObject.GetComponent<ItemSlot>().Position);
+            int itemCode = (int)results[0].gameObject.GetComponent<ItemSlot>().Item.ItemCode;
+
+            Sprite sprite = ImageStorage.Instance.sprites[itemCode];
+            EmptyImg.sprite = sprite;
+            EmptyImg.gameObject.SetActive(true);
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        EmptyImg.transform.position = Input.mousePosition;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        EmptyImg.gameObject.SetActive(true);
+
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("Click");
+        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
     }
 }
