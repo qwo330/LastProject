@@ -19,5 +19,8 @@ public enum ItemCodes
     AdamantiumArmor,
     MithrilArmor,
 
+    RedPotion = 5,
 
+    TEMPSWORD = 2,
+    TEMPPOTION = 3,
 }
