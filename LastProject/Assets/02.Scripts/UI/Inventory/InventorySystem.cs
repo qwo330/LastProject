@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 참고자료 : https://unity3d.com/kr/learn/tutorials/projects/adventure-game-tutorial/inventory
-public class InventorySystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class InventorySystem : MonoBehaviour, IPointerClickHandler
 {
     public GameObject InventoryPanel, CraftPanel;
     public GameObject SlotPrefab;
@@ -45,7 +45,52 @@ public class InventorySystem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         AddItem(new ItemData(ItemCodes.TEMPPOTION, 100, 100, true));
     }
-    
+
+    float mouseMoveX;
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseMoveX = Input.mousePosition.x;
+        }
+
+        else if (Input.GetMouseButton(0))
+        {
+            float gap = mouseMoveX - Input.mousePosition.x;
+            if (gap < 0) gap *= -1;
+            
+            if(EmptyImg.IsActive())
+                EmptyImg.transform.position = Input.mousePosition;
+            else if (gap > 7f)
+            {
+                ped.position = Input.mousePosition;
+                List<RaycastResult> results = new List<RaycastResult>();
+                gr.Raycast(ped, results);
+                if (results.Count != 0)
+                {
+                    if (results[0].gameObject.CompareTag("ItemSlot"))
+                    {
+                        int itemCode = (int)results[0].gameObject.GetComponent<ItemSlot>().Item.ItemCode;
+                        Sprite sprite = ImageStorage.Instance.sprites[itemCode];
+                        EmptyImg.sprite = sprite;
+                        EmptyImg.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            EmptyImg.gameObject.SetActive(false);
+            //Craft에서 등록처리
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("Click");
+        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
+    }
+
     void AddItem(ItemData item)
     {
         int index = FindItemPosition(item);
@@ -164,42 +209,5 @@ public class InventorySystem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void AddIteminCraft(ItemData item)
     {
 
-    }
-
-    Vector3 defaultposition;
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        defaultposition = transform.position;
-        Debug.Log("drag Start");
-        ped.position = Input.mousePosition;
-        List<RaycastResult> results = new List<RaycastResult>();
-        gr.Raycast(ped, results);
-        if (results.Count != 0)
-        {
-            Debug.Log(results[0].gameObject.GetComponent<ItemSlot>().Position);
-            int itemCode = (int)results[0].gameObject.GetComponent<ItemSlot>().Item.ItemCode;
-
-            Sprite sprite = ImageStorage.Instance.sprites[itemCode];
-            EmptyImg.sprite = sprite;
-            EmptyImg.gameObject.SetActive(true);
-        }
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        EmptyImg.transform.position = Input.mousePosition;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        EmptyImg.gameObject.SetActive(true);
-
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("Click");
-        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
     }
 }
