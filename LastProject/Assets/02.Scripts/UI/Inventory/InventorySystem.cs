@@ -20,62 +20,51 @@ public class InventorySystem : MonoBehaviour {
     int itemCount;
 
     /*===========================================================*/
-    Dictionary<ItemCodes, TEMPITEM> itemlist;
+    Dictionary<ItemCodes, ItemData> itemlist;
 
     private void Start()
     {
         //임시로 배치
         CreateInventory();
-        //itemlist = new Dictionary<ItemCodes, TEMPITEM>();
+        //itemlist = new Dictionary<ItemCodes, ItemData>();
         //itemlist.Add(ItemCodes.TEMPSWORD, new TEMPSWORD());
         //itemlist.Add(ItemCodes.TEMPPOTION, new TEMPPOTION());
     }
 
     public void AddSword()
     {
-        AddItem(new TEMPSWORD());
+        AddItem(new ItemData(ItemCodes.TEMPSWORD, 100, 100, false));
     }
     public void AddPotion()
     {
-        //AddItem();
+        AddItem(new ItemData(ItemCodes.TEMPPOTION, 100, 100, true));
     }
     
-    void AddItem(TEMPITEM item)
+    void AddItem(ItemData item)
     {
+        int index = FindItemPosition(item);
+        if (item.IsStack && index != -1)
+        {
+            Debug.Log("중첩 가능한 아이템");
+            // text에서 개수 증가
+            //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
+            return;
+        }
+
+        Debug.Log("중첩 불가능한 아이템");
+
         if (itemCount >= shownSlotCount)
-            if (!AddSlots())
+            if (!AddSlot())
             {
                 Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
                 return;
             }
-
-        int index;
-        if (item is IStackable)
-        {
-            Debug.Log("중첩가능한 아이템");
-
-            index = FindItemPosition(item);
-            if(index == -1)
-            {
-                index = FindEmptySlot();
-                inventorySlots[index].Item = item;
-                inventorySlots[index].gameObject.GetComponent<Image>().sprite = item.sprite;
-            }
-            else
-            {
-                // text에서 개수 증가
-                //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
-            }
-        }
-        else
-        {
-            Debug.Log("중첩 불가능한 아이템");
-
-            index = FindEmptySlot();
-            inventorySlots[index].Item = item;
-            Debug.Log(inventorySlots[index].Item.ItemCode);
-            inventorySlots[index].gameObject.GetComponent<Image>().sprite = item.sprite;
-        }
+            else Debug.Log("슬롯 확장");
+        
+        index = FindEmptySlot();
+        inventorySlots[index].Item = item;
+        inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
+        itemCount++;
     }
 
     /* ===================================*/
@@ -95,7 +84,7 @@ public class InventorySystem : MonoBehaviour {
     /// <summary>
     /// 인벤토리에 보이는 라인 수를 늘린다.
     /// </summary>
-    public bool AddSlots()
+    public bool AddSlot()
     {
         if (shownSlotCount >= 30) return false;
 
@@ -108,9 +97,9 @@ public class InventorySystem : MonoBehaviour {
     /// <summary>
     /// 인벤토리에 보이는 라인 수를 줄인다.
     /// </summary>
-    public void RemoveSlots()
+    public void RemoveSlot()
     {
-        if (shownSlotCount <= 12) return;
+        if (shownSlotCount <= 12 && itemCount >= shownSlotCount) return;
 
         RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
         rt.offsetMin = new Vector2(0, rt.offsetMin.y + 58f);
@@ -122,7 +111,7 @@ public class InventorySystem : MonoBehaviour {
     /// </summary>
     public bool CheckExistItem(int index)
     {
-        if (inventorySlots[index].Item != null) return true;
+        if (inventorySlots[index].Item.ItemCode != ItemCodes.Empty) return true;
         return false;
     }
 
@@ -131,7 +120,7 @@ public class InventorySystem : MonoBehaviour {
     /// </summary>
     public int FindEmptySlot()
     {
-        for (int i = 0; i < Defines.InventorySize; i++)
+        for (int i = 0; i < shownSlotCount; i++)
         {
             if (!CheckExistItem(i)) return i;
         }
@@ -141,11 +130,11 @@ public class InventorySystem : MonoBehaviour {
     /// <summary>
     /// 인벤토리에 해당 아이템이 존재하는지 확인하고 있다면 index, 없으면 -1 리턴
     /// </summary>
-    public int FindItemPosition(TEMPITEM item)
+    public int FindItemPosition(ItemData item)
     {
         for (int i = 0; i < Defines.InventorySize; i++)
         {
-            if(item == inventorySlots[i].Item)
+            if(item.ItemCode == inventorySlots[i].Item.ItemCode)
                 return i;
         }
         return -1;
@@ -154,7 +143,7 @@ public class InventorySystem : MonoBehaviour {
     /// <summary>
     /// 아이템 획득 시 인벤토리에 추가
     /// </summary>
-    public void AddIteminInventory(TEMPITEM item)
+    public void AddIteminInventory(ItemData item)
     {
         int index = FindEmptySlot();
         //inventorySlots.Add(item);
@@ -163,7 +152,7 @@ public class InventorySystem : MonoBehaviour {
     /// <summary>
     /// 조합창으로 아이템을 옮겼을 때 추가
     /// </summary>
-    public void AddIteminCraft(TEMPITEM item)
+    public void AddIteminCraft(ItemData item)
     {
 
     }

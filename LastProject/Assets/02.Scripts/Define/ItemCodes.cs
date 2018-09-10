@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ItemCodes
 {
-    Empty = -1,
+    Empty = 0,
 
     WoodSword = 1,
     StoneSword,
@@ -19,8 +19,8 @@ public enum ItemCodes
     AdamantiumArmor,
     MithrilArmor,
 
-    RedPotion = 100,
+    RedPotion = 5,
 
-    TEMPSWORD = -1,
-    TEMPPOTION = -100,
+    TEMPSWORD = 2,
+    TEMPPOTION = 3,
 }
