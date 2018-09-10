@@ -22,7 +22,7 @@ public class CharacterMove : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        //Destination = transform.position;
+        Destination = transform.position;
     }
 
     void FixedUpdate()
