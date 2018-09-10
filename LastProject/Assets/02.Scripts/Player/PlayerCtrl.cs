@@ -1,31 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerCtrl : MonoBehaviour {
 
-    const float RayCastMaxDistance = 100.0f;
-    TempInput tempInput;
-       
-	void Start () {
-        tempInput = FindObjectOfType<TempInput>();
-	}
-	
-	void FixedUpdate () {
-        Walking();
+    public VirtualJoyStick joystick;
+    public float speed = 150.0f;
+    private Rigidbody rigid;
+    
+    void Start() {
+        rigid = GetComponent<Rigidbody>();
     }
 
-    private void Walking()
-    {
-        if (tempInput.Clicked())
-        {
-            Vector2 clickPos = tempInput.GetCursorPosition();
-            Ray ray = Camera.main.ScreenPointToRay(clickPos);
-            RaycastHit hitInfo;
-            if (Physics.Raycast(ray, out hitInfo, RayCastMaxDistance, 1 << LayerMask.NameToLayer("Ground")))
-            {
-                SendMessage("SetDestination", hitInfo.point);
-            }
-        }
+    void Update() {
+        rigid.AddForce(joystick.InputDirection * speed * Time.deltaTime);
+
     }
+
+     
 }
