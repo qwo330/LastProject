@@ -58,15 +58,11 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         }
 
         Debug.Log("중첩 불가능한 아이템");
-
-        //if (itemCount >= shownSlotCount)
-        //    if (!AddSlot())
-        //    {
-        //        Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
-        //        return;
-        //    }
-        //    else Debug.Log("슬롯 확장");
-
+        if (FindEmptySlot() == -1)
+        {
+            Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
+            return;
+        }
         index = FindEmptySlot();
         inventorySlots[index].Item = item;
         inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
