@@ -14,16 +14,15 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     public GraphicRaycaster gr;
     PointerEventData ped;
 
-    //List<GameObject> inventoryObjects = new List<GameObject>();
+    public GameObject ItemPopUp;
+    public Image ItemPopUpImg;
+    Text ItemPopUpText;
+
     List<ItemSlot> inventorySlots = new List<ItemSlot>();
-    //List<Image> iventoryImgs = new List<Image>();
 
     //List<GameObject> craftObjects = new List<GameObject>();
     //List<ItemSlot> craftSlots = new List<ItemSlot>();
     //List<Image> craftImgs = new List<Image>();
-
-    int shownSlotCount;
-    int itemCount;
 
     /*===========================================================*/
     Dictionary<ItemCodes, ItemData> itemlist;
@@ -32,51 +31,25 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         //임시로 배치
         CreateInventory();
-        //itemlist = new Dictionary<ItemCodes, ItemData>();
-        //itemlist.Add(ItemCodes.TEMPSWORD, new TEMPSWORD());
-        //itemlist.Add(ItemCodes.TEMPPOTION, new TEMPPOTION());
     }
 
     public void AddSword()
     {
-        AddItem(new ItemData(ItemCodes.TEMPSWORD, 100, 100, false));
+        AddIteminInventory(new ItemData(ItemCodes.TEMPSWORD, 100, 100, false));
     }
     public void AddPotion()
     {
-        AddItem(new ItemData(ItemCodes.TEMPPOTION, 100, 100, true));
+        AddIteminInventory(new ItemData(ItemCodes.TEMPPOTION, 100, 100, true));
     }
-
-    void AddItem(ItemData item)
-    {
-        int index = FindItemPosition(item);
-        if (item.IsStack && index != -1)
-        {
-            Debug.Log("중첩 가능한 아이템");
-            // text에서 개수 증가
-            //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
-            return;
-        }
-
-        Debug.Log("중첩 불가능한 아이템");
-        if (FindEmptySlot() == -1)
-        {
-            Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
-            return;
-        }
-        index = FindEmptySlot();
-        inventorySlots[index].Item = item;
-        inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
-        itemCount++;
-    }
-
     /* ===================================*/
     void CreateInventory()
     {
         ped = new PointerEventData(null);
         EmptyImg.gameObject.SetActive(false);
 
-        shownSlotCount = 30;
-        itemCount = 0;
+        ItemPopUpText = ItemPopUp.GetComponentInChildren<Text>();
+        ItemPopUp.SetActive(false);
+
         for (int i = 0; i < Defines.InventorySize; i++)
         {
             GameObject obj = Instantiate(SlotPrefab, InventoryPanel.transform);
@@ -86,10 +59,32 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         }
     }
 
+    // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Click");
-        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
+        ItemData item;
+
+        ped.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        gr.Raycast(ped, results);
+        if (results.Count != 0)
+        {
+            if (results[0].gameObject.CompareTag("ItemSlot"))
+            {
+                item = results[0].gameObject.GetComponent<ItemSlot>().Item;
+                ItemPopUp.SetActive(true);
+                ItemPopUpText.text = item.ItemName + "\n" + item.Time.ToString();
+                ItemPopUpImg.sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
+            }
+        }
+    }
+
+    Vector3 prevPosition;
+    public void OnBeginDrag(PointerEventData data)
+    {
+        prevPosition = Input.mousePosition;
+        EmptyImg.transform.position = Input.mousePosition;
     }
 
     public void OnDrag(PointerEventData data)
@@ -115,12 +110,6 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             }
         }
     }
-    Vector3 prevPosition;
-    public void OnBeginDrag(PointerEventData data)
-    {
-        prevPosition = Input.mousePosition;
-        EmptyImg.transform.position = Input.mousePosition;
-    }
 
     public void OnEndDrag(PointerEventData eventData)
     {
@@ -142,7 +131,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// </summary>
     public int FindEmptySlot()
     {
-        for (int i = 0; i < shownSlotCount; i++)
+        for (int i = 0; i < Defines.InventorySize; i++)
         {
             if (!CheckExistItem(i)) return i;
         }
@@ -167,8 +156,25 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// </summary>
     public void AddIteminInventory(ItemData item)
     {
-        int index = FindEmptySlot();
-        //inventorySlots.Add(item);
+        int index = FindItemPosition(item);
+        if (item.IsStack && index != -1)
+        {
+            Debug.Log("중첩 가능한 아이템");
+            // text에서 개수 증가
+            //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
+            return;
+        }
+
+        Debug.Log("중첩 불가능한 아이템");
+        if (FindEmptySlot() == -1)
+        {
+            Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
+            return;
+        }
+        index = FindEmptySlot();
+        inventorySlots[index].Item = item;
+        inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
+
     }
 
     /// <summary>
