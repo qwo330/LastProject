@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 참고자료 : https://unity3d.com/kr/learn/tutorials/projects/adventure-game-tutorial/inventory
-public class InventorySystem : MonoBehaviour, IPointerClickHandler
+public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public GameObject InventoryPanel, CraftPanel;
     public GameObject SlotPrefab;
@@ -46,51 +46,6 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
         AddItem(new ItemData(ItemCodes.TEMPPOTION, 100, 100, true));
     }
 
-    float mouseMoveX;
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            mouseMoveX = Input.mousePosition.x;
-        }
-
-        else if (Input.GetMouseButton(0))
-        {
-            float gap = mouseMoveX - Input.mousePosition.x;
-            if (gap < 0) gap *= -1;
-            
-            if(EmptyImg.IsActive())
-                EmptyImg.transform.position = Input.mousePosition;
-            else if (gap > 30f)
-            {
-                ped.position = Input.mousePosition;
-                List<RaycastResult> results = new List<RaycastResult>();
-                gr.Raycast(ped, results);
-                if (results.Count != 0)
-                {
-                    if (results[0].gameObject.CompareTag("ItemSlot"))
-                    {
-                        int itemCode = (int)results[0].gameObject.GetComponent<ItemSlot>().Item.ItemCode;
-                        Sprite sprite = ImageStorage.Instance.sprites[itemCode];
-                        EmptyImg.sprite = sprite;
-                        EmptyImg.gameObject.SetActive(true);
-                    }
-                }
-            }
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            EmptyImg.gameObject.SetActive(false);
-            //Craft에서 등록처리
-        }
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("Click");
-        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
-    }
-
     void AddItem(ItemData item)
     {
         int index = FindItemPosition(item);
@@ -104,14 +59,14 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
 
         Debug.Log("중첩 불가능한 아이템");
 
-        if (itemCount >= shownSlotCount)
-            if (!AddSlot())
-            {
-                Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
-                return;
-            }
-            else Debug.Log("슬롯 확장");
-        
+        //if (itemCount >= shownSlotCount)
+        //    if (!AddSlot())
+        //    {
+        //        Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
+        //        return;
+        //    }
+        //    else Debug.Log("슬롯 확장");
+
         index = FindEmptySlot();
         inventorySlots[index].Item = item;
         inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
@@ -124,7 +79,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
         ped = new PointerEventData(null);
         EmptyImg.gameObject.SetActive(false);
 
-        shownSlotCount = 12;
+        shownSlotCount = 30;
         itemCount = 0;
         for (int i = 0; i < Defines.InventorySize; i++)
         {
@@ -135,29 +90,46 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    /// <summary>
-    /// 인벤토리에 보이는 라인 수를 늘린다.
-    /// </summary>
-    public bool AddSlot()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (shownSlotCount >= 30) return false;
-
-        RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
-        rt.offsetMin = new Vector2(0, rt.offsetMin.y - 58f); // slotImageSize
-        shownSlotCount += 6;
-        return true;
+        Debug.Log("Click");
+        // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
     }
 
-    /// <summary>
-    /// 인벤토리에 보이는 라인 수를 줄인다.
-    /// </summary>
-    public void RemoveSlot()
+    public void OnDrag(PointerEventData data)
     {
-        if (shownSlotCount <= 12 && itemCount >= shownSlotCount) return;
+        float distance = Vector3.Distance(prevPosition, Input.mousePosition);
 
-        RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
-        rt.offsetMin = new Vector2(0, rt.offsetMin.y + 58f);
-        shownSlotCount -= 6;
+        if (EmptyImg.IsActive())
+            EmptyImg.transform.position = Input.mousePosition;
+        else if (distance > 15f)
+        {
+            ped.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            gr.Raycast(ped, results);
+            if (results.Count != 0)
+            {
+                if (results[0].gameObject.CompareTag("ItemSlot"))
+                {
+                    int itemCode = (int)results[0].gameObject.GetComponent<ItemSlot>().Item.ItemCode;
+                    Sprite sprite = ImageStorage.Instance.sprites[itemCode];
+                    EmptyImg.sprite = sprite;
+                    EmptyImg.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+    Vector3 prevPosition;
+    public void OnBeginDrag(PointerEventData data)
+    {
+        prevPosition = Input.mousePosition;
+        EmptyImg.transform.position = Input.mousePosition;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        EmptyImg.gameObject.SetActive(false);
+        //Craft에서 등록처리
     }
 
     /// <summary>
@@ -188,7 +160,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
     {
         for (int i = 0; i < Defines.InventorySize; i++)
         {
-            if(item.ItemCode == inventorySlots[i].Item.ItemCode)
+            if (item.ItemCode == inventorySlots[i].Item.ItemCode)
                 return i;
         }
         return -1;
@@ -211,3 +183,31 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
 
     }
 }
+
+
+/* 하정님 조합슬롯 추가,삭제에 참고
+    ///// <summary>
+    ///// 인벤토리에 보이는 라인 수를 늘린다.
+    ///// </summary>
+    //public bool AddSlot()
+    //{
+    //    if (shownSlotCount >= 30) return false;
+
+    //    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
+    //    rt.offsetMin = new Vector2(0, rt.offsetMin.y - 58f); // slotImageSize
+    //    shownSlotCount += 6;
+    //    return true;
+    //}
+
+    ///// <summary>
+    ///// 인벤토리에 보이는 라인 수를 줄인다.
+    ///// </summary>
+    //public void RemoveSlot()
+    //{
+    //    if (shownSlotCount <= 12 && itemCount >= shownSlotCount) return;
+
+    //    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
+    //    rt.offsetMin = new Vector2(0, rt.offsetMin.y + 58f);
+    //    shownSlotCount -= 6;
+    //}
+     */
