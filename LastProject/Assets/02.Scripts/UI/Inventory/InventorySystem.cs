@@ -61,7 +61,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler
             
             if(EmptyImg.IsActive())
                 EmptyImg.transform.position = Input.mousePosition;
-            else if (gap > 7f)
+            else if (gap > 30f)
             {
                 ped.position = Input.mousePosition;
                 List<RaycastResult> results = new List<RaycastResult>();
