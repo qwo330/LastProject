@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
-public class ItemSlot : MonoBehaviour {
+public class ItemSlot : Slot {
     public int Position;
-    public ItemData Item;
 }

@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 
-public class EquipmentSlot : MonoBehaviour {
-    //public 
+public enum EquipmentType { Weapon, Helmet, Armor, Shoes, }
+
+public abstract class Slot : MonoBehaviour
+{
     public ItemData Item;
+}
+
+public class EquipmentSlot : Slot {
+    
+    public ItemTypes Part;
 }
