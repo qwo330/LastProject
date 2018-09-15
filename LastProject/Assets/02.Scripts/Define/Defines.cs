@@ -10,6 +10,7 @@ public struct ItemData
     public int Value; // 무기는 공격력, 방어구는 방어력, 포션은 회복력
     public bool IsStack;
 
+    [SerializeField]
     public ItemData(ItemCodes itemCode, int maxDurability, int value, bool isStack)
     {
         ItemCode = itemCode;
