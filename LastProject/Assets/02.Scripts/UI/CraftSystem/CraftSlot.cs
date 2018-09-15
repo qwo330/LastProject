@@ -7,13 +7,17 @@ public class CraftSlot : MonoBehaviour
     const string TAG_IMAGE = "CraftItemImage";
     const string TAG_DESCRIPTION = "CraftItemDescription";
 
-    [SerializeField] UISprite image;
-    [SerializeField] UISprite description;
+    UISprite image;
+    UISprite description;
+    CraftSystem craftSystem;
+
+    public ItemData itemData;
 
     private void Start()
     {
-        UISprite[] sprite = GetComponentsInChildren<UISprite>();
+        craftSystem = GetComponentInParent<CraftSystem>();
 
+        UISprite[] sprite = GetComponentsInChildren<UISprite>();
         for (int i = 0; i < sprite.Length; i++)
         {
             if(sprite[i].tag == TAG_IMAGE)
@@ -26,5 +30,12 @@ public class CraftSlot : MonoBehaviour
             }
         }
     }
+
+    void OnClick()
+    {
+        Debug.Log(itemData.ItemName.ToString());
+    }
+
+
 
 }
