@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CraftSystem : MonoBehaviour
 {
+    [SerializeField] public InventorySystem InventorySystem;
     [SerializeField] UIGrid EpuipmentWindowGrid;
     [SerializeField] UIGrid PotionWindowGrid;
     [SerializeField] UIGrid NeedItemWindowGrid;
     [SerializeField] GameObject CraftSlot;
     [SerializeField] GameObject NeedSlot;
     CraftItemDB itemDB;
+    public ItemData SelectedItem;
 
     int MaxEquipItemCount = 3;
     int MaxPotionItemCount = 1;
@@ -17,7 +19,8 @@ public class CraftSystem : MonoBehaviour
 
     List<CraftSlot> EquipList;
     List<CraftSlot> PotionList;
-    List<UISprite> NeedList;//스크립트 생기면 형식 변경
+    List<NeedSlot> NeedList;
+    
 
     private void Start()
     {
@@ -27,7 +30,7 @@ public class CraftSystem : MonoBehaviour
         {
             EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
             PotionList = CreateList<CraftSlot>(PotionWindowGrid, MaxPotionItemCount, CraftSlot);
-            NeedList = CreateList<UISprite>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
+            NeedList = CreateList<NeedSlot>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
         }
 
         itemDB = new CraftItemDB();
@@ -53,17 +56,57 @@ public class CraftSystem : MonoBehaviour
         }
     }
 
-    List<T> CreateList<T>(UIGrid windowGrid, int count, GameObject slot)
+    List<T> CreateList<T>(UIGrid windowGrid, int count, GameObject slot) where T: CraftSlotParent
     {
         List<T> list = new List<T>(count);
         for (int i = 0; i < count; i++)
         {
             GameObject item = NGUITools.AddChild(windowGrid.gameObject, slot);
-
-            list.Add(item.GetComponent<T>());
+            T itemComponent = item.GetComponent<T>();
+            itemComponent.craftSystem = this;
+            list.Add(itemComponent);
         }
         windowGrid.Reposition();
 
         return list;
     }
-}
+
+    public void ViewNeedItems(ItemData itemData)
+    {
+        int index = 0;
+
+        //클릭한 아이템이 제작 리스트에 있는지 확인
+        foreach (CraftItem itemInDB in itemDB.CraftItems)
+        {
+            if(itemInDB.TargetItem.ItemCode == itemData.ItemCode)
+            {
+                for (int i = 0; i < itemInDB.NeedItems.Length; i++)
+                {
+                    if(itemInDB.NeedItems[i] > 0)
+                    {
+                        //인벤토리에서 보유 장비 개수도 읽어와서 같이 반영한다.
+                        NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
+                        index++;
+                    }
+                }
+
+                SelectedItem = itemInDB.TargetItem;
+            }
+        }
+
+        //나머지 빈 슬롯 처리
+        for (int i = index; i < MaxNeedItemCount; i++)
+        {
+            NeedList[i].ResetCount();
+        }
+    }
+
+    public bool IsCrafty()
+    {
+        foreach (NeedSlot slot in NeedList)
+        {
+            if (!slot.isCraft) return false;
+        }
+        return true;
+    }
+} 
