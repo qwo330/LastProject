@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CraftSlot : MonoBehaviour
+public class CraftSlot : CraftSlotParent
 {
     const string TAG_IMAGE = "CraftItemImage";
     const string TAG_DESCRIPTION = "CraftItemDescription";
 
     UISprite image;
     UISprite description;
-    CraftSystem craftSystem;
 
     public ItemData itemData;
 
     private void Start()
     {
-        craftSystem = GetComponentInParent<CraftSystem>();
-
         UISprite[] sprite = GetComponentsInChildren<UISprite>();
         for (int i = 0; i < sprite.Length; i++)
         {
@@ -33,9 +30,6 @@ public class CraftSlot : MonoBehaviour
 
     void OnClick()
     {
-        Debug.Log(itemData.ItemName.ToString());
+        craftSystem.ViewNeedItems(itemData);
     }
-
-
-
 }
