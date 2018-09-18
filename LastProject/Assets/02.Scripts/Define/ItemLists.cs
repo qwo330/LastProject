@@ -14,18 +14,18 @@ public enum ItemCodes
     Empty = 0,
 
     WoodSword = 1,
-    StoneSword,
-    IronSword,
-    AdamantiumSword,
-    MithrilSword,
+    StoneSword = 2,
+    IronSword = 3,
+    AdamantiumSword = 4,
+    MithrilSword = 5,
 
     Cloth = 11,
-    LeatherArmor,
-    IronArmor,
-    AdamantiumArmor,
-    MithrilArmor,
+    LeatherArmor = 12,
+    IronArmor = 13,
+    AdamantiumArmor =14,
+    MithrilArmor = 15,
 
-    RedPotion = 3,
+    RedPotion = 21,
 }
 
 public static class ItemLists

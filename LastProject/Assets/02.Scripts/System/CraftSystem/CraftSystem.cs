@@ -24,8 +24,6 @@ public class CraftSystem : MonoBehaviour
 
     private void Start()
     {
-        //각 아이템 최대 개수를 얻어와야 함
-
         if (CraftSlot != null)
         {
             EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
@@ -38,6 +36,7 @@ public class CraftSystem : MonoBehaviour
 
         int equipIndex = 0;
         int potionIndex = 0;
+
         foreach (CraftItem item in itemDB.CraftItems)
         {
             if (item.TargetItem.ItemType == ItemTypes.Eat)
@@ -75,7 +74,6 @@ public class CraftSystem : MonoBehaviour
     {
         int index = 0;
 
-        //클릭한 아이템이 제작 리스트에 있는지 확인
         foreach (CraftItem itemInDB in itemDB.CraftItems)
         {
             if(itemInDB.TargetItem.ItemCode == itemData.ItemCode)
@@ -85,7 +83,9 @@ public class CraftSystem : MonoBehaviour
                     if(itemInDB.NeedItems[i] > 0)
                     {
                         //인벤토리에서 보유 장비 개수도 읽어와서 같이 반영한다.
+                        //InventorySystem.
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
+                        NeedList[index].ChangeSprite(itemData);
                         index++;
                     }
                 }
