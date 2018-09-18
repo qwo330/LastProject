@@ -5,12 +5,14 @@ using UnityEngine;
 public class NeedSlot : CraftSlotParent
 {
     UILabel label;
+    UISprite sprite;
     int currentCount = 0;
     int needCount = 0;
     public bool isCraft = false; 
 
     void Start ()
     {
+        sprite = GetComponent<UISprite>();
         label = GetComponentInChildren<UILabel>();
         ResetCount();
     }
@@ -21,6 +23,7 @@ public class NeedSlot : CraftSlotParent
         needCount = 0;
         SetTextAndColor();
         label.text = "- / -";
+        ResetSprite();
     }
 
     public void SetCurrentCount(int count)
@@ -55,5 +58,15 @@ public class NeedSlot : CraftSlotParent
             label.effectColor = Color.black;
             isCraft = true;
         }
+    }
+
+    void ResetSprite()
+    {
+
+    }
+
+    public override void ChangeSprite(ItemData itemData)
+    {
+        
     }
 }

@@ -5,4 +5,6 @@ using UnityEngine;
 public abstract class CraftSlotParent : MonoBehaviour
 {
     public CraftSystem craftSystem;
+
+    public abstract void ChangeSprite(ItemData itemData);
 }

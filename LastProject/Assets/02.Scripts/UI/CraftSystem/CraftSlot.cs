@@ -31,5 +31,11 @@ public class CraftSlot : CraftSlotParent
     void OnClick()
     {
         craftSystem.ViewNeedItems(itemData);
+        ChangeSprite(itemData);
+    }
+
+    public override void ChangeSprite(ItemData itemData)
+    {
+        
     }
 }

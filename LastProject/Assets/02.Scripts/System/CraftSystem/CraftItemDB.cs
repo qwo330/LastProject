@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
 
 public struct CraftItem
@@ -56,25 +57,45 @@ public class CraftItemDB
     void ImportItemDB(string[] text, int[] count)
     {
         ItemData itemData;
+        ItemCodes type =  (ItemCodes)Enum.Parse(typeof(ItemCodes), text[0]);
+        
 
-        switch (text[0])
+        //지용님 ItemLists에 맞춰서 다시 작업 해야함
+        switch (type)
         {
-            case "WoodSword":
+            case ItemCodes.WoodSword:
                 itemData = ItemLists.WoodSword;
                 break;
-
-            case "StoneSword":
+            case ItemCodes.StoneSword:
                 itemData = ItemLists.StoneSword;
                 break;
-
-            case "IronSword":
+            case ItemCodes.IronSword:
                 itemData = ItemLists.IronSword;
                 break;
-
-            case "RedPotion":
+            case ItemCodes.AdamantiumSword:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.MithrilSword:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.Cloth:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.LeatherArmor:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.IronArmor:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.AdamantiumArmor:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.MithrilArmor:
+                itemData = ItemLists.WoodSword;
+                break;
+            case ItemCodes.RedPotion:
                 itemData = ItemLists.RedPotion;
                 break;
-
             default:
                 Debug.Log("DB 이름 불일치! WoodSword로 입력됩니다.");
                 itemData = ItemLists.WoodSword;
