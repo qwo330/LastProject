@@ -4,27 +4,17 @@ using UnityEngine;
 
 public class MonsterBookUI : MonoBehaviour {
 
-    public GameObject SlotParent;
 
-    private int slotCount = 20;
-    MonsterBookSlot monsterbookslot;
+    public delegate void OnSlotChanged();
+    public OnSlotChanged onSlotChangedCallback;
 
-    MonsterBookSlot[] slots;
-
-	void Start () {
-        monsterbookslot.onSlotChangedCallback += UpdateUI;
-        slots = SlotParent.GetComponentsInChildren<MonsterBookSlot>();
+    void Start () {
+         
 	}
 
     void UpdateUI()
     {
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (i<slotCount)
-            {
-
-            }
-        }
+        
     }
 
 }
