@@ -13,8 +13,8 @@ public class CraftSystem : MonoBehaviour
     CraftItemDB itemDB;
     public ItemData SelectedItem;
 
-    int MaxEquipItemCount = 12;//ItemList.Instance.GetMaxEquipItemCount();
-    int MaxPotionItemCount = 2;//ItemList.Instance.GetMaxPotionItemCount();
+    int MaxEquipItemCount;
+    int MaxPotionItemCount;
     const int MaxNeedItemCount = 4;
 
     List<CraftSlot> EquipList;
@@ -24,6 +24,9 @@ public class CraftSystem : MonoBehaviour
 
     private void Start()
     {
+        MaxEquipItemCount = ItemList.Instance.EquipmentCount;
+        MaxPotionItemCount = ItemList.Instance.FoodCount;
+
         if (CraftSlot != null)
         {
             EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
@@ -85,7 +88,22 @@ public class CraftSystem : MonoBehaviour
                         //인벤토리에서 보유 장비 개수도 읽어와서 같이 반영한다.
                         //InventorySystem.
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
-                        NeedList[index].ChangeSprite(itemData);
+                        if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
+                        {
+                            NeedList[index].ChangeSprite((CraftItemResource)(i+100));
+                        }
+                        else if (itemInDB.TargetItem.ItemType == ItemTypes.Weapon
+                            || itemInDB.TargetItem.ItemType == ItemTypes.Helmet
+                            || itemInDB.TargetItem.ItemType == ItemTypes.Armor
+                            || itemInDB.TargetItem.ItemType == ItemTypes.Shoes)
+                        {
+                            NeedList[index].ChangeSprite((CraftItemResource)i);
+                        }
+                        else
+                        {
+                            NeedList[index].ChangeSprite((CraftItemResource)999);
+                        }
+                        
                         index++;
                     }
                 }

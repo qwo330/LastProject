@@ -3,6 +3,26 @@ using System.IO;
 using System;
 using UnityEngine;
 
+//제작 재료 순서대로
+//장비 : 나무, 돌, 철, 아다만티움, 미스릴, 천, 양모, 가죽
+//물약 : 물, 사과
+public enum CraftItemResource
+{
+    Wood = 0,
+    Stone,
+    Iron,
+    Adamantium,
+    Mithrill,
+    Fabric,
+    Wool,
+    Leather,
+
+    Water = 100,
+    Apple,
+
+    Empty = 999,
+}
+
 public struct CraftItem
 {
     public ItemData TargetItem;
@@ -50,10 +70,6 @@ public class CraftItemDB
             }
         }
     }
-
-    //제작 재료 순서대로
-    //장비 : 나무, 돌, 철, 아다만티움, 미스릴, 천, 양모, 가죽
-    //물약 : 물, 사과
     void ImportItemDB(string[] text, int[] count)
     {
         ItemData itemData;
@@ -63,8 +79,6 @@ public class CraftItemDB
         {
             count[i - 1] = int.Parse(text[i]);
         }
-
-        Debug.Log(type + ", " + count);
 
         for (int i = 0; i < ItemList.Instance.ItemIndex.Length; i++)
         {
@@ -82,16 +96,9 @@ public class CraftItemDB
                     {
                         CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1], count[2], count[3], count[4], count[5], count[6], count[7]));
                     }
-
-                    Debug.Log("아이템 생성 성공! : " + itemData.ItemName);
                 }
             }
             
         }
-
-
-        
-
-        
     }
 }

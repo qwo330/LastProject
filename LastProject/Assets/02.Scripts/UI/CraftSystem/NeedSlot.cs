@@ -69,11 +69,47 @@ public class NeedSlot : CraftSlotParent
 
     void ResetSprite()
     {
-
+        ChangeSprite((CraftItemResource)999);
     }
 
-    public override void ChangeSprite(ItemData itemData)
+    public void ChangeSprite(CraftItemResource index)
     {
-        
+        switch (index)
+        {
+            case CraftItemResource.Wood:
+                sprite.spriteName = "NeedWood";
+                break;
+            case CraftItemResource.Stone:
+                sprite.spriteName = "NeedStone";
+                break;
+            case CraftItemResource.Iron:
+                sprite.spriteName = "NeedIron";
+                break;
+            case CraftItemResource.Adamantium:
+                sprite.spriteName = "NeedAdamantium";
+                break;
+            case CraftItemResource.Mithrill:
+                sprite.spriteName = "NeedMithrill";
+                break;
+            case CraftItemResource.Fabric:
+                sprite.spriteName = "NeedFabric";
+                break;
+            case CraftItemResource.Wool:
+                sprite.spriteName = "NeedWool";
+                break;
+            case CraftItemResource.Leather:
+                sprite.spriteName = "NeedLeather";
+                break;
+            case CraftItemResource.Water:
+                sprite.spriteName = "NeedWater";
+                break;
+            case CraftItemResource.Apple:
+                sprite.spriteName = "NeedApple";
+                break;
+            case CraftItemResource.Empty:
+            default:
+                sprite.spriteName = "NeedEmpty";
+                break;
+        }
     }
 }
