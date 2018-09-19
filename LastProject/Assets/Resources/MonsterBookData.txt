@@ -1,6 +1,6 @@
-﻿ID,Name,Description
-0,늑대,늑대다! 늑대가 나타났다
-1,토끼,산토끼 토끼야~
-2,마녀,나와 계약해서 마법소녀가 되어줘!
-3,여우,여우와 두루미~
-4,유령,히히히히 나는 유령이닷
+﻿Icon,Name,Description,Ingredient1,Ingredient2,Ingredient3
+Rabbit,토끼,산토끼 토끼야~,Wood,Meat,Iron
+Fox,여우,여우와 두루미~,Salt,Stone,Iron
+Wolf,늑대,늑대다! 늑대가 나타났다,Wood,Iron,Iron
+Witch,마녀,나와 계약해서 마법소녀가 되어줘!,Meat,Wood,Iron
+Ghost,유령,히히히히 나는 유령이닷,Iron,Salt,Iron

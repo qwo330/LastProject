@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class MonsterBook : MonoBehaviour
 {
-
     public UILabel Name;
-
     public UILabel Description;
+    public UISprite MonsterSprite, Ingredient1, Ingredient2, Ingredient3;
 
-    public UISprite MonsterSprite;
-
-   
     public enum MonsterNames
     {
         Wolf,
         Rabbit,
         Witch,
         Fox,
-        Ghost
+        Ghost,
     }
+    public MonsterNames monsterNames;
 
-    public MonsterNames SelectName;
-
-
+    private enum Ingredient
+    {
+        Wood,
+        Meat,
+        Iron,
+        Salt,
+        Stone
+    }
 
     List<MonsterBookDataList> quests = new List<MonsterBookDataList>();
 
@@ -41,9 +43,12 @@ public class MonsterBook : MonoBehaviour
             {
                 MonsterBookDataList q = new MonsterBookDataList();
 
-                int.TryParse(row[0], out q.ID);
+                q.Icon = row[0];
                 q.Name = row[1];
                 q.Description = row[2];
+                q.Ingredient1 = row[3];
+                q.Ingredient2 = row[4];
+                q.Ingredient3 = row[5];
 
                 quests.Add(q);
             }
@@ -54,12 +59,16 @@ public class MonsterBook : MonoBehaviour
     {
         for (int i = 0; i < Defines.TotalMonsterCount; i++)
         {
-            if ((int)this.SelectName == i)
+            if (this.monsterNames.ToString() == quests[i].Icon)
             {
                 Name.text = quests[i].Name;
                 Description.text = quests[i].Description;
-                MonsterSprite.spriteName = ((MonsterNames)i).ToString();
+                MonsterSprite.spriteName = quests[i].Icon;
+                Ingredient1.spriteName = quests[i].Ingredient1;
+                Ingredient2.spriteName = quests[i].Ingredient2;
+                Ingredient3.spriteName = quests[i].Ingredient3; //왜 \r이 들어가지?
             }
         }
     }
+
 }
