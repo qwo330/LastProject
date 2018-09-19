@@ -1,16 +1,14 @@
 WoodSword	2	0	0	0	0	2	0	0
 StoneSword	0	4	0	0	0	0	0	4
 IronSword	0	0	6	0	0	0	0	6
-FbricHelmet	0	0	0	0	0	2	0	0	
+FabricHelmet	0	0	0	0	0	2	0	0
 LeatherHelmet	0	0	0	0	0	0	0	2
-IronHelmet	0	0	6	6	0	0	6	0	
+IronHelmet	0	0	6	6	0	0	6	0
 FabricArmor	0	0	0	0	0	2	2	2
-LeatherArmor	0	0	0	0	0	4	4	4	
+LeatherArmor	0	0	0	0	0	4	4	4
 IronArmor	0	0	6	6	6	0	0	5
-FabricShoes	0	0	0	0	0	2	2	2	
+FabricShoes	0	0	0	0	0	2	2	2
 LeatherShoes	0	0	0	4	0	4	0	4
 IronShoes	0	0	6	6	6	0	0	0
-
-
-RedPotion1	1	1
-RedPotion2	3	3
+HalfRedPotion	1	1
+RedPotion	3	3

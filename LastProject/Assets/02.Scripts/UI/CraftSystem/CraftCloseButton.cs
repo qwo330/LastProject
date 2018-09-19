@@ -11,5 +11,4 @@ public class CraftCloseButton : MonoBehaviour
     {
         panel.SetActive(false);
     }
-
 }

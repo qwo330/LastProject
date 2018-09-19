@@ -56,7 +56,14 @@ public class NeedSlot : CraftSlotParent
         else
         {
             label.effectColor = Color.black;
-            isCraft = true;
+            if(needCount == 0)
+            {
+                isCraft = false;
+            }
+            else
+            {
+                isCraft = true;
+            }
         }
     }
 
