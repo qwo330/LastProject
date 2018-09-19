@@ -31,16 +31,16 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     public void AddWoodSword()
     {
-        AddIteminInventory(new ItemData(ItemLists.WoodSword));
+        AddIteminInventory(new ItemData(ItemList.Instance.ItemIndex[1]));
     }
 
     public void AddStoneSword()
     {
-        AddIteminInventory(new ItemData(ItemLists.StoneSword));
+        AddIteminInventory(new ItemData(ItemList.Instance.ItemIndex[2]));
     }
     public void AddPotion()
     {
-        AddIteminInventory(new ItemData(ItemLists.RedPotion));
+        AddIteminInventory(new ItemData(ItemList.Instance.ItemIndex[41]));
     }
     /* ===================================*/
     void CreateInventory()

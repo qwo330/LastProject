@@ -13,8 +13,8 @@ public class CraftSystem : MonoBehaviour
     CraftItemDB itemDB;
     public ItemData SelectedItem;
 
-    int MaxEquipItemCount = 3;
-    int MaxPotionItemCount = 1;
+    int MaxEquipItemCount = 12;//ItemList.Instance.GetMaxEquipItemCount();
+    int MaxPotionItemCount = 2;//ItemList.Instance.GetMaxPotionItemCount();
     const int MaxNeedItemCount = 4;
 
     List<CraftSlot> EquipList;

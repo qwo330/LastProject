@@ -57,103 +57,41 @@ public class CraftItemDB
     void ImportItemDB(string[] text, int[] count)
     {
         ItemData itemData;
-        ItemCodes type =  (ItemCodes)Enum.Parse(typeof(ItemCodes), text[0]);
-
-
-        //지용님 ItemLists에 맞춰서 다시 작업 해야함
-        switch (type)
-        {
-            case ItemCodes.Empty:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.WoodSword:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.StoneSword:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.IronSword:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.AdamantiumSword:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.MithrilSword:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.FabricHelmet:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.LeatherHelmet:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.IronHelmet:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.AdamantiumHelmet:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.MithrilHelmet:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.FabricArmor:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.LeatherArmor:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.IronArmor:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.AdamantiumArmor:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.MithrilArmor:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.FabricShoes:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.LeatherShoes:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.IronShoes:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.AdamantiumShoes:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.MithrilShoes:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.HalfRedPotion:
-                itemData = ItemLists.WoodSword;
-                break;
-            case ItemCodes.RedPotion:
-                itemData = ItemLists.WoodSword;
-                break;
-            default:
-                Debug.Log("DB 이름 불일치! WoodSword로 입력됩니다.");
-                itemData = ItemLists.WoodSword;
-                break;
-        }
-
-        
+        ItemCodes type = (ItemCodes)Enum.Parse(typeof(ItemCodes), text[0]);
 
         for (int i = 1; i < text.Length; i++)
         {
             count[i - 1] = int.Parse(text[i]);
         }
 
-        if(itemData.ItemType == ItemTypes.Eat)
+        Debug.Log(type + ", " + count);
+
+        for (int i = 0; i < ItemList.Instance.ItemIndex.Length; i++)
         {
-            CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1]));
-        }
-        else
-        {
-            CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1], count[2], count[3], count[4], count[5], count[6], count[7]));
+            if(ItemList.Instance.ItemIndex[i].ItemCode != ItemCodes.Empty)
+            {
+                if (ItemList.Instance.ItemIndex[i].ItemCode == type)
+                {
+                    itemData = ItemList.Instance.ItemIndex[i];
+
+                    if (itemData.ItemType == ItemTypes.Eat)
+                    {
+                        CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1]));
+                    }
+                    else
+                    {
+                        CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1], count[2], count[3], count[4], count[5], count[6], count[7]));
+                    }
+
+                    Debug.Log("아이템 생성 성공! : " + itemData.ItemName);
+                }
+            }
+            
         }
 
-        Debug.Log("아이템 생성 성공! : " + itemData.ItemName);
+
+        
+
+        
     }
 }
