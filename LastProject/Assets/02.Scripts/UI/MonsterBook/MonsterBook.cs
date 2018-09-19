@@ -9,6 +9,8 @@ public class MonsterBook : MonoBehaviour
 
     public UILabel Description;
 
+    public UISprite MonsterSprite;
+
    
     public enum MonsterNames
     {
@@ -21,15 +23,13 @@ public class MonsterBook : MonoBehaviour
 
     public MonsterNames SelectName;
 
-    ////////////////////
 
 
-    List<Quest> quests = new List<Quest>();
+    List<MonsterBookDataList> quests = new List<MonsterBookDataList>();
 
-    // Use this for initialization
     void Start()
     {
-        TextAsset questdata = Resources.Load<TextAsset>("questdata2");
+        TextAsset questdata = Resources.Load<TextAsset>("MonsterBookData");
 
         string[] data = questdata.text.Split(new char[] { '\n' });
 
@@ -39,22 +39,15 @@ public class MonsterBook : MonoBehaviour
 
             if (row[1] != "")
             {
-                Quest q = new Quest();
+                MonsterBookDataList q = new MonsterBookDataList();
 
-                int.TryParse(row[0], out q.id);
-                q.name = row[1];
-                q.npc = row[2];
-                q.desc = row[3];
-                int.TryParse(row[4], out q.status);
-                q.rewards = row[5];
-                q.task = row[6];
-                int.TryParse(row[7], out q.parent);
+                int.TryParse(row[0], out q.ID);
+                q.Name = row[1];
+                q.Description = row[2];
 
                 quests.Add(q);
             }
         }
-
-
     }
 
     public void OnClickMonsterButton()
@@ -63,10 +56,10 @@ public class MonsterBook : MonoBehaviour
         {
             if ((int)this.SelectName == i)
             {
-                Name.text = quests[i].id.ToString();
-                Description.text = quests[i].desc;
+                Name.text = quests[i].Name;
+                Description.text = quests[i].Description;
+                MonsterSprite.spriteName = ((MonsterNames)i).ToString();
             }
         }
-
     }
 }
