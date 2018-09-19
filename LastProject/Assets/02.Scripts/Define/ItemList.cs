@@ -1,6 +1,8 @@
-﻿public enum ItemTypes
+﻿using UnityEngine;
+
+public enum ItemTypes
 {
-    Eat,
+    Eat = 1,
     RawMaterial,
 
     Weapon,
@@ -46,13 +48,17 @@ public enum ItemCodes
 public class ItemList : Singleton<ItemList>
 {
     public ItemData[] ItemIndex;
+    public int EquipmentCount {private set; get;}
+    public int FoodCount { private set; get; }
+    public int RawMaterialCount { private set; get; }
 
     private void Start()
     {
-        SetItemData();
+        setItemData();
+        getItemTypeCount();
     }
 
-    void SetItemData()
+    void setItemData()
     {
         ItemIndex = new ItemData[60];
 
@@ -74,5 +80,23 @@ public class ItemList : Singleton<ItemList>
 
         ItemIndex[41] = new ItemData(ItemCodes.HalfRedPotion, ItemTypes.Eat, 10, 25);
         ItemIndex[42] = new ItemData(ItemCodes.RedPotion, ItemTypes.Eat, 10, 50);
+    }
+
+    void getItemTypeCount()
+    {
+        EquipmentCount = 0; FoodCount = 0; RawMaterialCount = 0;
+
+        for (int i = 0; i < ItemIndex.Length; i++)
+        {
+            if (ItemIndex[i].ItemType == ItemTypes.Eat)
+                FoodCount++;
+            else if (ItemIndex[i].ItemType == ItemTypes.RawMaterial)
+                RawMaterialCount++;
+            else if (ItemIndex[i].ItemType == ItemTypes.Weapon || ItemIndex[i].ItemType == ItemTypes.Armor
+                || ItemIndex[i].ItemType == ItemTypes.Helmet || ItemIndex[i].ItemType == ItemTypes.Shoes)
+            {
+                EquipmentCount++;
+            }
+        }
     }
 }
