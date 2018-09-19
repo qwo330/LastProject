@@ -26,16 +26,21 @@ public class CraftSlot : CraftSlotParent
                 description = sprite[i];
             }
         }
+        ChangeSprite();
     }
 
     void OnClick()
     {
         craftSystem.ViewNeedItems(itemData);
-        ChangeSprite(itemData);
     }
 
-    public override void ChangeSprite(ItemData itemData)
+    //private void OnEnable()
+    //{
+    //    ChangeSprite();
+    //}
+
+    public void ChangeSprite()
     {
-        
+        image.spriteName = itemData.ItemName;
     }
 }
