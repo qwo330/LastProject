@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using LitJson;
+
 
 public class MonsterBook : MonoBehaviour
 {
@@ -27,48 +30,34 @@ public class MonsterBook : MonoBehaviour
         Stone
     }
 
-    List<MonsterBookDataList> quests = new List<MonsterBookDataList>();
-
-    void Start()
+    public void OnClickMonsterButton()
     {
-        TextAsset questdata = Resources.Load<TextAsset>("MonsterBookData");
-
-        string[] data = questdata.text.Split(new char[] { '\n' });
-
-        for (int i = 1; i < data.Length - 1; i++)
+        if (File.Exists(Application.dataPath + "/Resources/MonsterBookData.json"))
         {
-            string[] row = data[i].Split(new char[] { ',' });
+            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/MonsterBookData.json");
+            JsonData data = JsonMapper.ToObject(jsonStr);
 
-            if (row[1] != "")
-            {
-                MonsterBookDataList q = new MonsterBookDataList();
-
-                q.Icon = row[0];
-                q.Name = row[1];
-                q.Description = row[2];
-                q.Ingredient1 = row[3];
-                q.Ingredient2 = row[4];
-                q.Ingredient3 = row[5];
-
-                quests.Add(q);
-            }
+            ShowMonsterInfo(data);
         }
+
     }
 
-    public void OnClickMonsterButton()
+    private void ShowMonsterInfo(JsonData data)
     {
         for (int i = 0; i < Defines.TotalMonsterCount; i++)
         {
-            if (this.monsterNames.ToString() == quests[i].Icon)
+            if (this.monsterNames.ToString() == data[i]["Icon"].ToString())
             {
-                Name.text = quests[i].Name;
-                Description.text = quests[i].Description;
-                MonsterSprite.spriteName = quests[i].Icon;
-                Ingredient1.spriteName = quests[i].Ingredient1;
-                Ingredient2.spriteName = quests[i].Ingredient2;
-                Ingredient3.spriteName = quests[i].Ingredient3; //왜 \r이 들어가지?
+                Debug.Log("asdfsf");
+                Name.text = data[i]["Name"].ToString();
+                Description.text = data[i]["Description"].ToString();
+                MonsterSprite.spriteName = data[i]["Icon"].ToString();
+                Ingredient1.spriteName = data[i]["Ingredient1"].ToString();
+                Ingredient2.spriteName = data[i]["Ingredient2"].ToString();
+                Ingredient3.spriteName = data[i]["Ingredient3"].ToString();
             }
         }
     }
+
 
 }

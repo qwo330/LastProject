@@ -1,0 +1,5 @@
+[{"Icon":"Rabbit","Name":"토끼","Description":"산토끼 토끼야~","Ingredient1":"Wood","Ingredient2":"Meat","Ingredient3":"Iron"},
+{"Icon":"Fox","Name":"여우","Description":"여우와 두루미~","Ingredient1":"Salt","Ingredient2":"Stone","Ingredient3":"Iron"},
+{"Icon":"Wolf","Name":"늑대","Description":"늑대다! 늑대가 나타났다","Ingredient1":"Wood","Ingredient2":"Iron","Ingredient3":"Iron"},
+{"Icon":"Witch","Name":"마녀","Description":"나와 계약해서 마법소녀가 되어줘!","Ingredient1":"Meat","Ingredient2":"Wood","Ingredient3":"Iron"},
+{"Icon":"Ghost","Name":"유령","Description":"히히히히 나는 유령이닷","Ingredient1":"Iron","Ingredient2":"Salt","Ingredient3":"Iron"}]
