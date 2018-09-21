@@ -20,12 +20,18 @@ public class CraftSystem : MonoBehaviour
     List<CraftSlot> EquipList;
     List<CraftSlot> PotionList;
     List<NeedSlot> NeedList;
-    
 
     private void Start()
     {
+        Invoke("Initialize", 1f);
+    }
+
+    void Initialize ()
+    {
         MaxEquipItemCount = ItemList.Instance.EquipmentCount;
         MaxPotionItemCount = ItemList.Instance.FoodCount;
+
+        Debug.Log(MaxEquipItemCount + ", " + MaxPotionItemCount);
 
         if (CraftSlot != null)
         {
@@ -103,11 +109,9 @@ public class CraftSystem : MonoBehaviour
                         {
                             NeedList[index].ChangeSprite((CraftItemResource)999);
                         }
-                        
                         index++;
                     }
                 }
-
                 SelectedItem = itemInDB.TargetItem;
             }
         }
