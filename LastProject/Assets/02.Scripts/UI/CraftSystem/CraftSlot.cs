@@ -33,12 +33,7 @@ public class CraftSlot : CraftSlotParent
     {
         craftSystem.ViewNeedItems(itemData);
     }
-
-    //private void OnEnable()
-    //{
-    //    ChangeSprite();
-    //}
-
+    
     public void ChangeSprite()
     {
         image.spriteName = itemData.ItemName;
