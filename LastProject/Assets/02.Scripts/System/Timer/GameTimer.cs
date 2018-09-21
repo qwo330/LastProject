@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameTimer : MonoBehaviour {
+public delegate void TimerCallback();
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+public class GameTimer : MonoBehaviour {
+    public TimerCallback Callback;
+
+    public void SetTimer(float time)
+    {
+
+    }
 }

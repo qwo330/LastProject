@@ -9,7 +9,7 @@ public class TimerManager : Singleton<TimerManager> {
     float startTime;
     float fixedDeltaTime;
 
-    Queue<GameTimer> TimerPool;
+    Queue<GameTimer> timerPool;
 
     void init()
     {
@@ -23,5 +23,16 @@ public class TimerManager : Singleton<TimerManager> {
         startTime = Time.realtimeSinceStartup;
 
         Time.fixedDeltaTime = fixedDeltaTime * TimeScale;
+    }
+
+    public GameTimer GetTimer()
+    {
+        GameTimer timer = timerPool.Dequeue();
+        return timer;
+    }
+
+    public void ReturnTimer(GameTimer timer)
+    {
+        timerPool.Enqueue(timer);
     }
 }
