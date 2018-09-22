@@ -1,4 +1,7 @@
-﻿[System.Serializable]
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable]
 public struct ItemData
 {
     public ItemCodes ItemCode;
@@ -31,7 +34,8 @@ public struct ItemData
 //public interface IEquipable { }
 //public interface IEatable { }
 
-//public abstract class Item : MonoBehaviour {
+//public abstract class Item : MonoBehaviour
+//{
 //    public ItemData ItemData;
 //    public Sprite sprite;
 //}

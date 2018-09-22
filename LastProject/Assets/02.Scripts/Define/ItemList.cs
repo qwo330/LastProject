@@ -62,6 +62,7 @@ public class ItemList : Singleton<ItemList>
     {
         ItemIndex = new ItemData[60];
 
+        ItemIndex[0] = new ItemData(0, 0, 0, 0);
         ItemIndex[1] = new ItemData(ItemCodes.WoodSword, ItemTypes.Weapon, 5, 5);
         ItemIndex[2] = new ItemData(ItemCodes.StoneSword, ItemTypes.Weapon, 7, 7);
         ItemIndex[3] = new ItemData(ItemCodes.IronSword, ItemTypes.Weapon, 10, 10);

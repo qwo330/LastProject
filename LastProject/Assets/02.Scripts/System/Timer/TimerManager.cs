@@ -9,12 +9,31 @@ public class TimerManager : Singleton<TimerManager> {
     float startTime;
     float fixedDeltaTime;
 
+    [SerializeField]
+    int timerCount = 40;
+
     Queue<GameTimer> timerPool;
+
+    [SerializeField]
+    GameTimer timerPrefab;
+
+    private void Awake()
+    {
+        init();
+    }
 
     void init()
     {
+        startTime = Time.realtimeSinceStartup;
+        fixedDeltaTime = Time.fixedDeltaTime;
         TimeScale = 1f;
-        
+
+        timerPool = new Queue<GameTimer>();
+        for (int i = 0; i < timerCount; i++)
+        {
+            GameTimer timer = Instantiate(timerPrefab, transform);
+            timerPool.Enqueue(timer);
+        }
     }
 
     void Update()
