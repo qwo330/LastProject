@@ -1,3 +1,3 @@
-[{"ID":0,"Image1":"Town1","Name":"김엔피씨","Description":"숲마을의 김엔피씨에게 찾아가세요","Image2":"Forest_Npc1"},
-{"ID":1,"Image1":"Town2","Name":"박엔피씨","Description":"겨울마을의 박엔피씨에게 찾아가세요","Image2":"Winter_Npc2"},
-{"ID":2,"Image1":"Town3","Name":"최엔피씨","Description":"바다마을의 최엔피씨에게 찾아가세요","Image2":"Sea_Npc3"}]
+[{"ID":0,"Image1":"Town1","Name":"김엔피씨","Description":"숲마을의 김엔피씨에게 찾아가세요","EXP":1000},
+{"ID":1,"Image1":"Town2","Name":"박엔피씨","Description":"겨울마을의 박엔피씨에게 찾아가세요","EXP":500},
+{"ID":2,"Image1":"Town3","Name":"최엔피씨","Description":"바다마을의 최엔피씨에게 찾아가세요","EXP":2000}]
