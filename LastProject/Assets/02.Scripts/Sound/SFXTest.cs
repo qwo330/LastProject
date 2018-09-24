@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SoundTest : MonoBehaviour {
+public class SFXTest : MonoBehaviour {
 
     
     public enum MyEnum
@@ -17,28 +17,28 @@ public class SoundTest : MonoBehaviour {
   
     public string Test3;
 
-    private AudioManager audio;
+    private AudioManager sfx;
 
     // Use this for initialization
     void Start () {
-        audio = FindObjectOfType<AudioManager>();
+        sfx = FindObjectOfType<AudioManager>();
 	}
 
   
-    public void OnClickedButtone3()
+    public void OnClickedButtone()
     {
-        audio.Play(SFXEnum.ToString());
+        sfx.Play(SFXEnum.ToString());
     }
 
    
     public void SetSFXVolume()
     {
-        audio.SetSFXVolume(SFXslider.value);
+        sfx.SetSFXVolume(SFXslider.value);
     }
 
 
     /// <summary>
-    ///SFX볼륨 정보 함수
+    ///SFX 볼륨 정보 함수
     /// </summary>
     /// <returns></returns>
    

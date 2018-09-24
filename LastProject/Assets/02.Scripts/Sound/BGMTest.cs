@@ -14,24 +14,26 @@ public class BGMTest : MonoBehaviour {
 
     public Slider BGMSlider;
     private BGMManager BGM;
-
-    public int PlayMusicTrack;
-
+ 
 	// Use this for initialization
 	void Start () {
         BGM = FindObjectOfType<BGMManager>();
     }
     public void OnClickedButton()
     {
-        BGM.Play(TestEnum.ToString());
+        BGM.Play((int)TestEnum);
         BGM.FadeInMusic();
     }
 
     public void SetBGMVolume()
     {
-        BGM.SetBGMVolume(BGMSlider.value);
+        BGM.SetVolumn(BGMSlider.value);
     }
 
+    /// <summary>
+    /// BGM 볼륨 정보 함수
+    /// </summary>
+    /// <returns></returns>
     public float GetBGMVolume()
     {
         return BGMSlider.value;
