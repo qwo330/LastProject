@@ -1,31 +1,39 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
-public interface IElapsable
+public abstract class Slot : MonoBehaviour
 {
-    void Elapse();
-}
-
-public abstract class Slot : MonoBehaviour, IElapsable
-{
-    public ItemData[] Item;
+    public List<ItemData> Item;
 
     public void Elapse()
     {
-        for (int i = 0; i < Item.Length; i++)
+        if (Item.Count == 0) return;
+
+        Debug.Log("아이템 내구도 감소");
+        for (int i = 0; i < Item.Count; i++)
         {
-            Item[i].Time--;
-            if (Item[i].Time < 0)
-            {
-                deleteItem(i);
-            }
-        }  
+            // List<T>.this[int i]에서 리턴시키는 임시변수에 수정 불가능
+            ItemData tmp = Item[i];
+            tmp.Time--;
+            Item[i] = tmp;
+
+            Debug.Log(i);
+        }
+
+        if (Item[0].Time < 0)
+            deleteItem();
     }
 
-    void deleteItem(int i)
+    public void deleteItem()
     {
-        Item[i] = ItemList.Instance.ItemIndex[0];
-        if(Item.Length == 0) GetComponent<Image>().sprite = null;
+        if (Item.Count == 1)
+        {
+            Item[0] = ItemList.Instance.ItemIndex[0];
+            GetComponent<Image>().sprite = null;
+        }
+        else
+            Item.RemoveAt(0);
     }
 }
 

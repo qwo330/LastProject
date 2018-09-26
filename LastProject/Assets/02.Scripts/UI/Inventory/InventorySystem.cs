@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,6 +18,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     List<ItemSlot> inventorySlots = new List<ItemSlot>();
     EquipmentSlot[] equipmentSlots = new EquipmentSlot[4]; // Weapon, Helmet, Armor, Shoes
+    GameTimer itemTimer;
 
     /*===========================================================*/
     Dictionary<ItemCodes, ItemData> itemlist;
@@ -51,13 +51,25 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         ItemPopUpText = ItemPopUp.GetComponentInChildren<Text>();
         ItemPopUp.SetActive(false);
 
+        itemTimer = TimerManager.Instance.GetTimer();
+
         for (int i = 0; i < Defines.InventorySize; i++)
         {
             GameObject obj = Instantiate(SlotPrefab, InventoryPanel.transform);
             ItemSlot slot = obj.GetComponent<ItemSlot>();
             slot.Position = i;
             inventorySlots.Add(slot);
+
+            itemTimer.Callback += slot.Elapse;
         }
+
+        itemTimer.SetTimer();
+        InvokeRepeating("StartTimer", 1f, 1f);
+    }
+
+    void StartTimer()
+    {
+        itemTimer.StartTimer();
     }
 
     bool isDrag = false;
@@ -79,7 +91,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             EmptyImg.transform.position = Input.mousePosition;
         else if (distance > 15f)
         {
-            int itemCode = (int)dragItemSlot.Item.ItemCode;
+            int itemCode = (int)dragItemSlot.Item[0].ItemCode;
             Sprite sprite = ImageStorage.Instance.sprites[itemCode];
             if (sprite == null) return;
 
@@ -102,9 +114,9 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             ItemTypes part = enter.GetComponent<EquipmentSlot>().Part;
             Debug.Log("part : " + part.ToString());
 
-            Debug.Log("dragItem : " + dragItemSlot.Item.ItemType.ToString());
+            Debug.Log("dragItem : " + dragItemSlot.Item[0].ItemType.ToString());
 
-            if (part == dragItemSlot.Item.ItemType)
+            if (part == dragItemSlot.Item[0].ItemType)
                 swapItem(enter);
             else
                 Debug.Log("올바르지 못한 착용 부위입니다.");
@@ -117,7 +129,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         if (isDrag) return;
 
-        ItemData itemData = getItemInfo().Item;
+        ItemData itemData = getItemInfo().Item[0];
         if (itemData.ItemCode == ItemCodes.Empty) return;
 
         ItemPopUp.SetActive(true);
@@ -161,9 +173,9 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     // Slot의 데이터와 이미지 Swap.
     void swapItem(Slot target)
     {
-        ItemData tempItem = target.Item;
+        ItemData tempItem = target.Item[0];
         target.Item = dragItemSlot.Item;
-        dragItemSlot.Item = tempItem;
+        dragItemSlot.Item[0] = tempItem;
 
         Sprite targetSprite = target.GetComponent<Image>().sprite;
         Sprite dragSprite = dragItemSlot.GetComponent<Image>().sprite;
@@ -177,7 +189,8 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// </summary>
     public bool CheckExistItem(int index)
     {
-        if (inventorySlots[index].Item.ItemCode != ItemCodes.Empty) return true;
+        if (inventorySlots[index].Item.Count == 0) return false;
+        if (inventorySlots[index].Item[0].ItemCode != ItemCodes.Empty) return true;
         return false;
     }
 
@@ -200,8 +213,11 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         for (int i = 0; i < Defines.InventorySize; i++)
         {
-            if (item.ItemCode == inventorySlots[i].Item.ItemCode)
+            if (inventorySlots[i].Item.Count != 0
+                && item.ItemCode == inventorySlots[i].Item[0].ItemCode)
+            {
                 return i;
+            }
         }
         return -1;
     }
@@ -217,6 +233,8 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             Debug.Log("중첩 가능한 아이템");
             // text에서 개수 증가
             //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
+            inventorySlots[index].Item.Add(item);
+            //inventorySlots[index].Item.Sort(); // 남은 Time 값에 맞춰 정렬
             return;
         }
 
@@ -227,7 +245,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             return;
         }
         index = FindEmptySlot();
-        inventorySlots[index].Item = item;
+        inventorySlots[index].Item.Add(item);
         inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
 
     }

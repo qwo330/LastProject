@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TimerManager : Singleton<TimerManager> {
 
     public float TimeScale;
-    public float DeltaTime;
+    public float DeltaTime { get; private set; }
     float startTime;
     float fixedDeltaTime;
 
     [SerializeField]
-    int timerCount = 40;
+    int timerCount = 10;
 
     Queue<GameTimer> timerPool;
 
@@ -33,6 +32,7 @@ public class TimerManager : Singleton<TimerManager> {
         {
             GameTimer timer = Instantiate(timerPrefab, transform);
             timerPool.Enqueue(timer);
+            timer.gameObject.SetActive(false);
         }
     }
 
@@ -47,11 +47,13 @@ public class TimerManager : Singleton<TimerManager> {
     public GameTimer GetTimer()
     {
         GameTimer timer = timerPool.Dequeue();
+        timer.gameObject.SetActive(true);
         return timer;
     }
 
     public void ReturnTimer(GameTimer timer)
     {
         timerPool.Enqueue(timer);
+        timer.gameObject.SetActive(false);
     }
 }
