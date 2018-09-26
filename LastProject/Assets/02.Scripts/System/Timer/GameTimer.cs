@@ -2,12 +2,12 @@
 
 public delegate void TimerCallback();
 
-public class GameTimer : MonoBehaviour {
+public class GameTimer : MonoBehaviour{
     public TimerCallback Callback;
     float callTime;
     bool isWorking = false;
 
-    public void SetTimer(float time)
+    public void SetTimer(float time = 1)
     {
         callTime = time;
     }
@@ -25,6 +25,10 @@ public class GameTimer : MonoBehaviour {
     public void StopTimer()
     {
         isWorking = false;
+    }
+
+    public void ReturnTimer()
+    {
         TimerManager.Instance.ReturnTimer(this);
     }
 
