@@ -21,19 +21,21 @@ public abstract class Slot : MonoBehaviour
             Debug.Log(i);
         }
 
-        if (Item[0].Time < 0)
+        if (Item[0].Time <= 0)
             deleteItem();
     }
 
-    public void deleteItem()
+    void deleteItem()
     {
-        if (Item.Count == 1)
+        for (int i = 0; i < Item.Count; i++)
         {
-            Item[0] = ItemList.Instance.ItemIndex[0];
-            GetComponent<Image>().sprite = null;
+            if(Item[i].Time <= 0) Item.RemoveAt(i);
         }
-        else
-            Item.RemoveAt(0);
+
+        if (Item.Count <= 0)
+        {
+            GetComponent<Image>().sprite = ImageStorage.Instance.sprites[0];
+        }
     }
 }
 
