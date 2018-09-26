@@ -21,10 +21,15 @@ public class QuestUI : MonoBehaviour
     private List<QuestInfo> info;
 
     [SerializeField]
-    private GameObject ongoingTabGrid, completeTabGrid;
+    private GameObject gridStartTab, gridProgressTab, gridCompleteTab;
     [SerializeField]
-    private UIScrollView ongoingTabScroll, completeTabScroll;
-
+    private UIScrollView scrollProgressTab, scrollCompleteTab;
+    [SerializeField]
+    private GameObject questListButton, questProgressButton;
+    [SerializeField]
+    private Animator questListButtonAnim, questProgressButtonAnim;
+    //[SerializeField]
+    //private Animation questListPlay, questListBack, questProgressPlay, questProgressBack;
     private List<int> questID = new List<int>();
 
     [SerializeField]
@@ -55,7 +60,6 @@ public class QuestUI : MonoBehaviour
         }
     }
 
-    //private NPC npc;
     public int TestID; //NPC 클래스에서 퀘스트 아이디를 넘겨준다.
 
     public void OnClickedOngoingTest()
@@ -63,27 +67,30 @@ public class QuestUI : MonoBehaviour
         bool ID = CheckQuestID();
         if (ID)
         {
-            info[TestID].QuestObject.transform.SetParent(ongoingTabGrid.transform);
-            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = ongoingTabScroll;
+            info[TestID].QuestObject.transform.SetParent(gridProgressTab.transform);
+            gridStartTab.GetComponent<UIGrid>().enabled = true;
+            gridProgressTab.GetComponent<UIGrid>().enabled = true;
+            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = scrollProgressTab;
             info[TestID].CheckedBG.active = true;
             info[TestID].QuestObject.GetComponent<UIButton>().enabled = true;
         }
     }
-
 
     public void OnClickedComplete()
     {
         bool ID = CheckQuestID();
         if (ID)
         {
-            info[TestID].QuestObject.transform.SetParent(completeTabGrid.transform);
-            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = completeTabScroll;
+            info[TestID].QuestObject.transform.SetParent(gridCompleteTab.transform);
+            gridProgressTab.GetComponent<UIGrid>().enabled = true;
+            gridCompleteTab.GetComponent<UIGrid>().enabled = true;
+            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = scrollCompleteTab;
             info[TestID].CheckedBG.active = false;
             info[TestID].QuestObject.GetComponent<UIButton>().enabled = false;
         }
     }
 
-        private bool CheckQuestID()
+    private bool CheckQuestID()
     {
         for (int i = 0; i < questID.Count; i++)
         {
@@ -92,24 +99,37 @@ public class QuestUI : MonoBehaviour
         }
         return false;
     }
-   
+
     public void OnClickedCheckButton(GameObject value)
     {
         string objectName = value.name;
         string tempName = Regex.Replace(objectName, @"\D", "");
         int buttonNumber = int.Parse(tempName);
 
-        if (!info[buttonNumber].CheckedSprite.active && ButtonCount < 3)
+        if (! info[buttonNumber].CheckedSprite.active && ButtonCount < 3) 
         {
             info[buttonNumber].CheckedSprite.active = true;
-            quest[buttonNumber].text = info[buttonNumber].Info.text;
+            quest[ButtonCount].text = info[buttonNumber].Info.text; //버튼카운트 값으로 넣어줘야 첫번쨰 목록부터 들어온다
             ButtonCount++;
         }
         else if (info[buttonNumber].CheckedSprite.active)
         {
             info[buttonNumber].CheckedSprite.active = false;
             ButtonCount--;
-            quest[buttonNumber].text = null;
+            quest[ButtonCount].text = null;
         }
+    }
+
+    //퀘스트 진행상황 창을 열고 닫는 함수
+    public void OnClickedQuestListIcon()
+    {
+        //애니메이션 재생 다시할것
+        //이름 다시 짓기.
+        questListButtonAnim.GetComponent<Animator>().Play("ListButton_Play");
+    }
+
+    public void OnClickedQuestProgress()
+    {
+
     }
 }
