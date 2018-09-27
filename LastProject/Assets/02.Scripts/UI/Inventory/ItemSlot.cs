@@ -18,7 +18,7 @@ public abstract class Slot : MonoBehaviour
             tmp.Time--;
             Item[i] = tmp;
 
-            Debug.Log(i);
+            //Debug.Log(i);
         }
 
         if (Item[0].Time <= 0)
@@ -30,6 +30,7 @@ public abstract class Slot : MonoBehaviour
         for (int i = 0; i < Item.Count; i++)
         {
             if(Item[i].Time <= 0) Item.RemoveAt(i);
+            //inventorySystem.instance.SetCountText(this);
         }
 
         if (Item.Count <= 0)

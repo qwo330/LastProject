@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    public GameObject InventoryPanel, CraftPanel;
+    public GameObject InventoryPanel, EquipmentPanel;
     public GameObject SlotPrefab;
 
     public Image EmptyImg;
@@ -16,8 +16,10 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     public Image ItemPopUpImg;
     Text ItemPopUpText;
 
+    [SerializeField]
+    EquipmentSlot[] equipmentSlots = new EquipmentSlot[4];
+
     List<ItemSlot> inventorySlots = new List<ItemSlot>();
-    EquipmentSlot[] equipmentSlots = new EquipmentSlot[4]; // Weapon, Helmet, Armor, Shoes
     GameTimer itemTimer;
 
     /*===========================================================*/
@@ -53,6 +55,9 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
         itemTimer = TimerManager.Instance.GetTimer();
 
+        for (int i = 0; i < 4; i++)
+            itemTimer.Callback += equipmentSlots[i].Elapse;
+
         for (int i = 0; i < Defines.InventorySize; i++)
         {
             GameObject obj = Instantiate(SlotPrefab, InventoryPanel.transform);
@@ -74,24 +79,32 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     bool isDrag = false;
     Vector3 prevPosition;
-    Slot dragItemSlot;
+    Slot dragItem;
+
     public void OnBeginDrag(PointerEventData data)
     {
         isDrag = true;
         prevPosition = Input.mousePosition;
         EmptyImg.transform.position = Input.mousePosition;
-        dragItemSlot = getItemInfo();
+        dragItem = getItemInfo();
     }
 
     public void OnDrag(PointerEventData data)
     {
+        if(dragItem.Item.Count == 0)
+        {
+            isDrag = false;
+            EmptyImg.gameObject.SetActive(false);
+            return;
+        }
+
         float distance = Vector3.Distance(prevPosition, Input.mousePosition);
 
         if (EmptyImg.IsActive())
             EmptyImg.transform.position = Input.mousePosition;
         else if (distance > 15f)
         {
-            int itemCode = (int)dragItemSlot.Item[0].ItemCode;
+            int itemCode = (int)dragItem.Item[0].ItemCode;
             Sprite sprite = ImageStorage.Instance.sprites[itemCode];
             if (sprite == null) return;
 
@@ -103,25 +116,24 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     public void OnEndDrag(PointerEventData eventData)
     {
         isDrag = false;
-        Slot enter = getItemInfo();
-        if (enter is ItemSlot) // 인벤토리의 slot
+        EmptyImg.gameObject.SetActive(false);
+        if (dragItem.Item.Count == 0) return;
+
+        Slot targetItem = getItemInfo();
+        if (targetItem is ItemSlot) // 인벤토리의 slot
         {
-            swapItem(enter);
+            swapItem(targetItem);
         }
-        else if(enter is EquipmentSlot) // 장비의 slot //장비창에서 등록처리
+        else if(targetItem is EquipmentSlot) // 장비의 slot //장비창에서 등록처리
         {
             //TODO : 인벤토리와 장비 slot에서 아이템 교체
-            ItemTypes part = enter.GetComponent<EquipmentSlot>().Part;
-            Debug.Log("part : " + part.ToString());
+            ItemTypes part = targetItem.GetComponent<EquipmentSlot>().Part;
 
-            Debug.Log("dragItem : " + dragItemSlot.Item[0].ItemType.ToString());
-
-            if (part == dragItemSlot.Item[0].ItemType)
-                swapItem(enter);
+            if (part == dragItem.Item[0].ItemType)
+                swapItem(targetItem);
             else
                 Debug.Log("올바르지 못한 착용 부위입니다.");
         }
-        EmptyImg.gameObject.SetActive(false);
     }
 
     // 인벤토리의 아이템 클릭시 아이템에 대한 정보를 띄운다.
@@ -129,7 +141,10 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         if (isDrag) return;
 
-        ItemData itemData = getItemInfo().Item[0];
+        Slot targetItem = getItemInfo();
+        if (targetItem.Item.Count == 0) return;
+
+        ItemData itemData = targetItem.Item[0];
         if (itemData.ItemCode == ItemCodes.Empty) return;
 
         ItemPopUp.SetActive(true);
@@ -154,34 +169,20 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         return result;
     }
 
-    //bool checkUsedSlot()
-    //{
-    //    ItemSlot enter = getItemInfo();
-    //    if (enter == null)
-    //    {
-    //        Debug.Log("슬롯을 찾을 수 없습니다.");
-    //        return false;
-    //    }
-
-    //    ItemCodes itemCode = enter.Item.ItemCode;
-    //    if (itemCode != ItemCodes.Empty)
-    //        return true;
-
-    //    return false;
-    //}
-
     // Slot의 데이터와 이미지 Swap.
-    void swapItem(Slot target)
+    void swapItem(Slot targetItem)
     {
-        ItemData tempItem = target.Item[0];
-        target.Item = dragItemSlot.Item;
-        dragItemSlot.Item[0] = tempItem;
+        List<ItemData> tempItem = targetItem.Item;
+        targetItem.Item = dragItem.Item;
+        dragItem.Item = tempItem;
 
-        Sprite targetSprite = target.GetComponent<Image>().sprite;
-        Sprite dragSprite = dragItemSlot.GetComponent<Image>().sprite;
+        Sprite targetSprite = targetItem.GetComponent<Image>().sprite;
+        Sprite dragSprite = dragItem.GetComponent<Image>().sprite;
 
-        target.GetComponent<Image>().sprite = dragSprite;
-        dragItemSlot.GetComponent<Image>().sprite = targetSprite;
+        targetItem.GetComponent<Image>().sprite = dragSprite;
+        dragItem.GetComponent<Image>().sprite = targetSprite;
+
+        SetCountText(targetItem); SetCountText(dragItem);
     }
 
     /// <summary>
@@ -228,25 +229,41 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     public void AddIteminInventory(ItemData item)
     {
         int index = FindItemPosition(item);
-        if (item.ItemType == ItemTypes.Eat && index != -1)
+        if ((item.ItemType == ItemTypes.Eat || item.ItemType == ItemTypes.RawMaterial) 
+            && index != -1)
         {
-            Debug.Log("중첩 가능한 아이템");
-            // text에서 개수 증가
-            //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
             inventorySlots[index].Item.Add(item);
-            //inventorySlots[index].Item.Sort(); // 남은 Time 값에 맞춰 정렬
+            SetCountText(inventorySlots[index]);
+            //inventorySlots[index].gameObject.GetComponent<Text>().text = (inventorySlots[index].Item.Count + 1).ToString();
+            //inventorySlots[index].Item.Sort(); // 남은 Time 값에 맞춰 정렬 // 순서대로 add 되면 정렬 아닌가?
             return;
         }
 
-        Debug.Log("중첩 불가능한 아이템");
         if (FindEmptySlot() == -1)
         {
             Debug.Log("가방이 가득 찼습니다. 더 이상 아이템을 획득할 수 없습니다.");
             return;
         }
+
         index = FindEmptySlot();
         inventorySlots[index].Item.Add(item);
+        SetCountText(inventorySlots[index]);
         inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
+    }
+
+    void SetCountText(Slot target)
+    {
+        if (target is EquipmentSlot) return;
+
+        if (target.Item.Count <= 1)
+            target.GetComponentInChildren<Text>().text = string.Empty;
+        else
+            target.GetComponentInChildren<Text>().text = target.Item.Count.ToString();
+    }
+
+    // 내구도에 따른 아이템 경고
+    public void WarnItemDelete()
+    {
 
     }
     /*====================================================*/
@@ -259,6 +276,21 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     }
 }
 
+//bool checkUsedSlot()
+//{
+//    ItemSlot enter = getItemInfo();
+//    if (enter == null)
+//    {
+//        Debug.Log("슬롯을 찾을 수 없습니다.");
+//        return false;
+//    }
+
+//    ItemCodes itemCode = enter.Item.ItemCode;
+//    if (itemCode != ItemCodes.Empty)
+//        return true;
+
+//    return false;
+//}
 
 /* 하정님 조합슬롯 추가,삭제에 참고
     ///// <summary>
