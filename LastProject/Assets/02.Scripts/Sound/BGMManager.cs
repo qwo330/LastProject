@@ -1,17 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class BGMManager : MonoBehaviour
+public enum BGMLIst
 {
+    BGM1,
+    BGM2,
+    BGM3,
+}
 
-    static public BGMManager instance;
+
+public class BGMManager : Singleton<BGMManager>
+{
 
     public AudioClip[] clips; // 배경음악들
 
     private AudioSource source;
 
+    [SerializeField]
+    private Slider BGMSlider;
+
     private WaitForSeconds waitTime = new WaitForSeconds(0.01f);
+
+    //BGM볼륨 데이터
+    public float GetBGMVolume()
+    {
+        return BGMSlider.value;
+    }
+
+    static public BGMManager instance;
 
     private void Awake()
     {
@@ -26,22 +44,21 @@ public class BGMManager : MonoBehaviour
         }
     }
 
-    // Use this for initialization
     void Start()
     {
         source = GetComponent<AudioSource>();   //BGM은 하나만 존재
     }
 
-    public void Play(int _playMusicTrack)
+    public void Play(BGMLIst list)
     {
         source.volume = 1f;
-        source.clip = clips[_playMusicTrack];
+        source.clip = clips[(int)list];
         source.Play();
     }
 
-    public void SetVolumn(float _volumn)
+    public void SetVolumn()
     {
-        source.volume = _volumn;
+        source.volume = BGMSlider.value;
     }
 
     public void Pause()

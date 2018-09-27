@@ -1,11 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum SoundList
+{
+    SFX1,
+    SFX2,
+    SFX3,
+}
 
 [System.Serializable]
 public class Sound
 {
-    public string Name;
+    [HideInInspector]
+    public SoundList Name; 
     public AudioClip Clip; //사운드 파일
     private AudioSource source; // 사운드 플레이어
 
@@ -46,13 +55,31 @@ public class Sound
 
 }
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-
-    static public AudioManager instance;
 
     [SerializeField]
     public Sound[] sounds;
+
+    [SerializeField]
+    private Slider volumeSlider;
+
+    //SFX볼륨데이터
+    public void SetSFXVolume()
+    {
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            sounds[i].Volume = volumeSlider.value;
+            sounds[i].SetVolume();
+        }
+    }
+
+    public float GetSFXVolume()
+    {
+        return volumeSlider.value;
+    }
+
+    public static AudioManager instance;
 
     private void Awake()
     {
@@ -66,7 +93,13 @@ public class AudioManager : MonoBehaviour
             instance = this;
         }
     }
+
     void Start()
+    {
+        Initialized();
+    }
+
+    public void Initialized()
     {
         for (int i = 0; i < sounds.Length; i++)
         {
@@ -76,61 +109,24 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(string name)
+    public void Play(SoundList name)
     {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            if (name == sounds[i].Name)
-            {
-                sounds[i].Play();
-                return;
-            }
-        }
+        sounds[(int)name].Play();
     }
 
-    public void Stop(string name)
+    public void Stop(SoundList name)
     {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            if (name == sounds[i].Name)
-            {
-                sounds[i].Stop();
-                return;
-            }
-        }
+        sounds[(int)name].Stop();
     }
 
-    public void SetLoop(string name)
+    public void SetLoop(SoundList name)
     {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            if (name == sounds[i].Name)
-            {
-                sounds[i].SetLoop();
-                return;
-            }
-        }
+        sounds[(int)name].SetLoop();
     }
 
-    public void SetLoopCancel(string name)
+    public void SetLoopCancel(SoundList name)
     {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            if (name == sounds[i].Name)
-            {
-                sounds[i].SetLoopCancel();
-                return;
-            }
-        }
+        sounds[(int)name].SetLoopCancel();
     }
- 
-    public void SetSFXVolume( float voluem)
-    {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            sounds[i].Volume = voluem;
-            sounds[i].SetVolume();
-        }
-    }
-    
+
 }

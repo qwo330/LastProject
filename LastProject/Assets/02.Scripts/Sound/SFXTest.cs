@@ -5,46 +5,15 @@ using UnityEngine.UI;
 
 public class SFXTest : MonoBehaviour {
 
-    
-    public enum MyEnum
-    {
-        Music3,
-    }
-    public MyEnum SFXEnum;
-    
-    public Slider SFXslider;
-
-  
-    public string Test3;
-
-    private AudioManager sfx;
-
-    // Use this for initialization
-    void Start () {
-        sfx = FindObjectOfType<AudioManager>();
-	}
-
-  
+   
     public void OnClickedButtone()
     {
-        sfx.Play(SFXEnum.ToString());
+        AudioManager.Instance.Play(SoundList.SFX2);
     }
 
-   
-    public void SetSFXVolume()
+    public void OnDragSlider()
     {
-        sfx.SetSFXVolume(SFXslider.value);
+        AudioManager.Instance.SetSFXVolume();
     }
-
-
-    /// <summary>
-    ///SFX 볼륨 정보 함수
-    /// </summary>
-    /// <returns></returns>
    
-    public float GetSFXVolume()
-    {
-        return SFXslider.value;
-    }
-
 }

@@ -22,14 +22,14 @@ public class QuestUI : MonoBehaviour
 
     [SerializeField]
     private GameObject gridStartTab, gridProgressTab, gridCompleteTab;
+
     [SerializeField]
     private UIScrollView scrollProgressTab, scrollCompleteTab;
     [SerializeField]
     private GameObject questListButton, questProgressButton;
-    [SerializeField]
-    private Animator questListButtonAnim, questProgressButtonAnim;
-    //[SerializeField]
-    //private Animation questListPlay, questListBack, questProgressPlay, questProgressBack;
+
+    private Animator listButtonAnim, progressListAnim;
+
     private List<int> questID = new List<int>();
 
     [SerializeField]
@@ -40,6 +40,9 @@ public class QuestUI : MonoBehaviour
     void Start()
     {
         LoadQuestInfoData();
+        listButtonAnim = questListButton.GetComponent<Animator>();
+        progressListAnim = questProgressButton.GetComponent<Animator>();
+
     }
 
     private void LoadQuestInfoData()
@@ -60,8 +63,9 @@ public class QuestUI : MonoBehaviour
         }
     }
 
-    public int TestID; //NPC 클래스에서 퀘스트 아이디를 넘겨준다.
+    public int TestID; //NPC 클래스에서 퀘스트 아이디를 넘겨준다. 임시로 인스펙터에서 값을 넣어줌.
 
+    //겟 컴포넌트 뺄 방법을 생각해보자.
     public void OnClickedOngoingTest()
     {
         bool ID = CheckQuestID();
@@ -123,13 +127,14 @@ public class QuestUI : MonoBehaviour
     //퀘스트 진행상황 창을 열고 닫는 함수
     public void OnClickedQuestListIcon()
     {
-        //애니메이션 재생 다시할것
-        //이름 다시 짓기.
-        questListButtonAnim.GetComponent<Animator>().Play("ListButton_Play");
+        listButtonAnim.SetTrigger("ButtonHide");
+        progressListAnim.SetTrigger("ListShow");
     }
 
     public void OnClickedQuestProgress()
     {
+        progressListAnim.SetTrigger("ListHide");
+        listButtonAnim.SetTrigger("ButtonShow");
 
     }
 }
