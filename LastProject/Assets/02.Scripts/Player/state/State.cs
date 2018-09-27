@@ -25,10 +25,15 @@ public abstract class State
     protected Transform transformComponent;
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
+    protected Collider attackBoxCollider;
+    protected Collider hitBoxCollider;
     protected bool isRunning;
     protected bool isInHome;
+    protected bool isAttack;
+    protected bool isDeath;
+    protected bool isWound;
     protected float VerticalAxis;
     protected float HorizontalAxis;
 
-    public abstract void SetAnimation();
+    public abstract void DoAction();
 }

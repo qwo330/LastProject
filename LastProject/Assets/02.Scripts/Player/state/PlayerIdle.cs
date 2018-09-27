@@ -11,9 +11,10 @@ public class PlayerIdle : State
         this.isInHome = isInHome;
     }
 
-    public override void SetAnimation()
+    public override void DoAction()
     {
-        animatorComponent.SetBool("IsRunnig", isRunning);
-        animatorComponent.SetBool("InHome", isInHome);
+        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, isRunning);
+        animatorComponent.SetBool(PlayerAniTrigger.ISINHOME, isInHome);
+        animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }    
 }

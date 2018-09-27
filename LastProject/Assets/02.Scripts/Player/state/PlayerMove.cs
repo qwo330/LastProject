@@ -18,20 +18,16 @@ public class PlayerMove : State
         this.HorizontalAxis = HorizontalAxis;
     }
     
-    public override void SetAnimation()
+    public override void DoAction()
     {
         float traslation = VerticalAxis * status.MovingSpeed;
         float rotation = HorizontalAxis * status.MovingSpeed;
         Vector3 v = new Vector3(rotation, 0, traslation);
-        Debug.Log(v);
         Quaternion q = Quaternion.LookRotation(v);
         rigidbodyComponent.velocity = v;
-        //while (transformComponent.rotation != q)
-        //{
-        //    transformComponent.rotation = Quaternion.Slerp(transformComponent.rotation, q, TimerManager.Instance.DeltaTime * moveSpeedWeight);
-        //}
         transformComponent.rotation = q;
-        animatorComponent.SetBool("IsRunnig", isRunning);
-        animatorComponent.SetBool("InHome", isInHome);
+        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, isRunning);
+        animatorComponent.SetBool(PlayerAniTrigger.ISINHOME, isInHome);
+        animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }
 }
