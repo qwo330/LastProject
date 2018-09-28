@@ -7,44 +7,52 @@ using System.Text.RegularExpressions;
 
 public class QuestUI : MonoBehaviour
 {
-    [System.Serializable]
-    private struct QuestInfo
-    {
-        public string QuestName;
-        public UISprite MonsterImage;
-        public UILabel Name, Info, EXP;
-        public GameObject CheckedBG, CheckedSprite;
-        public GameObject QuestObject;
-    }
+    /// <summary>
+    /// 퀘스트 프리팹을 동적으로 생성하고 컴포넌트도 동적으로 추가하다.
+    /// </summary>
+     
+    [SerializeField]
+    private GameObject grid;
+    [SerializeField]
+    private GameObject itemPrefab, Name, Info, EXP, Image;
 
     [SerializeField]
-    private List<QuestInfo> info;
-
-    [SerializeField]
-    private GameObject gridStartTab, gridProgressTab, gridCompleteTab;
-
-    [SerializeField]
-    private UIScrollView scrollProgressTab, scrollCompleteTab;
-    [SerializeField]
-    private GameObject questListButton, questProgressButton;
-
+    private GameObject questButton, ListButton;
     private Animator listButtonAnim, progressListAnim;
 
-    private List<int> questID = new List<int>();
-
     [SerializeField]
-    private UILabel[] quest = new UILabel[3];
+    private UILabel[] selectedQuestList = new UILabel[3];
 
     private int ButtonCount = 0;
 
     void Start()
     {
         LoadQuestInfoData();
-        listButtonAnim = questListButton.GetComponent<Animator>();
-        progressListAnim = questProgressButton.GetComponent<Animator>();
-
+         
+        listButtonAnim = questButton.GetComponent<Animator>();
+        progressListAnim = ListButton.GetComponent<Animator>();
     }
 
+    private void AddQuest(string name, string info, string exp, string spriteName)
+    {
+        GameObject obj = grid.AddChild(itemPrefab); 
+
+        GameObject questName = obj.AddChild(Name);
+        questName.transform.localPosition = new Vector3(-97, 27, 0);
+        questName.GetComponent<UILabel>().text = name;
+       
+        GameObject questInfo = obj.AddChild(Info);
+        questInfo.GetComponent<UILabel>().text = info;
+
+        GameObject experience = obj.AddChild(EXP);
+        experience.transform.localPosition = new Vector3(-110,-29,0);
+        experience.GetComponent<UILabel>().text = exp;
+
+        GameObject questImage = obj.AddChild(Image);
+        questImage.transform.localPosition = new Vector3(-196,0,0);
+        questImage.GetComponent<UISprite>().spriteName = spriteName;
+    }
+ 
     private void LoadQuestInfoData()
     {
         if (File.Exists(Application.dataPath + "/Resources/document.json"))
@@ -54,55 +62,17 @@ public class QuestUI : MonoBehaviour
 
             for (int i = 0; i < data.Count; i++)
             {
-                questID.Add(((int)data[i]["ID"]));
-                info[i].MonsterImage.spriteName = data[i]["Image1"].ToString();
-                info[i].Name.text = data[i]["Name"].ToString();
-                info[i].Info.text = data[i]["Description"].ToString();
-                info[i].EXP.text = data[i]["EXP"].ToString();
+                string name = data[i]["Name"].ToString();
+                string info = data[i]["Description"].ToString();
+                string exp = data[i]["EXP"].ToString();
+                string spriteName = data[i]["Image1"].ToString();
+
+                AddQuest(name, info, exp, spriteName);
             }
         }
     }
 
     public int TestID; //NPC 클래스에서 퀘스트 아이디를 넘겨준다. 임시로 인스펙터에서 값을 넣어줌.
-
-    //겟 컴포넌트 뺄 방법을 생각해보자.
-    public void OnClickedOngoingTest()
-    {
-        bool ID = CheckQuestID();
-        if (ID)
-        {
-            info[TestID].QuestObject.transform.SetParent(gridProgressTab.transform);
-            gridStartTab.GetComponent<UIGrid>().enabled = true;
-            gridProgressTab.GetComponent<UIGrid>().enabled = true;
-            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = scrollProgressTab;
-            info[TestID].CheckedBG.active = true;
-            info[TestID].QuestObject.GetComponent<UIButton>().enabled = true;
-        }
-    }
-
-    public void OnClickedComplete()
-    {
-        bool ID = CheckQuestID();
-        if (ID)
-        {
-            info[TestID].QuestObject.transform.SetParent(gridCompleteTab.transform);
-            gridProgressTab.GetComponent<UIGrid>().enabled = true;
-            gridCompleteTab.GetComponent<UIGrid>().enabled = true;
-            info[TestID].QuestObject.GetComponent<UIDragScrollView>().scrollView = scrollCompleteTab;
-            info[TestID].CheckedBG.active = false;
-            info[TestID].QuestObject.GetComponent<UIButton>().enabled = false;
-        }
-    }
-
-    private bool CheckQuestID()
-    {
-        for (int i = 0; i < questID.Count; i++)
-        {
-            if (TestID == questID[i])
-                return true;
-        }
-        return false;
-    }
 
     public void OnClickedCheckButton(GameObject value)
     {
@@ -110,17 +80,15 @@ public class QuestUI : MonoBehaviour
         string tempName = Regex.Replace(objectName, @"\D", "");
         int buttonNumber = int.Parse(tempName);
 
-        if (! info[buttonNumber].CheckedSprite.active && ButtonCount < 3) 
+        if (ButtonCount < 3)
         {
-            info[buttonNumber].CheckedSprite.active = true;
-            quest[ButtonCount].text = info[buttonNumber].Info.text; //버튼카운트 값으로 넣어줘야 첫번쨰 목록부터 들어온다
+            /* questList[ButtonCount].text = info[buttonNumber].Info.text; *///버튼카운트 값으로 넣어줘야 첫번쨰 목록부터 들어온다
             ButtonCount++;
         }
-        else if (info[buttonNumber].CheckedSprite.active)
+        else
         {
-            info[buttonNumber].CheckedSprite.active = false;
             ButtonCount--;
-            quest[ButtonCount].text = null;
+            selectedQuestList[ButtonCount].text = null;
         }
     }
 
