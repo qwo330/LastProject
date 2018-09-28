@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,21 +13,33 @@ public static class PlayerAniTrigger
     public const string ISINHOME = "InHome";
 }
 
+[Flags]
+public enum CharacterState
+{
+    Idle = 0,
+    Running = 2,
+    Attack = 4,
+    Death = 8,
+    Wound = 16,
+    DeathOrWound = Death | Wound,
+    DeathAndWound = Death & Wound
+}
+
+/// <summary>
+/// SetStatus()으로 스텟 설정 꼭 해야함,
+/// 마을 안과 밖일때 isInHome 변수 꼭 조정해줘야함
+/// </summary>
 public class PlayerScr : MonoBehaviour
 {
-    bool isRunning;
-    bool isInHome;
-    bool isAttack;
-    bool isDeath;
-    bool isWound;
-
     public State CurrentState;
+    public bool isInHome;
 
+    CharacterState playerStates;
     CharacterStatus status;
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
-    Collider attackBoxCollider;
-    Collider hitBoxCollider;
+    PlayerAttackBox attackBoxCollider;
+    PlayerHitBox hitBoxCollider;
 
     float VerticalAxis;
     float HorizontalAxis;
@@ -37,23 +50,23 @@ public class PlayerScr : MonoBehaviour
 
     private void Awake()
     {
-        rigidbodyComponent = GetComponent<Rigidbody>();
-        animatorComponent = GetComponent<Animator>();
-        attackBoxCollider = GetComponentInChildren<BoxCollider>();
-        hitBoxCollider = GetComponent<CapsuleCollider>();
+        Init();
     }
 
-    private void Start()
+    void Init()
     {
-        isRunning = false;
-        isInHome = false;
-        isAttack = false;
-        isDeath = false;
-        isWound = false;
+        rigidbodyComponent = GetComponent<Rigidbody>();
+        animatorComponent = GetComponent<Animator>();
+        attackBoxCollider = GetComponentInChildren<PlayerAttackBox>();
+        attackBoxCollider.player = this;
+        hitBoxCollider = GetComponentInChildren<PlayerHitBox>();
+        hitBoxCollider.player = this;
 
+        isInHome = false;
         status = new CharacterStatus();
         SetMoveSpeed(speed);
-        ChangeState(CharacterState.Idle);
+        playerStates = CharacterState.Idle;
+        ChangeState(playerStates);
         attackBoxCollider.enabled = false;
     }
 
@@ -66,36 +79,31 @@ public class PlayerScr : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isWound && !isDeath)
+        if((playerStates != CharacterState.DeathOrWound))
         {
-            if (!isAttack)
+            if (playerStates != CharacterState.Attack)
             {
                 //attack
                 if (isMouseClicked)
                 {
-                    isRunning = false;
-                    isAttack = true;
-                    ChangeState(CharacterState.Attack);
+                    playerStates = CharacterState.Attack;
+                    ChangeState(playerStates);
                 }
                 
                 //moving
                 else if (VerticalAxis != 0 || HorizontalAxis != 0)
                 {
-                    isRunning = true;
-                    ChangeState(CharacterState.Move);
+                    playerStates = CharacterState.Running;
+                    ChangeState(playerStates);
                 }
 
                 //idle
-                else
+                else if(playerStates != CharacterState.Idle)
                 {
-                    isRunning = false;
-
-                    if (CurrentState is PlayerMove)
-                    {
-                        ChangeState(CharacterState.Idle);
-                    }
+                    playerStates = CharacterState.Idle;
+                    ChangeState(playerStates);
                 }
-            }
+            }  
         }
     }
 
@@ -116,18 +124,19 @@ public class PlayerScr : MonoBehaviour
         switch (state)
         {
             case CharacterState.Idle:
-                CurrentState = new PlayerIdle(animatorComponent, isRunning, isInHome);
+                CurrentState = new PlayerIdle(animatorComponent, playerStates, isInHome);
                 break;
-            case CharacterState.Move:
-                CurrentState = new PlayerMove(transform, status.MovingSpeed, rigidbodyComponent, animatorComponent, isRunning, isInHome, VerticalAxis, HorizontalAxis);
+            case CharacterState.Running:
+                CurrentState = new PlayerMove(transform, status.MovingSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
                 break;
             case CharacterState.Attack:
-                CurrentState = new PlayerAttack(animatorComponent, attackBoxCollider, rigidbodyComponent);
+                CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
                 break;
-            case CharacterState.Damaged:
-                CurrentState = new PlayerWound(animatorComponent, rigidbodyComponent, isWound);
+            case CharacterState.Wound:
+                CurrentState = new PlayerWound(animatorComponent, rigidbodyComponent, playerStates);
                 break;
             case CharacterState.Death:
+                CurrentState = new PlayerDeath(animatorComponent, rigidbodyComponent, playerStates);
                 break;
             default:
                 break;
@@ -140,29 +149,37 @@ public class PlayerScr : MonoBehaviour
         ChangeState(CharacterState.Idle);
     }
 
-    void OnTriggerEnter(Collider other)
+    public void OnTargetAttack(Enemy enemy)
     {
-        if(other.tag == Defines.TAG_EnemyAttackBox)
-        {
-            ChangeState(CharacterState.Damaged);
-            isRunning = false;
-            isWound = true;
-        }
+
     }
 
     void OnAttackExit()
     {
-        attackBoxCollider.enabled = false;
-        isAttack = false;
-        isRunning = false;
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, isAttack);
-        ChangeState(CharacterState.Idle);
+        playerStates &= CharacterState.Idle;
+        attackBoxCollider.Collider.enabled = false;
+        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, playerStates == CharacterState.Attack);
+        ChangeState(playerStates);
     }
 
     void OnWoundExit()
     {
-        isWound = false;
-        animatorComponent.SetBool(PlayerAniTrigger.WOUND, isWound);
-        ChangeState(CharacterState.Idle);
+        playerStates &= CharacterState.Idle;
+        animatorComponent.SetBool(PlayerAniTrigger.WOUND, playerStates == CharacterState.Wound);
+        ChangeState(playerStates);
+    }
+
+    public void PlayerWound(int damege)
+    {
+        status.Health -= damege;
+        if(status.Health < 0)
+        {
+            playerStates &= CharacterState.Death;  
+        }
+        else
+        {
+            playerStates &= CharacterState.Wound;
+        }
+        ChangeState(playerStates);
     }
 }

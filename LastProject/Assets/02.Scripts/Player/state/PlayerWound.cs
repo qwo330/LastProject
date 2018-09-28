@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class PlayerWound : State
 {
-    public PlayerWound(Animator animator, Rigidbody rigidbody, bool isWound)
+    public PlayerWound(Animator animator, Rigidbody rigidbody, CharacterState playerStates)
     {
         this.animatorComponent = animator;
         this.rigidbodyComponent = rigidbody;
-        this.isWound = isWound;
+        this.playerStates = playerStates;
     }
 
     public override void DoAction()
     {
-        isWound = true;
         rigidbodyComponent.velocity = Vector3.zero;
-        animatorComponent.SetBool(PlayerAniTrigger.WOUND, true);
+        animatorComponent.SetBool(PlayerAniTrigger.WOUND, playerStates == CharacterState.Wound);
     }
 }
