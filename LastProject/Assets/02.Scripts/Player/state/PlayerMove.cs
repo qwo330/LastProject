@@ -6,12 +6,12 @@ public class PlayerMove : State
 {
     const float moveSpeedWeight = 10f;
 
-    public PlayerMove(Transform transformComponent, float speed, Rigidbody rigidbodyComponent, Animator animatorComponent, bool isRunning, bool isInHome, float VerticalAxis, float HorizontalAxis)
+    public PlayerMove(Transform transformComponent, float speed, Rigidbody rigidbodyComponent, Animator animatorComponent, CharacterState playerState, bool isInHome, float VerticalAxis, float HorizontalAxis)
     {
         this.transformComponent = transformComponent;
         this.rigidbodyComponent = rigidbodyComponent;
         this.animatorComponent = animatorComponent;
-        this.isRunning = isRunning;
+        this.playerStates = playerState;
         this.isInHome = isInHome;
         this.status.MovingSpeed = speed;
         this.VerticalAxis = VerticalAxis;
@@ -26,7 +26,7 @@ public class PlayerMove : State
         Quaternion q = Quaternion.LookRotation(v);
         rigidbodyComponent.velocity = v;
         transformComponent.rotation = q;
-        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, isRunning);
+        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, playerStates == CharacterState.Running);
         animatorComponent.SetBool(PlayerAniTrigger.ISINHOME, isInHome);
         animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }

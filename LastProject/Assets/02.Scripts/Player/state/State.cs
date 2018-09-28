@@ -10,30 +10,18 @@ public struct CharacterStatus
     public float MovingSpeed;
 }
 
-public enum CharacterState
-{
-    Idle,
-    Move,
-    Attack,
-    Damaged,
-    Death,
-}
-
 public abstract class State
 {
     protected CharacterStatus status;
     protected Transform transformComponent;
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
-    protected Collider attackBoxCollider;
-    protected Collider hitBoxCollider;
-    protected bool isRunning;
+    protected PlayerAttackBox attackBoxCollider;
+    protected PlayerHitBox hitBoxCollider;
     protected bool isInHome;
-    protected bool isAttack;
-    protected bool isDeath;
-    protected bool isWound;
     protected float VerticalAxis;
     protected float HorizontalAxis;
+    protected CharacterState playerStates;
 
     public abstract void DoAction();
 }
