@@ -7,18 +7,13 @@ using System.Text.RegularExpressions;
 
 public class QuestUI : MonoBehaviour
 {
-    /// <summary>
-    /// 퀘스트 프리팹을 동적으로 생성하고 컴포넌트도 동적으로 추가하다.
-    /// </summary>
-     
     [SerializeField]
     private GameObject grid;
     [SerializeField]
-    private GameObject itemPrefab, Name, Info, EXP, Image;
+    private GameObject ItemPrefab, Name, Info, EXP, Icon;
 
     [SerializeField]
-    private GameObject questButton, ListButton;
-    private Animator listButtonAnim, progressListAnim;
+    private Animator listButtonAnimator, listPanelAnimator;
 
     [SerializeField]
     private UILabel[] selectedQuestList = new UILabel[3];
@@ -27,38 +22,38 @@ public class QuestUI : MonoBehaviour
 
     void Start()
     {
+        EventDelegate.Add(ItemPrefab.GetComponent<UIToggle>().onChange, OnClickedQuestButton);
         LoadQuestInfoData();
-         
-        listButtonAnim = questButton.GetComponent<Animator>();
-        progressListAnim = ListButton.GetComponent<Animator>();
     }
-
+    
     private void AddQuest(string name, string info, string exp, string spriteName)
     {
-        GameObject obj = grid.AddChild(itemPrefab); 
+        GameObject obj = grid.AddChild(ItemPrefab);
 
         GameObject questName = obj.AddChild(Name);
         questName.transform.localPosition = new Vector3(-97, 27, 0);
         questName.GetComponent<UILabel>().text = name;
-       
+
         GameObject questInfo = obj.AddChild(Info);
         questInfo.GetComponent<UILabel>().text = info;
 
         GameObject experience = obj.AddChild(EXP);
-        experience.transform.localPosition = new Vector3(-110,-29,0);
+        experience.transform.localPosition = new Vector3(-110, -29, 0);
         experience.GetComponent<UILabel>().text = exp;
 
-        GameObject questImage = obj.AddChild(Image);
-        questImage.transform.localPosition = new Vector3(-196,0,0);
+        GameObject questImage = obj.AddChild(Icon);
+        questImage.transform.localPosition = new Vector3(-196, 0, 0);
         questImage.GetComponent<UISprite>().spriteName = spriteName;
     }
- 
+
+    private string jsonStr;
+    private JsonData data;
     private void LoadQuestInfoData()
     {
         if (File.Exists(Application.dataPath + "/Resources/document.json"))
         {
-            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/document.json");
-            JsonData data = JsonMapper.ToObject(jsonStr);
+            jsonStr = File.ReadAllText(Application.dataPath + "/Resources/document.json");
+            data = JsonMapper.ToObject(jsonStr);
 
             for (int i = 0; i < data.Count; i++)
             {
@@ -68,41 +63,50 @@ public class QuestUI : MonoBehaviour
                 string spriteName = data[i]["Image1"].ToString();
 
                 AddQuest(name, info, exp, spriteName);
+
+                 
             }
         }
     }
 
-    public int TestID; //NPC 클래스에서 퀘스트 아이디를 넘겨준다. 임시로 인스펙터에서 값을 넣어줌.
+    public int TestID; //NPC 클래스에서 퀘스트 완료된 아이디를 넘겨준다. 임시로 인스펙터에서 값을 넣어줌.
 
-    public void OnClickedCheckButton(GameObject value)
+    public void OnClickedTestButton()
     {
-        string objectName = value.name;
-        string tempName = Regex.Replace(objectName, @"\D", "");
-        int buttonNumber = int.Parse(tempName);
+        CompleteQuest(TestID);
+    }
 
-        if (ButtonCount < 3)
+    public void CompleteQuest(int TestID)
+    {
+        //완료된게 몇번째 퀘스트 오브젝트 인지 알아내야함
+       
+    }
+
+    public void OnClickedQuestButton()
+    {
+        if (selectedQuestList[ButtonCount].text == "" && ButtonCount < 3)   //왜 인덱스 아웃오브 레인지가 뜨는건지...
         {
-            /* questList[ButtonCount].text = info[buttonNumber].Info.text; *///버튼카운트 값으로 넣어줘야 첫번쨰 목록부터 들어온다
+            selectedQuestList[ButtonCount].text = data[ButtonCount]["Description"].ToString();
             ButtonCount++;
+            Debug.Log(ButtonCount);
         }
         else
         {
-            ButtonCount--;
             selectedQuestList[ButtonCount].text = null;
+            ButtonCount--;
         }
     }
 
     //퀘스트 진행상황 창을 열고 닫는 함수
-    public void OnClickedQuestListIcon()
+    public void OnClickedListButton()
     {
-        listButtonAnim.SetTrigger("ButtonHide");
-        progressListAnim.SetTrigger("ListShow");
+        listButtonAnimator.SetTrigger("ButtonHide");
+        listPanelAnimator.SetTrigger("ListShow");
     }
 
-    public void OnClickedQuestProgress()
+    public void OnClickedListPanel()
     {
-        progressListAnim.SetTrigger("ListHide");
-        listButtonAnim.SetTrigger("ButtonShow");
-
+        listButtonAnimator.SetTrigger("ButtonShow");
+        listPanelAnimator.SetTrigger("ListHide");
     }
 }
