@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdle : State
+public class PlayerIdle : PlayerState
 {
     public PlayerIdle(Animator animatorComponent, CharacterState playerStates, bool isInHome)
     {

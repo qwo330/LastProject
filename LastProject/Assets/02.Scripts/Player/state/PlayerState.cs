@@ -10,14 +10,13 @@ public struct CharacterStatus
     public float MovingSpeed;
 }
 
-public abstract class State
+public abstract class PlayerState
 {
     protected CharacterStatus status;
     protected Transform transformComponent;
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
     protected PlayerAttackBox attackBoxCollider;
-    protected PlayerHitBox hitBoxCollider;
     protected bool isInHome;
     protected float VerticalAxis;
     protected float HorizontalAxis;

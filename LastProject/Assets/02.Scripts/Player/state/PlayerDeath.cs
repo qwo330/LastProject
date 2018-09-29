@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDeath : State
+public class PlayerDeath : PlayerState
 {
     public PlayerDeath(Animator animatorComponent, Rigidbody rigidbodyComponent, CharacterState playerStates)
     {

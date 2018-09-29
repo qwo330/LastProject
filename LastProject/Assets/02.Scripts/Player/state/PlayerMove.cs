@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove : State
+public class PlayerMove : PlayerState
 {
     const float moveSpeedWeight = 10f;
 

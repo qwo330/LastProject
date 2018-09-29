@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWound : State
+public class PlayerWound : PlayerState
 {
     public PlayerWound(Animator animator, Rigidbody rigidbody, CharacterState playerStates)
     {

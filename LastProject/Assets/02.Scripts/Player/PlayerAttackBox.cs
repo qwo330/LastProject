@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAttackBox : MonoBehaviour
 {
     public BoxCollider Collider;
-    public PlayerScr player;
+    public Player player;
 
     private void Awake()
     {
@@ -14,6 +14,10 @@ public class PlayerAttackBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        player.OnTargetAttack(other.GetComponent<Enemy>());
+        if(other.tag == Defines.TAG_EnemyHitBox)
+        {
+            Enemy enemy = other.GetComponentInParent<Enemy>();
+            enemy.PlayerWound(Defines.CalculateDamage(player.status.Attack, enemy.status.Defense));
+        }
     }
 }

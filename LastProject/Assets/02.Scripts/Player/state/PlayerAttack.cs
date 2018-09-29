@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : State
+public class PlayerAttack : PlayerState
 {
     public PlayerAttack(Animator animator, CharacterState playerState, PlayerAttackBox attackBoxCollider, Rigidbody rigidbody)
     {
