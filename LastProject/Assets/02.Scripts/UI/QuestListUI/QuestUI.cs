@@ -10,13 +10,15 @@ public class QuestUI : MonoBehaviour
     [SerializeField]
     private GameObject grid;
     [SerializeField]
-    private GameObject ItemPrefab, Name, Info, EXP, Icon;
+    private GameObject ItemPrefab, Name, Info, EXP, Icon;//Label로 바꾸기.   
 
     [SerializeField]
     private Animator listButtonAnimator, listPanelAnimator;
 
     [SerializeField]
-    private UILabel[] selectedQuestList = new UILabel[3];
+    private UILabel[] selectedQuestLabels = new UILabel[3];
+
+    private List<GameObject> QuestList = new List<GameObject>();
 
     private int ButtonCount = 0;
 
@@ -25,11 +27,11 @@ public class QuestUI : MonoBehaviour
         EventDelegate.Add(ItemPrefab.GetComponent<UIToggle>().onChange, OnClickedQuestButton);
         LoadQuestInfoData();
     }
-    
-    private void AddQuest(string name, string info, string exp, string spriteName)
+
+    private GameObject AddQuest(string name, string info, string exp, string spriteName)
     {
         GameObject obj = grid.AddChild(ItemPrefab);
-
+        
         GameObject questName = obj.AddChild(Name);
         questName.transform.localPosition = new Vector3(-97, 27, 0);
         questName.GetComponent<UILabel>().text = name;
@@ -44,6 +46,8 @@ public class QuestUI : MonoBehaviour
         GameObject questImage = obj.AddChild(Icon);
         questImage.transform.localPosition = new Vector3(-196, 0, 0);
         questImage.GetComponent<UISprite>().spriteName = spriteName;
+
+        return obj;
     }
 
     private string jsonStr;
@@ -62,9 +66,7 @@ public class QuestUI : MonoBehaviour
                 string exp = data[i]["EXP"].ToString();
                 string spriteName = data[i]["Image1"].ToString();
 
-                AddQuest(name, info, exp, spriteName);
-
-                 
+                QuestList.Add(AddQuest(name, info, exp, spriteName));
             }
         }
     }
@@ -84,17 +86,10 @@ public class QuestUI : MonoBehaviour
 
     public void OnClickedQuestButton()
     {
-        if (selectedQuestList[ButtonCount].text == "" && ButtonCount < 3)   //왜 인덱스 아웃오브 레인지가 뜨는건지...
-        {
-            selectedQuestList[ButtonCount].text = data[ButtonCount]["Description"].ToString();
-            ButtonCount++;
-            Debug.Log(ButtonCount);
-        }
-        else
-        {
-            selectedQuestList[ButtonCount].text = null;
-            ButtonCount--;
-        }
+        
+        
+
+        
     }
 
     //퀘스트 진행상황 창을 열고 닫는 함수
