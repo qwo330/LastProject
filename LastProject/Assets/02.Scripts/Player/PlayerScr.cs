@@ -84,7 +84,7 @@ public class PlayerScr : MonoBehaviour
             if (playerStates != CharacterState.Attack)
             {
                 //attack
-                if (isMouseClicked)
+                if (isMouseClicked && !isInHome)
                 {
                     playerStates = CharacterState.Attack;
                     ChangeState(playerStates);
