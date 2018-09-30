@@ -7,90 +7,121 @@ using System.IO;
 
 public class NPC : MonoBehaviour {
 
-    //버튼을 눌렀을때 퀘스트 아이디가 전송된다.
-    public int questId;
+    private int questID;
 
     [SerializeField]
     private Text dialogueText;
     private List<int> dialogueID = new List<int>();
     private List<string> scripts = new List<string>();
+    private int scriptIndex = 0;
 
     [SerializeField]
-    private Button prev, next, acceptance, confirm;
+    private Button prev, next, acceptance, cancel;
     [SerializeField]
     private GameObject dialogueUI;
 
+    private List<int> acceptedList = new List<int>();
 
+    QuestUI quest;
     private void Start()
     {
-        LoadDialogueData();
+        LoadDialogue();
+    }
+
+    public void OnClickedTestButton(int ID)
+    {
+        ShowDialogue(ID);
+        questID = ID;
+    }
+
+    private void ShowDialogue(int ID)
+    {
+        for (int i = 0; i < data.Count; i++)
+        {
+            if (data[i]["DialogueId"].ToString() == ID.ToString())
+            {
+              scripts.Add(data[i]["Scripts"].ToString());
+            }
+        }
         dialogueText.text = scripts[0];
     }
 
-    public int GetQuestId
-    {
-        get { return questId; }
-    }
-
-    private void LoadDialogueData()
+    private JsonData data;
+    private void LoadDialogue()
     {
         if (File.Exists(Application.dataPath + "/Resources/Dialogue.json"))
         {
             string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Dialogue.json");
-            JsonData data = JsonMapper.ToObject(jsonStr);
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                scripts.Add (data[i]["Scripts"].ToString());
-                //dialogueID.Add((int)data[i]["DialogueId"]);
-            }
+            data = JsonMapper.ToObject(jsonStr);
         }
     }
 
     //플레이어에게 퀘스트 아이디를 넘겨 몇번째 퀘스트를 하고 있는지 전달해야한다.
-    //플레이어가 다시 찾아왔을때 대사 내용이 바뀌어야함. 
     //플레이어 레벨별로 퀘스트를 진행할 수 있도록 레벨에 따라 설정
-    //플레이어가 퀘스트 완료조건을 충족했을시 다른 대사가 떠야한다.
-    private int index;
-
     public void OnClickedNextButton()
     {
-        if (index < scripts.Count-1)
+        if (scriptIndex < scripts.Count-1)
         {
-            index++;
-            dialogueText.text = scripts[index];
+            scriptIndex++;
+            dialogueText.text = scripts[scriptIndex];
         }
         else
         {
             prev.gameObject.SetActive(false);
             next.gameObject.SetActive(false);
             acceptance.gameObject.SetActive(true);
+            cancel.gameObject.SetActive(true);
         }
     }
 
     public void OnClickedPrevButton()
     {
-        if (index > 0)
+        if (scriptIndex > 0)
         {
-            index--;
-            dialogueText.text = scripts[index];
+            scriptIndex--;
+            dialogueText.text = scripts[scriptIndex];
+        }
+        else
+        {
+            scriptIndex = 0;
         }
     }
 
     public void OnClickedAcceptance()
     {
         dialogueUI.gameObject.SetActive(false);
-        //퀘스트 아이디 넘겨주기
+        SetOngoingQuest(questID);
+        GetQuestID(questID);
     }
 
-    
-
-    public void OnClickedConfirm()
+    public void SetOngoingQuest(int questId)
     {
-        //퀘스트 아이디 넘겨주기
+        for (int i = 0; i < data.Count; i++)
+        {
+            if (data[i]["DialogueId"].ToString() == questId.ToString())
+            {
+                acceptedList.Add(questId);
+                return;
+            }
+        }
     }
 
-  
+    public void OnClickedCancel()
+    {
+        dialogueUI.gameObject.SetActive(false);
+    }
 
+    //수락한 퀘스트의 ID를 가져가는 함수
+    public int GetQuestID(int ID)
+    {
+        Debug.Log("퀘스트아이디를 얻다"+ID);
+        return ID;
+    }
+
+    //수락한 퀘스트의 리스트를 가져가는 함수
+    public List<int> GetAcceptedList()
+    {
+        return acceptedList;
+    }
 
 }
