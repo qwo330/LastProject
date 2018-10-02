@@ -48,7 +48,6 @@ public class MonsterBook : MonoBehaviour
         {
             if (this.monsterNames.ToString() == data[i]["Icon"].ToString())
             {
-                Debug.Log("asdfsf");
                 Name.text = data[i]["Name"].ToString();
                 Description.text = data[i]["Description"].ToString();
                 MonsterSprite.spriteName = data[i]["Icon"].ToString();

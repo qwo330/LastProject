@@ -7,6 +7,8 @@ using System.IO;
 
 public class NPC : MonoBehaviour {
 
+   
+
     private int questID;
 
     [SerializeField]
@@ -28,10 +30,11 @@ public class NPC : MonoBehaviour {
         LoadDialogue();
     }
 
-    public void OnClickedTestButton(int ID)
+    //NPC에서 호출
+    public void OnClickedNPC(int ID)
     {
         ShowDialogue(ID);
-        questID = ID;
+        questID = (ID);
     }
 
     private void ShowDialogue(int ID)
@@ -49,9 +52,9 @@ public class NPC : MonoBehaviour {
     private JsonData data;
     private void LoadDialogue()
     {
-        if (File.Exists(Application.dataPath + "/Resources/DialogueTest.json"))
+        if (File.Exists(Application.dataPath + "/Resources/Dialogue.json"))
         {
-            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/DialogueTest.json");
+            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Dialogue.json");
             data = JsonMapper.ToObject(jsonStr);
         }
     }
