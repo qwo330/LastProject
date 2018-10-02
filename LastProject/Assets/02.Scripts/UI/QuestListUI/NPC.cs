@@ -57,7 +57,6 @@ public class NPC : MonoBehaviour {
     }
 
     //플레이어에게 퀘스트 아이디를 넘겨 몇번째 퀘스트를 하고 있는지 전달해야한다.
-    //플레이어 레벨별로 퀘스트를 진행할 수 있도록 레벨에 따라 설정
     public void OnClickedNextButton()
     {
         if (scriptIndex < scripts.Count-1)
