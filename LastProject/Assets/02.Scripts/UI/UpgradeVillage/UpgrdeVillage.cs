@@ -11,18 +11,35 @@ public class UpgrdeVillage : MonoBehaviour
         Forest,
         Snow,
     }
+    public VillageType type;
 
-    private int money;
+    private int forestVillageMoney;
+    private int snowVillageMoney;
 
     public void OnClickedConfirmButton()
     {
-        money = int.Parse(inputField.text);
+        if (type == VillageType.Forest)
+        {
+            forestVillageMoney = int.Parse(inputField.text);
+        }
+        else if(type == VillageType.Snow)
+        {
+            snowVillageMoney = int.Parse(inputField.text);
+        }
+        
         inputField.text = null;
     }
 
     //플레이어가 투자한 금액을 리턴하는 함수.
     public int GetInvestedMoney()
     {
-        return money;
+        if (type == VillageType.Forest)
+        {
+            return forestVillageMoney;
+        }
+        else 
+        {
+            return snowVillageMoney; 
+        }
     }
 }
