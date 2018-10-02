@@ -20,7 +20,7 @@ public class NPC : MonoBehaviour {
     [SerializeField]
     private GameObject dialogueUI;
 
-    private List<int> acceptedList = new List<int>();
+    //private List<int> acceptedList = new List<int>();
 
     QuestUI quest;
     private void Start()
@@ -49,9 +49,9 @@ public class NPC : MonoBehaviour {
     private JsonData data;
     private void LoadDialogue()
     {
-        if (File.Exists(Application.dataPath + "/Resources/Dialogue.json"))
+        if (File.Exists(Application.dataPath + "/Resources/DialogueTest.json"))
         {
-            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Dialogue.json");
+            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/DialogueTest.json");
             data = JsonMapper.ToObject(jsonStr);
         }
     }
@@ -89,21 +89,21 @@ public class NPC : MonoBehaviour {
     public void OnClickedAcceptance()
     {
         dialogueUI.gameObject.SetActive(false);
-        SetOngoingQuest(questID);
+        //SetOngoingQuest(questID);
         GetQuestID(questID);
     }
 
-    public void SetOngoingQuest(int questId)
-    {
-        for (int i = 0; i < data.Count; i++)
-        {
-            if (data[i]["DialogueId"].ToString() == questId.ToString())
-            {
-                acceptedList.Add(questId);
-                return;
-            }
-        }
-    }
+    //public void SetOngoingQuest(int questId)
+    //{
+    //    for (int i = 0; i < data.Count; i++)
+    //    {
+    //        if (data[i]["DialogueId"].ToString() == questId.ToString())
+    //        {
+    //            acceptedList.Add(questId);
+    //            return;
+    //        }
+    //    }
+    //}
 
     public void OnClickedCancel()
     {
@@ -118,9 +118,9 @@ public class NPC : MonoBehaviour {
     }
 
     //수락한 퀘스트의 리스트를 가져가는 함수
-    public List<int> GetAcceptedList()
-    {
-        return acceptedList;
-    }
+    //public List<int> GetAcceptedList()
+    //{
+    //    return acceptedList;
+    //}
 
 }
