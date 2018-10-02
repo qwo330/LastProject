@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     Animator animatorComponent;
 
     [SerializeField, Range(0, 10)]
-    float speed;
+    public float MovingSpeed;
 
     private void Awake()
     {
@@ -29,13 +29,7 @@ public class Enemy : MonoBehaviour
         enemyAttackBox = GetComponentInChildren<EnemyAttackBox>();
         enemyAttackBox.enemy = this;
         status = new CharacterStatus();
-        SetMoveSpeed(speed);
         enemyAttackBox.enabled = false;
-    }
-
-    public void SetMoveSpeed(float speed)
-    {
-        status.MovingSpeed = speed;
     }
 
     public void PlayerWound(int damage)

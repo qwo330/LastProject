@@ -3,6 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct CharacterStatus
+{
+    public int Attack;
+    public int Defense;
+    public int cHealth;
+    public int MaxHealth;
+    public int Level;
+    public int Exp;
+    public int Gold;
+}
+
 public static class PlayerAniTrigger
 {
     public const string ATTACK = "IsAttack";
@@ -45,14 +56,9 @@ public class Player : MonoBehaviour
     bool isMouseClicked;
 
     [SerializeField, Range(0, 10)]
-    float speed;
+    public float MovingSpeed;
 
-    private void Awake()
-    {
-        Init();
-    }
-
-    void Init()
+    public Player Init()
     {
         rigidbodyComponent = GetComponent<Rigidbody>();
         animatorComponent = GetComponent<Animator>();
@@ -61,10 +67,11 @@ public class Player : MonoBehaviour
 
         isInHome = false;
         status = new CharacterStatus();
-        SetMoveSpeed(speed);
         playerStates = CharacterState.Idle;
         ChangeState(playerStates);
         attackBoxCollider.enabled = false;
+
+        return this;
     }
 
     private void Update()
@@ -108,12 +115,11 @@ public class Player : MonoBehaviour
     {
         status.Attack = atk;
         status.Defense = def;
-        status.Health = hp;
-    }
-
-    public void SetMoveSpeed(float speed)
-    {
-        status.MovingSpeed = speed;
+        status.MaxHealth = hp;
+        status.cHealth = status.MaxHealth;
+        status.Level = 1;
+        status.Exp = 0;
+        status.Gold = 0;
     }
 
     void ChangeState(CharacterState state)
@@ -124,7 +130,7 @@ public class Player : MonoBehaviour
                 CurrentState = new PlayerIdle(animatorComponent, playerStates, isInHome);
                 break;
             case CharacterState.Running:
-                CurrentState = new PlayerMove(transform, status.MovingSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
+                CurrentState = new PlayerMove(transform, MovingSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
                 break;
             case CharacterState.Attack:
                 CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
@@ -163,8 +169,8 @@ public class Player : MonoBehaviour
 
     public void PlayerWound(int damege)
     {
-        status.Health -= damege;
-        if(status.Health < 0)
+        status.cHealth -= damege;
+        if(status.cHealth < 0)
         {
             playerStates &= CharacterState.Death;  
         }

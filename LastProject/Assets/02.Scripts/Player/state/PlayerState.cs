@@ -2,14 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct CharacterStatus
-{
-    public int Attack;
-    public int Defense;
-    public int Health;
-    public float MovingSpeed;
-}
-
 public abstract class PlayerState
 {
     protected CharacterStatus status;
@@ -21,6 +13,7 @@ public abstract class PlayerState
     protected float VerticalAxis;
     protected float HorizontalAxis;
     protected CharacterState playerStates;
+    protected float MovingSpeed;
 
     public abstract void DoAction();
 }
