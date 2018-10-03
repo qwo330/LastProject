@@ -52,7 +52,7 @@ public class ItemList : Singleton<ItemList>
     public int FoodCount { private set; get; }
     public int RawMaterialCount { private set; get; }
 
-    private void Start()
+    public void Init()
     {
         setItemData();
         getItemTypeCount();
