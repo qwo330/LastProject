@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum QuestNumber
+public enum NPCType
 {
-    HeadMan = 0,
+    Headman = 0,
     ForestFactory = 1,
     ForestShop = 2,
     SnowFactory = 3,
     SnowShop = 4,
 }
 
-public class OnClickedObject : MonoBehaviour {
-   
-    public QuestNumber npcType;
+public class OnClickedNPC : MonoBehaviour
+{
+
+    public NPCType type;
 
     [SerializeField]
     private Camera camera;
@@ -22,6 +23,7 @@ public class OnClickedObject : MonoBehaviour {
 
     [SerializeField]
     private GameObject dialogueObject;
+
     private NPC npc;
 
     private void Start()
@@ -33,7 +35,7 @@ public class OnClickedObject : MonoBehaviour {
     {
         npc = dialogueObject.GetComponent<NPC>();
         dialogueObject.SetActive(false);//clickedObject값을 가져오기위해 처음에 true였다가 false로 바꿔줌.
-        npc.OnClickedNPC((int)npcType); //일반 인트값은 되는데 왜 이넘값은 안되는거지
+        npc.OnClickedNPC((int)type);
     }
 
     void Update()
@@ -44,8 +46,17 @@ public class OnClickedObject : MonoBehaviour {
         {
             if (Physics.Raycast(ray, out hitInfo))
             {
+
                 dialogueObject.SetActive(true);
             }
         }
     }
+
+    private void ShowNPCUI()
+    {
+        if (true)
+        {
+
+        }
+    } 
 }

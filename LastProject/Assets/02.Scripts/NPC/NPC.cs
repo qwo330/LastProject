@@ -6,10 +6,8 @@ using LitJson;
 using System.IO;
 
 public class NPC : MonoBehaviour {
-
-   
-
-    private int questID;
+    [HideInInspector]
+    public int questID;
 
     [SerializeField]
     private Text dialogueText;
@@ -21,11 +19,10 @@ public class NPC : MonoBehaviour {
     private Button prev, next, acceptance, cancel;
     [SerializeField]
     private GameObject dialogueUI;
-
-    //private List<int> acceptedList = new List<int>();
-
+  
     QuestUI quest;
-    private void Start()
+
+    private void Awake()
     {
         LoadDialogue();
     }
@@ -35,9 +32,10 @@ public class NPC : MonoBehaviour {
     {
         ShowDialogue(ID);
         questID = (ID);
+        
     }
 
-    private void ShowDialogue(int ID)
+    public  void ShowDialogue(int ID)
     {
         for (int i = 0; i < data.Count; i++)
         {
@@ -92,25 +90,34 @@ public class NPC : MonoBehaviour {
     public void OnClickedAcceptance()
     {
         dialogueUI.gameObject.SetActive(false);
-        //SetOngoingQuest(questID);
         GetQuestID(questID);
-    }
 
-    //public void SetOngoingQuest(int questId)
-    //{
-    //    for (int i = 0; i < data.Count; i++)
-    //    {
-    //        if (data[i]["DialogueId"].ToString() == questId.ToString())
-    //        {
-    //            acceptedList.Add(questId);
-    //            return;
-    //        }
-    //    }
-    //}
+        //스크립트 값 초기화
+        scripts.Clear();
+        scriptIndex = 0;
+
+        //버튼 초기화
+        prev.gameObject.SetActive(true);
+        next.gameObject.SetActive(true);
+        acceptance.gameObject.SetActive(false);
+        cancel.gameObject.SetActive(false);
+    }
 
     public void OnClickedCancel()
     {
         dialogueUI.gameObject.SetActive(false);
+
+        //스크립트 값 초기화
+        scripts.Clear();
+        scriptIndex = 0;
+
+        //버튼 초기화
+        prev.gameObject.SetActive(true);
+        next.gameObject.SetActive(true);
+        acceptance.gameObject.SetActive(false);
+        cancel.gameObject.SetActive(false);
+
+        
     }
 
     //수락한 퀘스트의 ID를 가져가는 함수
@@ -119,11 +126,5 @@ public class NPC : MonoBehaviour {
         Debug.Log("퀘스트아이디를 얻다"+ID);
         return ID;
     }
-
-    //수락한 퀘스트의 리스트를 가져가는 함수
-    //public List<int> GetAcceptedList()
-    //{
-    //    return acceptedList;
-    //}
 
 }
