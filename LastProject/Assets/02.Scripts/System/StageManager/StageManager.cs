@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=84613
 public enum SceneState
 {
     ForestVillage, // 숲 마을
