@@ -26,6 +26,7 @@ public class QuestUI : MonoBehaviour
     {
         EventDelegate.Add(questPrefab.GetComponent<UIToggle>().onChange, OnClickedQuestButton);
         LoadQuestInfoData();
+        grid.GetComponent<UIGrid>().enabled = true;
         for (int i = 0; i < questList.Count; i++)
         {
             questToggle.Add(questList[i].GetComponent<UIToggle>());
