@@ -47,6 +47,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /* ===================================*/
     void CreateInventory()
     {
+        gr = GetComponentInParent<GraphicRaycaster>();
         ped = new PointerEventData(null);
         EmptyImg.gameObject.SetActive(false);
 
