@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿//using UnityEngine;
 
 public enum ItemTypes
 {
@@ -51,6 +51,11 @@ public class ItemList : Singleton<ItemList>
     public int EquipmentCount {private set; get;}
     public int FoodCount { private set; get; }
     public int RawMaterialCount { private set; get; }
+
+    private void Start()
+    {
+        Init();
+    }
 
     public void Init()
     {

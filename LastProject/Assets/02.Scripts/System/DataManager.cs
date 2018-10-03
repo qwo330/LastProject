@@ -9,9 +9,12 @@ using System.IO;
 
 public struct PlayerData
 {
+    public int Attack;
+    public int Defense;
+    public int Health, MaxHealth;
     public int Level;
-    public int Hp, MaxHp;
-    public int Gold;
+    public int Exp;
+    public ItemData[] Equipments;
     public ItemData[] Belongings;
 }
 
@@ -73,7 +76,7 @@ public class DataManager : MonoBehaviour {
             PlayerData a = JsonMapper.ToObject<PlayerData>(jsonStr);
 
             Debug.Log(a.Level);
-            Debug.Log(a.MaxHp);
+            Debug.Log(a.MaxHealth);
             Debug.Log(a.Belongings[2].ItemName);
 
             Debug.Log("PlayerData Load 완료");
