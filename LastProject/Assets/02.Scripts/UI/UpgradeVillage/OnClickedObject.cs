@@ -15,11 +15,13 @@ public class OnClickedObject : MonoBehaviour {
    
     public QuestNumber npcType;
 
+    [SerializeField]
+    private Camera camera;
     private Ray ray;
     private RaycastHit hitInfo;
 
     [SerializeField]
-    private GameObject clickedObject;
+    private GameObject dialogueObject;
     private NPC npc;
 
     private void Start()
@@ -29,20 +31,20 @@ public class OnClickedObject : MonoBehaviour {
 
     private void SetInitial()
     {
-        npc = clickedObject.GetComponent<NPC>();
-        clickedObject.SetActive(false);//clickedObject값을 가져오기위해 처음에 true였다가 false로 바꿔줌.
+        npc = dialogueObject.GetComponent<NPC>();
+        dialogueObject.SetActive(false);//clickedObject값을 가져오기위해 처음에 true였다가 false로 바꿔줌.
         npc.OnClickedNPC((int)npcType); //일반 인트값은 되는데 왜 이넘값은 안되는거지
     }
 
     void Update()
     {
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        ray = camera.ScreenPointToRay(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(ray, out hitInfo))
             {
-                clickedObject.SetActive(true);
+                dialogueObject.SetActive(true);
             }
         }
     }
