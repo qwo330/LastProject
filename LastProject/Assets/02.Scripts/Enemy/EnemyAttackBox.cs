@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAttackBox : MonoBehaviour
 {
-    public Enemy enemy;
+    public abstractEnemy enemy;
     public BoxCollider collider;
 
     private void Start()
