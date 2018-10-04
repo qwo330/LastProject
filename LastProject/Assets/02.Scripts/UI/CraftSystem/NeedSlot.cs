@@ -56,15 +56,15 @@ public class NeedSlot : CraftSlotParent
         else
         {
             label.effectColor = Color.black;
-            if(needCount == 0)
-            {
-                isCraft = false;
-            }
-            else
-            {
-                isCraft = true;
-            }
+            isCraft = true;
         }
+    }
+
+    public bool CountIsZero()
+    {
+        if (needCount == 0)
+            return true;
+        return false;
     }
 
     void ResetSprite()

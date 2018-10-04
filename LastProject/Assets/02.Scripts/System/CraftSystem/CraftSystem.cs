@@ -118,11 +118,20 @@ public class CraftSystem : MonoBehaviour
         }
     }
 
-    public bool IsCrafty()
+    public bool IsCrafty(out int slotEmptyCount)
     {
+        slotEmptyCount = 0;
+
         foreach (NeedSlot slot in NeedList)
         {
-            if (!slot.isCraft) return false;
+            if (!slot.isCraft)
+            {
+                return false;
+            }
+            else if (slot.CountIsZero())
+            {
+                slotEmptyCount++;
+            }
         }
         return true;
     }
