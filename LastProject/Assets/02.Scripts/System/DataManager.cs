@@ -142,8 +142,8 @@ public class DataManager : Singleton<DataManager> {
 
     public void SetVolumeData()
     {
-        systemSetting.SFXVolume = AudioManager.instance.GetSFXVolume();
-        systemSetting.BGMVolume = AudioManager.instance.GetBGMVolume();
+        systemSetting.SFXVolume = AudioManager.Instance.GetSFXVolume();
+        systemSetting.BGMVolume = AudioManager.Instance.GetBGMVolume();
     }
 
     public SystemData GetVolumeData()

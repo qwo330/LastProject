@@ -102,28 +102,8 @@ public class AudioManager : Singleton<AudioManager>
         return BGMSlider.value;
     }
 
-    public static AudioManager instance;
-
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(this.gameObject);
-            instance = this;
-        }
-    }
-
-    void Start()
-    {
-        Initialized();
-        source = GetComponent<AudioSource>();   //BGM은 하나만 존재
-    }
-
-    public void Initialized()
+   
+    public void Init()
     {
         for (int i = 0; i < sounds.Length; i++)
         {
@@ -131,6 +111,7 @@ public class AudioManager : Singleton<AudioManager>
             sounds[i].Setsource(soundObject.AddComponent<AudioSource>());
             soundObject.transform.SetParent(this.transform);
         }
+        source = GetComponent<AudioSource>();
     }
 
     /// <summary>
