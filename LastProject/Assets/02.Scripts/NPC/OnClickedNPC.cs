@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum NPCType
 {
@@ -11,8 +12,7 @@ public enum NPCType
     SnowShop = 4,
 }
 
-public class OnClickedNPC : MonoBehaviour
-{
+public class OnClickedNPC : MonoBehaviour {
 
     public NPCType type;
 
@@ -23,6 +23,12 @@ public class OnClickedNPC : MonoBehaviour
 
     [SerializeField]
     private GameObject dialogueObject;
+    [SerializeField]
+    private GameObject upgradeObject;
+    [SerializeField]
+    private GameObject headmanObj, ForestFactoryObj;
+    [SerializeField]
+    private Button acceptButton;
 
     private NPC npc;
 
@@ -35,9 +41,9 @@ public class OnClickedNPC : MonoBehaviour
     {
         npc = dialogueObject.GetComponent<NPC>();
         dialogueObject.SetActive(false);//clickedObject값을 가져오기위해 처음에 true였다가 false로 바꿔줌.
-        npc.OnClickedNPC((int)type);
     }
 
+   
     void Update()
     {
         ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -46,17 +52,32 @@ public class OnClickedNPC : MonoBehaviour
         {
             if (Physics.Raycast(ray, out hitInfo))
             {
-
-                dialogueObject.SetActive(true);
+                    ShowUI();
             }
         }
     }
 
-    private void ShowNPCUI()
+   
+    private void ShowUI()
     {
-        if (true)
-        {
 
+        if (hitInfo.collider.gameObject.Equals(headmanObj))
+        {
+            npc.OnClickedNPC((int)NPCType.Headman);
+            dialogueObject.SetActive(true);
+            acceptButton.onClick.AddListener(delegate () { upgradeObject.SetActive(true); });
+            Debug.Log("Headman");
         }
-    } 
+        else if (hitInfo.collider.gameObject.Equals(ForestFactoryObj))
+        {
+            npc.OnClickedNPC((int)NPCType.ForestFactory);
+            dialogueObject.SetActive(true);
+                acceptButton.onClick.AddListener(delegate () { upgradeObject.SetActive(false); });
+            Debug.Log("another");
+        }
+
+        
+
+    }
+
 }

@@ -9,6 +9,8 @@ public class TurnUIOnAndOff : MonoBehaviour {
     [SerializeField]
     private GameObject quest;
     [SerializeField]
+    private GameObject craft;
+    [SerializeField]
     private GameObject monsterBook;
  
     public void TurnOnInventory()
@@ -38,4 +40,9 @@ public class TurnUIOnAndOff : MonoBehaviour {
         monsterBook.SetActive(false);
     }
 
+    public void TurnOnCraft()
+    {
+        craft.SetActive(true);
+    }
+   
 }
