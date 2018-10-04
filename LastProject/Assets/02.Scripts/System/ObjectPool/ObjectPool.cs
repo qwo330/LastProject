@@ -12,7 +12,7 @@ public class ObjectPool : Singleton<ObjectPool>
 
     public void Init()
     {
-        GameObject go = Instantiate(Resources.Load("Prefabs/Archu")) as GameObject;
+        GameObject go = Instantiate(Resources.Load("Prefabs/Archu"), transform) as GameObject;
         playerCharacter = go.GetComponent<Player>();
         //test용 코드 data 작업 이후 삭제----------
         playerCharacter.Init(0,0,0);//test용 코드, data 작업 이후 삭제

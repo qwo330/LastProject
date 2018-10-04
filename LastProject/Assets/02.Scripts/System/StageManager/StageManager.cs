@@ -8,6 +8,7 @@ public enum SceneState
     ForestVillage, // 숲 마을
     SnowVillage, // 저주받은 눈 마을
     BattleMap,
+    Field1,
 }
 
 public class StageManager : Singleton<StageManager> {
@@ -16,13 +17,13 @@ public class StageManager : Singleton<StageManager> {
     [SerializeField]
     SceneState currentStage;
     [SerializeField]
-    GameObject player;
+    Player player;
 
     public void Init()
     {
-        player = GameObject.FindWithTag("PlayerHitBox");
-        currentStage = SceneState.BattleMap;
+        currentStage = SceneState.Field1;
         stage = new BattleMap();
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
     }
 
     public void SetPlayerPosition(Vector3 startPosition)
@@ -36,18 +37,13 @@ public class StageManager : Singleton<StageManager> {
         stage.SetStage(next);
 
         Debug.Log("씬 전환 시작");
-        //SceneManager.LoadScene(currentStage.ToString());
-        //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(currentStage.ToString());
-        //asyncOperation.allowSceneActivation = false;
-        //SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
-        //asyncOperation.allowSceneActivation = true;
-        StartCoroutine(LoadAsyncScene());
-        Debug.Log("씬 전환 종료");
-        Debug.Log("플레이어 시작위치 설정");
 
-        //Player 초기 위치 세팅
-        //player = ObjectPool.instance.~~
-        
+        SceneManager.LoadScene(currentStage.ToString());
+
+        Debug.Log("씬 전환 종료");
+        Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
+
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
     }
 
     IEnumerator LoadAsyncScene()
@@ -65,7 +61,7 @@ public class StageManager : Singleton<StageManager> {
         }
 
         // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
-        SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
+        //SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
         player.transform.position = playerStartPosition;
         // Unload the previous Scene
         SceneManager.UnloadSceneAsync(currentScene);
@@ -98,8 +94,8 @@ public class ForestVillage : TownStage
     {
         switch (next)
         {
-            case SceneState.BattleMap:
-                StageManager.Instance.playerStartPosition = new Vector3(1f, 0f, 48f);
+            case SceneState.Field1:
+                StageManager.Instance.playerStartPosition = new Vector3(12f, 2f, 47f);
                 StageManager.Instance.stage = new BattleMap(); // 미리 만들어도 될 듯
                 break;
         }
@@ -112,8 +108,8 @@ public class SnowVillage : TownStage
     {
         switch (next)
         {
-            case SceneState.BattleMap:
-                StageManager.Instance.playerStartPosition = new Vector3(-16f, 0f, -47f);
+            case SceneState.Field1:
+                StageManager.Instance.playerStartPosition = new Vector3(-16f, 2f, -47f);
                 StageManager.Instance.stage = new BattleMap(); // 미리 만들어도 될 듯
                 break;
         }
@@ -127,11 +123,11 @@ public class BattleMap : FieldStage
         switch (next)
         {
             case SceneState.ForestVillage:
-                StageManager.Instance.SetPlayerPosition(new Vector3(32f, 1.5f, -13f));
+                StageManager.Instance.SetPlayerPosition(new Vector3(33f, 1.5f, -13f));
                 StageManager.Instance.stage = new ForestVillage(); // 미리 만들어도 될 듯
                 break;
             case SceneState.SnowVillage:
-                StageManager.Instance.SetPlayerPosition(new Vector3(32f, 1.5f, -13f));
+                StageManager.Instance.SetPlayerPosition(new Vector3(34f, 1.5f, -13f));
                 StageManager.Instance.stage = new SnowVillage(); // 미리 만들어도 될 듯
                 break;
         }

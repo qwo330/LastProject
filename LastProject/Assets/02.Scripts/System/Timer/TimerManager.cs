@@ -13,16 +13,12 @@ public class TimerManager : Singleton<TimerManager> {
 
     Queue<GameTimer> timerPool;
 
-    [SerializeField]
     GameTimer timerPrefab;
-
-    private void Awake()
-    {
-        Init();
-    }
 
     public void Init()
     {
+        timerPrefab = (Resources.Load("Prefabs/GameTimer") as GameObject).GetComponent<GameTimer>();
+
         startTime = Time.realtimeSinceStartup;
         fixedDeltaTime = Time.fixedDeltaTime;
         TimeScale = 1f;
