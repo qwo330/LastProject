@@ -70,6 +70,7 @@ public class CraftItemDB
             }
         }
     }
+
     void ImportItemDB(string[] text, int[] count)
     {
         ItemData itemData;

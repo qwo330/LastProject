@@ -30,12 +30,26 @@ public class CraftSystem : MonoBehaviour
 
         if (CraftSlot != null)
         {
-            EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
-            PotionList = CreateList<CraftSlot>(PotionWindowGrid, MaxPotionItemCount, CraftSlot);
-            NeedList = CreateList<NeedSlot>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
+            if(EquipList == null)
+            {
+                EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
+            }
+            if(PotionList == null)
+            {
+                PotionList = CreateList<CraftSlot>(PotionWindowGrid, MaxPotionItemCount, CraftSlot);
+            }
+            if(NeedList == null)
+            {
+                NeedList = CreateList<NeedSlot>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
+            }
         }
+        else
+            Debug.Log("Inspector 연결에 문제가 있습니다.");
 
-        itemDB = new CraftItemDB();
+        if(itemDB == null)
+        {
+            itemDB = new CraftItemDB();
+        }
         itemDB.Setting();
 
         int equipIndex = 0;
@@ -86,8 +100,9 @@ public class CraftSystem : MonoBehaviour
                 {
                     if(itemInDB.NeedItems[i] > 0)
                     {
-                        //인벤토리에서 보유 장비 개수도 읽어와서 같이 반영한다.
-                        //InventorySystem.
+                        //현재 보유 수량과 제작에 필요한 수량을 읽어와서 대입
+                        int itemIndex = InventorySystem.FindItemPosition(itemData);
+                        //NeedList[index].SetCurrentCount(InventorySystem.GetTargetItemCount(itemIndex));
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
                         if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
                         {
