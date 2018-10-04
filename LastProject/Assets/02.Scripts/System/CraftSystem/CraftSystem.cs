@@ -21,13 +21,7 @@ public class CraftSystem : MonoBehaviour
     List<CraftSlot> PotionList;
     List<NeedSlot> NeedList;
 
-    //private void Start()
-    //{
-    //    Invoke("Init", 1f);
-
-    //}
-
-    public void Init ()
+    public void Init()
     {
         MaxEquipItemCount = ItemList.Instance.EquipmentCount;
         MaxPotionItemCount = ItemList.Instance.FoodCount;
@@ -131,5 +125,10 @@ public class CraftSystem : MonoBehaviour
             if (!slot.isCraft) return false;
         }
         return true;
+    }
+
+    private void OnEnable()
+    {
+        Init();
     }
 } 
