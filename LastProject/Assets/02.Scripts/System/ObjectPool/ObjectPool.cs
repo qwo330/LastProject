@@ -14,10 +14,19 @@ public class ObjectPool : Singleton<ObjectPool>
     {
         GameObject go = Instantiate(Resources.Load("Prefabs/Archu")) as GameObject;
         playerCharacter = go.GetComponent<Player>();
-        playerCharacter.Init();
-        playerCharacter.gameObject.SetActive(false);
+        //test용 코드 data 작업 이후 삭제----------
+        playerCharacter.Init(0,0,0);//test용 코드, data 작업 이후 삭제
         playerCharacter.MovingSpeed = 5; //test용 코드, data 작업 이후 삭제
         playerCharacter.gameObject.transform.position = new Vector3(40, 1.5f, -11);//test용 코드, data 작업 이후 삭제
-        //playerCharacter.SetStatus();
+        //-----------------------------------------
+        playerCharacter.gameObject.SetActive(false);
+    }
+
+    public Player PopPlayer(Vector3 Position)
+    {
+        playerCharacter.gameObject.SetActive(true);
+        playerCharacter.gameObject.transform.position = Position;
+
+        return playerCharacter;
     }
 }

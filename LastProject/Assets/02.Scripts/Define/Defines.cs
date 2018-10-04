@@ -1,6 +1,4 @@
-﻿
-
-public static class Defines
+﻿public static class Defines
 {
     public const int InventoryRow = 5;
     public const int InventoryColunm = 6;
@@ -11,11 +9,9 @@ public static class Defines
     public const string TAG_PlayerHitBox = "PlayerHitBox";
     public const string TAG_EnemyAttackBox = "EnemyAttackBox";
     public const string TAG_EnemyHitBox = "EnemyHitBox";
-
-
-
-
-
+    public const string TAG_Player = "Player";
+    public const string TAG_Enemy = "Enemy";
+    
     /// <summary>
     /// 피해량을 계산하는 함수. 나중에 계산식이 바뀌었을 때, 이 함수만 수정하면 됩니다.
     /// </summary>
