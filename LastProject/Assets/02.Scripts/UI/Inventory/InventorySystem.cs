@@ -225,12 +225,12 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     }
 
     /// <summary>
-    /// 인벤토리 index에 위치한 아이템의 수량을 반환한다.
+    /// 인벤토리의 index에 위치한 슬롯을 반환한다.
     /// </summary>
-    public int GetTargetItemCount(int index)
+    public Slot GetTargetSlot(int index)
     {
-        if (inventorySlots[index] == null) return -1;
-        return inventorySlots[index].Item.Count;
+        if (inventorySlots[index] == null) return null;
+        return inventorySlots[index];
     }
 
     /// <summary>
