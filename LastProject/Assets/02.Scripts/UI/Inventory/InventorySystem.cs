@@ -225,6 +225,14 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     }
 
     /// <summary>
+    /// 인벤토리 index에 위치한 아이템의 수량을 반환한다.
+    /// </summary>
+    public int GetTargetItemCount(int index)
+    {
+        return inventorySlots[index].Item.Count;
+    }
+
+    /// <summary>
     /// 아이템 획득 시 인벤토리에 추가
     /// </summary>
     public void AddIteminInventory(ItemData item)
