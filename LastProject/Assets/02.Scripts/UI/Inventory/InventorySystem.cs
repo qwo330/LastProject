@@ -229,6 +229,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// </summary>
     public int GetTargetItemCount(int index)
     {
+        if (inventorySlots[index] == null) return -1;
         return inventorySlots[index].Item.Count;
     }
 
