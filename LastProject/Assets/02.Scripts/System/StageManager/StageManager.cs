@@ -45,27 +45,6 @@ public class StageManager : Singleton<StageManager> {
 
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
     }
-
-    IEnumerator LoadAsyncScene()
-    {
-        // Set the current Scene to be able to unload it later
-        Scene currentScene = SceneManager.GetActiveScene();
-
-        // The Application loads the Scene in the background at the same time as the current Scene.
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(currentStage.ToString(), LoadSceneMode.Additive);
-
-        // Wait until the last operation fully loads to return anything
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-
-        // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
-        //SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
-        player.transform.position = playerStartPosition;
-        // Unload the previous Scene
-        SceneManager.UnloadSceneAsync(currentScene);
-    }
 }
 
 public abstract class Stage
