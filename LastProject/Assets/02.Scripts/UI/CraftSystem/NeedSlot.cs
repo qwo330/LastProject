@@ -60,6 +60,13 @@ public class NeedSlot : CraftSlotParent
         }
     }
 
+    public bool CountIsZero()
+    {
+        if (needCount == 0)
+            return true;
+        return false;
+    }
+
     void ResetSprite()
     {
         ChangeSprite((CraftItemResource)999);
