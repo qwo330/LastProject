@@ -12,6 +12,28 @@ public struct CharacterStatus
     public int Level;
     public int Exp;
     public int Gold;
+
+    public CharacterStatus(int atk, int def, int hp)
+    {
+        Attack = atk;
+        Defense = def;
+        MaxHealth = hp;
+        cHealth = MaxHealth;
+        Level = 1;
+        Exp = 0;
+        Gold = 0;
+    }
+
+    public CharacterStatus(int atk, int def, int hp, int Lv)
+    {
+        Attack = atk;
+        Defense = def;
+        MaxHealth = hp;
+        cHealth = MaxHealth;
+        Level = Lv;
+        Exp = 0;
+        Gold = 0;
+    }
 }
 
 public static class PlayerAniTrigger
@@ -58,7 +80,7 @@ public class Player : MonoBehaviour
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
 
-    public Player Init()
+    public Player Init(int atk, int def, int hp)
     {
         rigidbodyComponent = GetComponent<Rigidbody>();
         animatorComponent = GetComponent<Animator>();
@@ -66,7 +88,7 @@ public class Player : MonoBehaviour
         attackBoxCollider.player = this;
 
         isInHome = false;
-        status = new CharacterStatus();
+        status = new CharacterStatus(atk, def, hp);
         playerStates = CharacterState.Idle;
         ChangeState(playerStates);
         attackBoxCollider.enabled = false;
@@ -110,18 +132,7 @@ public class Player : MonoBehaviour
             }  
         }
     }
-
-    public void SetStatus(int atk, int def, int hp)
-    {
-        status.Attack = atk;
-        status.Defense = def;
-        status.MaxHealth = hp;
-        status.cHealth = status.MaxHealth;
-        status.Level = 1;
-        status.Exp = 0;
-        status.Gold = 0;
-    }
-
+    
     void ChangeState(CharacterState state)
     {
         switch (state)
@@ -145,11 +156,6 @@ public class Player : MonoBehaviour
                 break;
         }
         CurrentState.DoAction();
-    }
-
-    void SetStateIdle()
-    {
-        ChangeState(CharacterState.Idle);
     }
 
     void OnAttackExit()

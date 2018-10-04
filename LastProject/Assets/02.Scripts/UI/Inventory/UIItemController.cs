@@ -17,7 +17,7 @@ public class UIItemController : MonoBehaviour
     Vector3 prevPosition;
     Slot dragItem;
 
-    public void init()
+    public void Init()
     {
         gr = GetComponentInParent<GraphicRaycaster>();
         ped = new PointerEventData(null);

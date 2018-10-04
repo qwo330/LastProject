@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=84613
@@ -11,10 +12,23 @@ public enum SceneState
 
 public class StageManager : Singleton<StageManager> {
     public Vector3 playerStartPosition;
-    public Stage stage = new ForestVillage();
-
+    public Stage stage;
+    [SerializeField]
     SceneState currentStage;
+    [SerializeField]
     GameObject player;
+
+    public void Init()
+    {
+        player = GameObject.FindWithTag("PlayerHitBox");
+        currentStage = SceneState.BattleMap;
+        stage = new BattleMap();
+    }
+
+    public void SetPlayerPosition(Vector3 startPosition)
+    {
+        playerStartPosition = startPosition;
+    }
 
     public void ChangeScene(SceneState next)
     {
@@ -22,13 +36,39 @@ public class StageManager : Singleton<StageManager> {
         stage.SetStage(next);
 
         Debug.Log("씬 전환 시작");
-        SceneManager.LoadScene(currentStage.ToString());
+        //SceneManager.LoadScene(currentStage.ToString());
+        //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(currentStage.ToString());
+        //asyncOperation.allowSceneActivation = false;
+        //SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
+        //asyncOperation.allowSceneActivation = true;
+        StartCoroutine(LoadAsyncScene());
         Debug.Log("씬 전환 종료");
         Debug.Log("플레이어 시작위치 설정");
 
         //Player 초기 위치 세팅
         //player = ObjectPool.instance.~~
-        //player.transform.position = playerStartPosition;
+        
+    }
+
+    IEnumerator LoadAsyncScene()
+    {
+        // Set the current Scene to be able to unload it later
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        // The Application loads the Scene in the background at the same time as the current Scene.
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(currentStage.ToString(), LoadSceneMode.Additive);
+
+        // Wait until the last operation fully loads to return anything
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
+        SceneManager.MoveGameObjectToScene(player, SceneManager.GetSceneByName(currentStage.ToString()));
+        player.transform.position = playerStartPosition;
+        // Unload the previous Scene
+        SceneManager.UnloadSceneAsync(currentScene);
     }
 }
 
@@ -87,11 +127,11 @@ public class BattleMap : FieldStage
         switch (next)
         {
             case SceneState.ForestVillage:
-                StageManager.Instance.playerStartPosition = new Vector3(31f, 0f, -13f);
+                StageManager.Instance.SetPlayerPosition(new Vector3(32f, 1.5f, -13f));
                 StageManager.Instance.stage = new ForestVillage(); // 미리 만들어도 될 듯
                 break;
             case SceneState.SnowVillage:
-                StageManager.Instance.playerStartPosition = new Vector3(31f, 0f, -13f);
+                StageManager.Instance.SetPlayerPosition(new Vector3(32f, 1.5f, -13f));
                 StageManager.Instance.stage = new SnowVillage(); // 미리 만들어도 될 듯
                 break;
         }

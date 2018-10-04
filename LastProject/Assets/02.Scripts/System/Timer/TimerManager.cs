@@ -18,10 +18,10 @@ public class TimerManager : Singleton<TimerManager> {
 
     private void Awake()
     {
-        init();
+        Init();
     }
 
-    void init()
+    public void Init()
     {
         startTime = Time.realtimeSinceStartup;
         fixedDeltaTime = Time.fixedDeltaTime;

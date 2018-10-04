@@ -32,7 +32,7 @@ public struct SystemData
     public float BGMVolume;
 }
 
-public class DataManager : MonoBehaviour {
+public class DataManager : Singleton<DataManager> {
     const string playerDataPath = "/LocalData/PlayerData.json";
     const string townDataPath = "/LocalData/TownData.json";
     const string systemDataPath = "/LocalData/SystemData.json";
