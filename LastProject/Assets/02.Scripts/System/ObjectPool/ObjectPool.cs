@@ -15,9 +15,8 @@ public class ObjectPool : Singleton<ObjectPool>
         GameObject go = Instantiate(Resources.Load("Prefabs/Archu"), transform) as GameObject;
         playerCharacter = go.GetComponent<Player>();
         //test용 코드 data 작업 이후 삭제----------
-        playerCharacter.Init(0,0,0);//test용 코드, data 작업 이후 삭제
-        playerCharacter.MovingSpeed = 5; //test용 코드, data 작업 이후 삭제
-        playerCharacter.gameObject.transform.position = new Vector3(40, 1.5f, -11);//test용 코드, data 작업 이후 삭제
+        playerCharacter.Init(0,0,0); //플레이어 스텟 설정
+        playerCharacter.MovingSpeed = 5;
         //-----------------------------------------
         playerCharacter.gameObject.SetActive(false);
     }
