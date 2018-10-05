@@ -14,8 +14,10 @@ public enum SceneState
 public class StageManager : Singleton<StageManager> {
     public Vector3 playerStartPosition;
     public Stage stage;
+
     [SerializeField]
     SceneState currentStage;
+
     [SerializeField]
     Player player;
 
@@ -39,29 +41,61 @@ public class StageManager : Singleton<StageManager> {
         Debug.Log("씬 전환 시작");
 
         SceneManager.LoadScene(currentStage.ToString());
+        //stage.LoadScene(next);
 
         Debug.Log("씬 전환 종료");
         Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
 
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
+        //stage.Test();
     }
 }
 
 public abstract class Stage
 {
     abstract public void SetStage(SceneState next);
+    abstract public void LoadScene(SceneState next);
+    abstract public void Test();
 }
 
 public abstract class TownStage : Stage
 {
     // TODO : 마을 배치, NPC 배치
-    
+    public GameObject[] Level1s;
+    public GameObject[] Level2s;
+
+    override public void LoadScene(SceneState next)
+    {
+        SceneManager.LoadScene(next.ToString());
+    }
+
+    public override void Test()
+    {
+        Level1s = GameObject.FindGameObjectsWithTag("TownLevel1");
+        Level2s = GameObject.FindGameObjectsWithTag("TownLevel2");
+
+        for (int i = 0; i < Level1s.Length; i++)
+        {
+            Debug.Log(Level1s[i].name);
+        }
+    }
+
+
     //Townsystem
 }
 
 public abstract class FieldStage : Stage
 {
     // TODO : 스포너, 배틀시스템, 몬스터 배치
+    override public void LoadScene(SceneState next)
+    {
+        SceneManager.LoadScene(next.ToString());
+    }
+
+    public override void Test()
+    {
+        Debug.Log("배틀맵");
+    }
 
     public GameObject Spawner; // class
     //BattleMediator
@@ -106,17 +140,12 @@ public class BattleMap : FieldStage
                 StageManager.Instance.stage = new ForestVillage(); // 미리 만들어도 될 듯
                 break;
             case SceneState.SnowVillage:
-                StageManager.Instance.SetPlayerPosition(new Vector3(34f, 1.5f, -13f));
+                StageManager.Instance.SetPlayerPosition(new Vector3(33f, 1.5f, -13f));
                 StageManager.Instance.stage = new SnowVillage(); // 미리 만들어도 될 듯
                 break;
         }
     }
 }
-/*
- 저주받은 눈 마을->필드 : -16, 0, -47
- 숲 마을->필드 : 11, 0, 48
- 필드 -> 마을 : 31, 0, -13
-     */
 
 
 /* 

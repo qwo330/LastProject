@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
 public class PotalTrigger : MonoBehaviour {
-    public SceneState next;
+    [SerializeField]
+    SceneState next;
 
     private void OnTriggerEnter(Collider other)
     {
