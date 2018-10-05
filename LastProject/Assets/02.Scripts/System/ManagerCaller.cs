@@ -6,13 +6,13 @@ public class ManagerCaller : MonoBehaviour {
 
     private void Awake()
     {
-        DataManager.Instance.Init();
+        TimerManager.Instance.Init();
         ObjectPool.Instance.Init();
         ItemList.Instance.Init();
-        StageManager.Instance.Init();
-        TimerManager.Instance.Init();
-        AudioManager.Instance.Init();
-
-        SceneManager.LoadScene(SceneState.Field1.ToString());
+        //StageManager.Instance.Init();
+        //        DataManager.Instanc
+        //AudioManager.Instance.Init();
+        
+        //SceneManager.LoadScene(SceneState.Field1.ToString());
     }
 }

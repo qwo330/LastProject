@@ -4,15 +4,51 @@ using UnityEngine;
 
 public class Ent : abstractEnemy
 {
-    private void Update()
+    private void Awake()
     {
-        if(targetPlayer != null)
+        Init(0, 0, 0, 1);
+    }
+
+    protected override void EnemyUpdate()
+    {
+        if (targetPlayer != null)
         {
-            if(!(currentState is EnemyAttack && currentState is EnemyDeath && currentState is EnemyWound))
+            TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
+
+            Debug.Log(currentState);
+            if (!(currentState is EnemyAttack || currentState is EnemyDeath || currentState is EnemyWound))
             {
-                ChangeState(CharacterState.Running);
+                if (TargetDistance < MaxChaseDistance)
+                {
+                    if (TargetDistance > MinChaseDistance)
+                    {
+                        if (navMeshAgent.isStopped)
+                        {
+                            ChangeState(CharacterState.Running);
+                        }
+                    }
+                    else
+                    {
+                        if ((currentState is EnemyIdle || currentState is EnemyMove))
+                        {
+                            navMeshAgent.isStopped = true;
+                            ChangeState(CharacterState.Attack);
+                        }
+                    }
+                }
+                else
+                {
+                    ChangeState(CharacterState.Idle);
+                }
             }
         }
+        else
+        {
+            ChangeState(CharacterState.Idle);
+        }
+
+        attackTimer.SetTimer(0.5f);
+        attackTimer.StartTimer();
     }
 
     protected override void ChangeState(CharacterState state)
@@ -20,11 +56,13 @@ public class Ent : abstractEnemy
         switch (state)
         {
             case CharacterState.Idle:
+                currentState = new EnemyIdle(animatorComponent, navMeshAgent);
                 break;
             case CharacterState.Running:
                 currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer); 
                 break;
             case CharacterState.Attack:
+                currentState = new EnemyAttack(animatorComponent);
                 break;
             case CharacterState.Death:
                 break;
@@ -39,7 +77,7 @@ public class Ent : abstractEnemy
 
     protected override void ONAttackExit()
     {
-        base.ONAttackExit();
+        ChangeState(CharacterState.Idle);
     }
 
     protected override void OnWoundExit()
@@ -47,8 +85,24 @@ public class Ent : abstractEnemy
         base.OnWoundExit();
     }
 
-    private void Awake()
+    private void OnStartLeftAttack()
     {
-        Init(0, 0, 0, 1);
+        enemyAttackBox[0].colliderComponent.enabled = true;
+    }
+
+    private void OnEndLeftAttack()
+    {
+        enemyAttackBox[0].colliderComponent.enabled = false;
+    }
+
+    private void OnStartRightAttack()
+    {
+        enemyAttackBox[1].colliderComponent.enabled = true;
+    }
+
+    private void OnEndRightAttack()
+    {
+        enemyAttackBox[1].colliderComponent.enabled = false;
+        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
     }
 }

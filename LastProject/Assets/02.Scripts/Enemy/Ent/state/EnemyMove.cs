@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyMove : EnemyState 
 {
+    const float chaseDistance = 4f;
+
     public EnemyMove(Animator animator, NavMeshAgent navMeshAgent, GameObject targetPlayer)
     {
         this.navMeshAgent = navMeshAgent;
@@ -18,6 +20,7 @@ public class EnemyMove : EnemyState
         {
             animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, true);
             navMeshAgent.SetDestination(targetPlayer.transform.position);
+            navMeshAgent.isStopped = false;
         }
     }
 }

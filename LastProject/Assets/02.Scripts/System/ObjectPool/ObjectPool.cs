@@ -8,7 +8,7 @@ public class ObjectPool : Singleton<ObjectPool>
     const int ENT_POOLCOUNT = 30;
 
     Player playerCharacter;
-    //List<Ent> EntList;
+    List<Ent> EntList;
 
     public void Init()
     {
@@ -19,6 +19,8 @@ public class ObjectPool : Singleton<ObjectPool>
         playerCharacter.MovingSpeed = 5;
         //-----------------------------------------
         playerCharacter.gameObject.SetActive(false);
+
+        
     }
 
     public Player PopPlayer(Vector3 Position)
