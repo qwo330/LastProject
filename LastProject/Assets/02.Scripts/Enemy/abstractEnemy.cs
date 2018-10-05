@@ -12,11 +12,18 @@ public abstract class abstractEnemy : MonoBehaviour
     public EnemyState currentState;
 
     public GameObject targetPlayer;
-    protected EnemyAttackBox enemyAttackBox;
+    protected EnemyAttackBox[] enemyAttackBox;
     protected CharacterState state;
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
     protected NavMeshAgent navMeshAgent;
+    protected GameTimer attackTimer;
+
+    protected float MinChaseDistance = 2f;
+    protected float MaxChaseDistance = 8f;
+    protected float TargetDistance;
+    //protected Vector3 startPosition;
+    //protected float startPositionDistance;
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
@@ -31,13 +38,22 @@ public abstract class abstractEnemy : MonoBehaviour
         rigidbodyComponent = GetComponent<Rigidbody>();
         animatorComponent = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        enemyAttackBox = GetComponentInChildren<EnemyAttackBox>();
-        enemyAttackBox.enemy = this;
-        enemyAttackBox.enabled = false;
+        enemyAttackBox = GetComponentsInChildren<EnemyAttackBox>();
+        for (int i = 0; i < enemyAttackBox.Length; i++)
+        {
+            enemyAttackBox[i].enemy = this;
+        }
         status = new CharacterStatus(atk, def, hp, lv);
-        
+        navMeshAgent.isStopped = true;
+        attackTimer = TimerManager.Instance.GetTimer();
+        attackTimer.SetTimer();
+        attackTimer.Callback = EnemyUpdate;
+        attackTimer.
+        attackTimer.StartTimer();
         return this;
     }
+
+    protected abstract void EnemyUpdate();
 
     public void PlayerWound(int damage)
     {
@@ -64,8 +80,6 @@ public abstract class abstractEnemy : MonoBehaviour
         if (other.transform.tag == Defines.TAG_Player)
         {
             targetPlayer = other.gameObject;
-
-            Debug.Log(gameObject.tag);
         }
     }
 
@@ -75,6 +89,6 @@ public abstract class abstractEnemy : MonoBehaviour
         {
             targetPlayer = null;
         }
-        Debug.Log(gameObject.tag);
+        
     }
 }

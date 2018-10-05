@@ -4,7 +4,7 @@ public delegate void TimerCallback();
 
 public class GameTimer : MonoBehaviour{
     public TimerCallback Callback;
-    float callTime;
+    [SerializeField]float callTime;
     bool isWorking = false;
 
     public void SetTimer(float time = 1)

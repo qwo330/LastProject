@@ -44,6 +44,7 @@ public static class PlayerAniTrigger
     public const string DEATH = "IsDeath";
     public const string ISRUNNING = "IsRunnig";
     public const string ISINHOME = "InHome";
+    public const string ISIDLE = "IsIdle";
 }
 
 [Flags]

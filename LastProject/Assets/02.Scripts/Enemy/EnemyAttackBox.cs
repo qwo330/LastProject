@@ -5,11 +5,12 @@ using UnityEngine;
 public class EnemyAttackBox : MonoBehaviour
 {
     public abstractEnemy enemy;
-    public BoxCollider collider;
+    public BoxCollider colliderComponent;
 
     private void Start()
     {
-        collider = GetComponent<BoxCollider>();
+        colliderComponent = GetComponent<BoxCollider>();
+        colliderComponent.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
