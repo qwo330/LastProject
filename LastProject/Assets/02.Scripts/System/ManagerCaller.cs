@@ -9,7 +9,7 @@ public class ManagerCaller : MonoBehaviour {
         TimerManager.Instance.Init();
         ObjectPool.Instance.Init();
         ItemList.Instance.Init();
-        //StageManager.Instance.Init();
+        StageManager.Instance.Init();
         //        DataManager.Instanc
         //AudioManager.Instance.Init();
         

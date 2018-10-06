@@ -48,7 +48,7 @@ public abstract class abstractEnemy : MonoBehaviour
         attackTimer = TimerManager.Instance.GetTimer();
         attackTimer.SetTimer();
         attackTimer.Callback = EnemyUpdate;
-        attackTimer.
+        //attackTimer.
         attackTimer.StartTimer();
         return this;
     }

@@ -25,6 +25,8 @@ public class StageManager : Singleton<StageManager> {
     {
         currentStage = SceneState.Field1;
         stage = new BattleMap();
+
+        ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
     }
 

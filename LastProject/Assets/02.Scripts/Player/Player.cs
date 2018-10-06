@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public struct CharacterStatus
 {
@@ -101,7 +102,10 @@ public class Player : MonoBehaviour
     {
         VerticalAxis = Input.GetAxis("Vertical");
         HorizontalAxis = Input.GetAxis("Horizontal");
-        isMouseClicked = Input.GetMouseButtonDown(0);
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            isMouseClicked = Input.GetMouseButtonDown(0);
+        }
     }
 
     private void FixedUpdate()
