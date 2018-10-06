@@ -64,7 +64,7 @@ public class Ent : abstractEnemy
                 currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer); 
                 break;
             case CharacterState.Attack:
-                currentState = new EnemyAttack(animatorComponent);
+                currentState = new EnemyAttack(animatorComponent, targetPlayer, transform);
                 break;
             case CharacterState.Death:
                 currentState = new EnemyDeath(animatorComponent);
