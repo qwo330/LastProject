@@ -13,6 +13,7 @@ public class PlayerDeath : PlayerState
 
     public override void DoAction()
     {
-        animatorComponent.SetBool(PlayerAniTrigger.DEATH, playerStates == CharacterState.Death);
+        animatorComponent.SetBool(PlayerAniTrigger.DEATH, true);
+        rigidbodyComponent.velocity = Vector3.zero;
     }   
 }

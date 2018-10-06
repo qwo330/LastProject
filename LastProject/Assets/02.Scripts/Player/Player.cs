@@ -167,29 +167,29 @@ public class Player : MonoBehaviour
 
     void OnAttackExit()
     {
-        playerStates &= CharacterState.Idle;
+        playerStates = CharacterState.Idle;
         attackBoxCollider.Collider.enabled = false;
         animatorComponent.SetBool(PlayerAniTrigger.ATTACK, playerStates == CharacterState.Attack);
-        ChangeState(playerStates);
+        ChangeState(CharacterState.Idle);
     }
 
     void OnWoundExit()
     {
-        playerStates &= CharacterState.Idle;
+        playerStates = CharacterState.Idle;
         animatorComponent.SetBool(PlayerAniTrigger.WOUND, playerStates == CharacterState.Wound);
-        ChangeState(playerStates);
+        ChangeState(CharacterState.Idle);
     }
 
     public void PlayerWound(int damege)
     {
-        status.cHealth -= damege;
+        //status.cHealth -= damege;
         if(status.cHealth < 0)
         {
-            playerStates &= CharacterState.Death;  
+            playerStates = CharacterState.Death;  
         }
         else
         {
-            playerStates &= CharacterState.Wound;
+            playerStates = CharacterState.Wound;
         }
         ChangeState(playerStates);
     }

@@ -17,7 +17,7 @@ public class EnemyAttackBox : MonoBehaviour
     {
         if(other.tag == Defines.TAG_PlayerHitBox)
         {
-            Player player = other.GetComponentInParent<Player>();  
+            Player player = other.GetComponentInParent<Player>();
             player.PlayerWound(Defines.CalculateDamage(enemy.status.Attack, player.status.Defense));
         }   
     }

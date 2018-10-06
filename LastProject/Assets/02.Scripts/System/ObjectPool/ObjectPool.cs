@@ -43,7 +43,7 @@ public class ObjectPool : Singleton<ObjectPool>
     {
         Ent ent = EntQueue.Dequeue();
         ent.gameObject.SetActive(true);
-        ent.Init(atk, def, lv, hp);
+        ent.Init(atk, def, hp, lv);
 
         return ent;
     }
