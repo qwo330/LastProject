@@ -13,6 +13,7 @@ public class EnemyIdle : EnemyState
 
     public override void DoAction()
     {
+        animatorComponent.SetBool(PlayerAniTrigger.WOUND, false);
         animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
         animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, false);
         animatorComponent.SetTrigger(PlayerAniTrigger.ISIDLE);

@@ -8,7 +8,8 @@ public class ObjectPool : Singleton<ObjectPool>
     const int ENT_POOLCOUNT = 30;
 
     Player playerCharacter;
-    List<Ent> EntList;
+    GameObject entPrefab;
+    Queue<Ent> EntQueue;
 
     public void Init()
     {
@@ -20,7 +21,14 @@ public class ObjectPool : Singleton<ObjectPool>
         //-----------------------------------------
         playerCharacter.gameObject.SetActive(false);
 
-        
+        EntQueue = new Queue<Ent>(ENT_POOLCOUNT);
+        entPrefab = Resources.Load("Prefabs/Ent") as GameObject;
+        for (int i = 0; i < ENT_POOLCOUNT; i++)
+        {
+            go = Instantiate(entPrefab, transform);
+            EntQueue.Enqueue(go.GetComponent<Ent>());
+            go.gameObject.SetActive(false);
+        }
     }
 
     public Player PopPlayer(Vector3 Position)
@@ -29,5 +37,20 @@ public class ObjectPool : Singleton<ObjectPool>
         playerCharacter.gameObject.transform.position = Position;
 
         return playerCharacter;
+    }
+
+    public Ent PopEnt(Vector3 position, int atk, int def, int lv, int hp)
+    {
+        Ent ent = EntQueue.Dequeue();
+        ent.gameObject.SetActive(true);
+        ent.Init(atk, def, lv, hp);
+
+        return ent;
+    }
+
+    public void PushEnt(Ent ent)
+    {
+        EntQueue.Enqueue(ent);
+        ent.gameObject.SetActive(false);
     }
 }

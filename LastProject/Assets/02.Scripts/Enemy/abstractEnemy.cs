@@ -17,13 +17,13 @@ public abstract class abstractEnemy : MonoBehaviour
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
     protected NavMeshAgent navMeshAgent;
+    protected GameTimer deadTimer;
     protected GameTimer attackTimer;
+    protected bool isAttackable;
 
     protected float MinChaseDistance = 2f;
     protected float MaxChaseDistance = 8f;
     protected float TargetDistance;
-    //protected Vector3 startPosition;
-    //protected float startPositionDistance;
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
@@ -45,35 +45,39 @@ public abstract class abstractEnemy : MonoBehaviour
         }
         status = new CharacterStatus(atk, def, hp, lv);
         navMeshAgent.isStopped = true;
+        isAttackable = true;
+
+        currentState = null;
+        targetPlayer = null;
+
+        deadTimer = TimerManager.Instance.GetTimer();
+        deadTimer.SetTimer(3f);
+        deadTimer.Callback = DeadExit;
         attackTimer = TimerManager.Instance.GetTimer();
-        attackTimer.SetTimer();
-        attackTimer.Callback = EnemyUpdate;
-        attackTimer.
-        attackTimer.StartTimer();
+        attackTimer.SetTimer(2f);
+        attackTimer.Callback = AttackTick;
         return this;
     }
 
-    protected abstract void EnemyUpdate();
-
-    public void PlayerWound(int damage)
+    protected virtual void AttackTick()
     {
-
+        isAttackable = true;
     }
+
+    public abstract void PlayerWound(int damage);
 
     protected virtual void ChangeState(CharacterState state)
     {
         currentState.DoAction();
     }
 
-    protected virtual void ONAttackExit()
-    {
+    protected abstract void ONAttackExit();
 
-    }
+    protected abstract void OnWoundExit();
 
-    protected virtual void OnWoundExit()
-    {
+    protected abstract void OnDeadExit();
 
-    }
+    protected abstract void DeadExit();
 
     protected void OnTriggerStay(Collider other)
     {

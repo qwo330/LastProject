@@ -6,16 +6,15 @@ public class Ent : abstractEnemy
 {
     private void Awake()
     {
-        Init(0, 0, 0, 1);
+        //Init(0, 0, 0, 1);
     }
 
-    protected override void EnemyUpdate()
+    private void Update()
     {
         if (targetPlayer != null)
         {
             TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
 
-            Debug.Log(currentState);
             if (!(currentState is EnemyAttack || currentState is EnemyDeath || currentState is EnemyWound))
             {
                 if (TargetDistance < MaxChaseDistance)
@@ -31,8 +30,14 @@ public class Ent : abstractEnemy
                     {
                         if ((currentState is EnemyIdle || currentState is EnemyMove))
                         {
-                            navMeshAgent.isStopped = true;
-                            ChangeState(CharacterState.Attack);
+                            if (isAttackable)
+                            {
+                                navMeshAgent.isStopped = true;
+                                isAttackable = false;
+                                attackTimer.SetTimer(2f);
+                                attackTimer.StartTimer();
+                                ChangeState(CharacterState.Attack);
+                            }
                         }
                     }
                 }
@@ -46,9 +51,6 @@ public class Ent : abstractEnemy
         {
             ChangeState(CharacterState.Idle);
         }
-
-        attackTimer.SetTimer(0.5f);
-        attackTimer.StartTimer();
     }
 
     protected override void ChangeState(CharacterState state)
@@ -65,14 +67,17 @@ public class Ent : abstractEnemy
                 currentState = new EnemyAttack(animatorComponent);
                 break;
             case CharacterState.Death:
+                currentState = new EnemyDeath(animatorComponent);
                 break;
             case CharacterState.Wound:
+                currentState = new EnemyWound(animatorComponent);
                 break;
             default:
                 break;
         }
 
         base.ChangeState(state);
+        Debug.Log(currentState);
     }
 
     protected override void ONAttackExit()
@@ -82,7 +87,7 @@ public class Ent : abstractEnemy
 
     protected override void OnWoundExit()
     {
-        base.OnWoundExit();
+        ChangeState(CharacterState.Idle);
     }
 
     private void OnStartLeftAttack()
@@ -104,5 +109,29 @@ public class Ent : abstractEnemy
     {
         enemyAttackBox[1].colliderComponent.enabled = false;
         animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
+    }
+
+    public override void PlayerWound(int damage)
+    {
+        status.cHealth -= damage;
+        if(status.cHealth <= 0)
+        {
+            ChangeState(CharacterState.Death);
+        }
+        else
+        {
+            ChangeState(CharacterState.Wound);
+        }
+    }
+
+    protected override void OnDeadExit()
+    {
+        deadTimer.SetTimer(3f);
+        deadTimer.StartTimer();
+    }
+
+    protected override void DeadExit()
+    {
+        ObjectPool.Instance.PushEnt(this);
     }
 }
