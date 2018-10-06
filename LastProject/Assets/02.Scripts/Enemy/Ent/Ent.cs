@@ -75,11 +75,7 @@ public class Ent : abstractEnemy
             default:
                 break;
         }
-
-        base.ChangeState(state);
-        Debug.Log(currentState);
-
-        
+        base.ChangeState(state); 
     }
 
     protected override void ONAttackExit()
