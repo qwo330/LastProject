@@ -102,7 +102,9 @@ public class Player : MonoBehaviour
     {
         VerticalAxis = Input.GetAxis("Vertical");
         HorizontalAxis = Input.GetAxis("Horizontal");
-        if (!EventSystem.current.IsPointerOverGameObject())
+        //if (!EventSystem.current.IsPointerOverGameObject())
+        //if (UICamera.Raycast(Input.mousePosition))
+        if (!UICamera.Raycast(Input.mousePosition) && !EventSystem.current.IsPointerOverGameObject())
         {
             isMouseClicked = Input.GetMouseButtonDown(0);
         }

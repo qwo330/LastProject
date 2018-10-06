@@ -78,6 +78,8 @@ public class Ent : abstractEnemy
 
         base.ChangeState(state);
         Debug.Log(currentState);
+
+        
     }
 
     protected override void ONAttackExit()
