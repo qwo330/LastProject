@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class PlayerDeath : PlayerState
 {
-    public PlayerDeath(Animator animatorComponent, Rigidbody rigidbodyComponent, CharacterState playerStates)
+    public PlayerDeath(Animator animatorComponent, Rigidbody rigidbodyComponent)
     {
         this.animatorComponent = animatorComponent;
         this.rigidbodyComponent = rigidbodyComponent;
-        this.playerStates = playerStates;
     }
 
     public override void DoAction()

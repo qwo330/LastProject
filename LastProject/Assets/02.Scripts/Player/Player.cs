@@ -154,10 +154,10 @@ public class Player : MonoBehaviour
                 CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
                 break;
             case CharacterState.Wound:
-                CurrentState = new PlayerWound(animatorComponent, rigidbodyComponent, playerStates);
+                CurrentState = new PlayerWound(animatorComponent, rigidbodyComponent);
                 break;
             case CharacterState.Death:
-                CurrentState = new PlayerDeath(animatorComponent, rigidbodyComponent, playerStates);
+                CurrentState = new PlayerDeath(animatorComponent, rigidbodyComponent);
                 break;
             default:
                 break;

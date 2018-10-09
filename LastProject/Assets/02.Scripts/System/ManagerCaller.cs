@@ -13,6 +13,6 @@ public class ManagerCaller : MonoBehaviour {
         //        DataManager.Instanc
         //AudioManager.Instance.Init();
         
-        //SceneManager.LoadScene(SceneState.Field1.ToString());
+        SceneManager.LoadScene(SceneState.Field1.ToString());
     }
 }
