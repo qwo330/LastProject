@@ -22,6 +22,10 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     List<ItemSlot> inventorySlots = new List<ItemSlot>();
     GameTimer itemTimer;
 
+    bool isDrag = false;
+    Vector3 prevPosition;
+    Slot dragItem;
+
     /*===========================================================*/
     Dictionary<ItemCodes, ItemData> itemlist;
 
@@ -77,10 +81,6 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         itemTimer.StartTimer();
     }
-
-    bool isDrag = false;
-    Vector3 prevPosition;
-    Slot dragItem;
 
     public void OnBeginDrag(PointerEventData data)
     {
