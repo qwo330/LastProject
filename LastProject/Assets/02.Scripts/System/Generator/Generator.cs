@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    
     EnemySpawner[] enemySpawner;
     Gatherspawner[] gatherSpawner;
 
@@ -22,5 +21,21 @@ public class Generator : MonoBehaviour
         {
             spawner.Init(Defines.TotalMonsterCount);
         }
+
+        foreach (Gatherspawner spawner in gatherSpawner)
+        {
+            spawner.Init();
+        }
+    }
+
+    public void GatherPlayer(Gatherspawner gatherspawner)
+    {
+        gatherspawner.gameObject.SetActive(false);
+        Invoke("Respawn", Defines.GatherRespawnTime);
+    }
+
+    void Respawn(Gatherspawner gatherspawner)
+    {
+        gatherspawner.gameObject.SetActive(true);
     }
 }
