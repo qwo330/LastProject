@@ -73,12 +73,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             itemTimer.Callback += slot.Elapse;
         }
 
-        itemTimer.SetTimer();
-        InvokeRepeating("StartTimer", 1f, 1f);
-    }
-
-    void StartTimer()
-    {
+        itemTimer.SetTimer(1f, true);
         itemTimer.StartTimer();
     }
 

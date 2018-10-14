@@ -53,7 +53,6 @@ public class StageManager : Singleton<StageManager>{
 
     IEnumerator FadeOut() // 시작 // 점점 검게
     {
-        Debug.Log("페이드 아웃");
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeTime)
@@ -63,13 +62,8 @@ public class StageManager : Singleton<StageManager>{
             fadeColor.a = Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
         }
-        Debug.Log("페이드 아웃 종료");
-
-        Debug.Log("씬 전환 시작");
         SceneManager.LoadScene(currentStage.ToString()); // 씬 전환
 
-        Debug.Log("씬 전환 종료");
-        Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
 
         StartCoroutine(FadeIn());
@@ -77,7 +71,6 @@ public class StageManager : Singleton<StageManager>{
 
     IEnumerator FadeIn() // 끝 // 점점 투명하게
     {
-        Debug.Log("페이드 인");
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeTime)
@@ -87,7 +80,6 @@ public class StageManager : Singleton<StageManager>{
             fadeColor.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
         }
-        Debug.Log("페이드 인 종료");
     }
 }
 
