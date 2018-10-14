@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Ent : abstractEnemy
 {
-    private void Awake()
-    {
-        //Init(0, 0, 0, 1);
-    }
+    //private void Awake()
+    //{
+    //   Init(0, 0, 0, 1);
+    //}
+
+    public List<Ent> MemberList;
 
     private void Update()
     {
@@ -114,6 +116,10 @@ public class Ent : abstractEnemy
         status.cHealth -= damage;
         if(status.cHealth <= 0)
         {
+            if(MemberList != null && MemberList.Contains(this))
+            {
+                MemberList.Remove(this);
+            }
             ChangeState(CharacterState.Death);
         }
         else

@@ -34,7 +34,7 @@ public class StageManager : Singleton<StageManager>{
         ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
 
-        fadeObject = GameObject.FindGameObjectWithTag("LoadingImg").GetComponent<SpriteRenderer>();
+        //fadeObject = GameObject.FindGameObjectWithTag("LoadingImg").GetComponent<SpriteRenderer>();
     }
 
     public void SetPlayerPosition(Vector3 startPosition)

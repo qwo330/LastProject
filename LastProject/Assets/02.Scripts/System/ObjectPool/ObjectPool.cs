@@ -39,11 +39,12 @@ public class ObjectPool : Singleton<ObjectPool>
         return playerCharacter;
     }
 
-    public Ent PopEnt(Vector3 position, int atk, int def, int lv, int hp)
+    public Ent PopEnt(Vector3 position, int atk, int def, int lv, int hp, List<Ent> list = null)
     {
         Ent ent = EntQueue.Dequeue();
         ent.gameObject.SetActive(true);
         ent.Init(atk, def, hp, lv);
+        ent.MemberList = list;
 
         return ent;
     }

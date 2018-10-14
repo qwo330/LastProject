@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Gatherspawner : MonoBehaviour
 {
+    [SerializeField] ItemCodes item;
     public Generator generator;
+    public int Index;
 
-    public void Init()
+    public void Init(int index)
     {
-        generator.GetComponentInParent<Generator>();
+        generator = GetComponentInParent<Generator>();
+        this.Index = index;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == Defines.TAG_Player)
         {
-            generator.GatherPlayer(this);
+            generator.GatherItem(Index, item);
             gameObject.SetActive(false);
         }
     }
