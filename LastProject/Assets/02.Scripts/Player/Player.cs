@@ -88,12 +88,13 @@ public class Player : MonoBehaviour
         animatorComponent = GetComponent<Animator>();
         attackBoxCollider = GetComponentInChildren<PlayerAttackBox>();
         attackBoxCollider.player = this;
+        attackBoxCollider.Collider.enabled = false;
 
         isInHome = false;
         status = new CharacterStatus(atk, def, hp);
         playerStates = CharacterState.Idle;
         ChangeState(playerStates);
-        attackBoxCollider.enabled = false;
+        
 
         return this;
     }

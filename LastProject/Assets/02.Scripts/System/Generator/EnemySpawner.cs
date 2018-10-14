@@ -9,6 +9,9 @@ public class EnemySpawner : MonoBehaviour
     const float spawnTime = 2f;
     List<Ent> entList;
 
+    const float MinRandomPos = -3f;
+    const float MaxRandomPos = 3f;
+
     public void Init(int maxCount)
     {
         MaxCount = maxCount;
@@ -22,7 +25,9 @@ public class EnemySpawner : MonoBehaviour
     {
         if (entList.Count < MaxCount)
         {
-            entList.Add(ObjectPool.Instance.PopEnt(transform.position, 100, 10, 1, 500, entList));
+            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), 0f, Random.Range(MinRandomPos, MaxRandomPos));
+            Debug.Log(randomPosition);
+            entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, 100, 10, 1, 500, entList));
             spawnTimer.SetTimer(spawnTime);
             spawnTimer.StartTimer();
         }
@@ -39,6 +44,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-//spawnTimer.StopTimer();
+        spawnTimer.StopTimer();
     }
 }
