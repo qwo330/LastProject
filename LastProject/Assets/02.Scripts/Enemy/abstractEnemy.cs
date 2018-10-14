@@ -28,10 +28,10 @@ public abstract class abstractEnemy : MonoBehaviour
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
 
-    private void Awake()
-    {
-        Init(0, 0, 0, 1);
-    }
+    //private void Awake()
+    //{
+    //    Init(0, 0, 0, 1);
+    //}
 
     public virtual abstractEnemy Init(int atk, int def, int hp, int lv)
     {

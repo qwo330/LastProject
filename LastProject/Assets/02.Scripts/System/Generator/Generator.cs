@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
     EnemySpawner[] enemySpawner;
     Gatherspawner[] gatherSpawner;
+    
 
     private void Start()
     {
@@ -22,20 +22,23 @@ public class Generator : MonoBehaviour
             spawner.Init(Defines.TotalMonsterCount);
         }
 
-        foreach (Gatherspawner spawner in gatherSpawner)
+        for (int i = 0; i < gatherSpawner.Length; i++)
         {
-            spawner.Init();
+            gatherSpawner[i].Init(i);
         }
     }
 
-    public void GatherPlayer(Gatherspawner gatherspawner)
+    public void GatherItem(int index, ItemCodes item)
     {
-        gatherspawner.gameObject.SetActive(false);
-        Invoke("Respawn", Defines.GatherRespawnTime);
+        gatherSpawner[index].gameObject.SetActive(false);
+        StartCoroutine(Respawn(index, Defines.GatherRespawnTime)); 
+        //플레이어가 아이템 획득(채집) 추가
     }
 
-    void Respawn(Gatherspawner gatherspawner)
+    IEnumerator Respawn(int index, float time)
     {
-        gatherspawner.gameObject.SetActive(true);
+        yield return new WaitForSeconds(time); 
+
+        gatherSpawner[index].gameObject.SetActive(true);
     }
 }

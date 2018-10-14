@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
     {
         if (entList.Count < MaxCount)
         {
-            entList.Add(ObjectPool.Instance.PopEnt(transform.position, 100, 10, 1, 500));
+            entList.Add(ObjectPool.Instance.PopEnt(transform.position, 100, 10, 1, 500, entList));
             spawnTimer.SetTimer(spawnTime);
             spawnTimer.StartTimer();
         }
@@ -39,6 +39,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        spawnTimer.StopTimer();
+//spawnTimer.StopTimer();
     }
 }
