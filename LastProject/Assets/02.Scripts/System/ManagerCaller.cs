@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 
-using UnityEngine.SceneManagement;
-
 public class ManagerCaller : MonoBehaviour {
 
     private void Awake()
@@ -10,9 +8,9 @@ public class ManagerCaller : MonoBehaviour {
         ObjectPool.Instance.Init();
         ItemList.Instance.Init();
         StageManager.Instance.Init();
-        //        DataManager.Instanc
+        DataManager.Instance.Init();
         //AudioManager.Instance.Init();
-        
-        SceneManager.LoadScene(SceneState.Field1.ToString());
+
+        StageManager.Instance.ChangeScene(SceneState.Field1);
     }
 }

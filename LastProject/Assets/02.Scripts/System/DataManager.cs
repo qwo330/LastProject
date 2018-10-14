@@ -69,7 +69,7 @@ public class DataManager : Singleton<DataManager> {
 
     public void Init()
     {
-        LoadJsonData();
+        //LoadJsonData();
     }
 
     /// <summary>
