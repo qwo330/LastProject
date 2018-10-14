@@ -41,11 +41,11 @@ public class GameTimer : MonoBehaviour{
     {
         if(isWorking)
         {
-            if(callTime < 0) callTime -= TimerManager.Instance.DeltaTime;
+            if(callTime > 0) callTime -= TimerManager.Instance.DeltaTime;
             else
             {
-                Callback();
                 StopTimer();
+                Callback();
             }
         }
     }

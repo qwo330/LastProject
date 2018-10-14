@@ -8,7 +8,7 @@ public class Gatherspawner : MonoBehaviour
 
     public void Init()
     {
-        generator.GetComponentInParent<Generator>();
+        //generator.GetComponentInParent<Generator>();
     }
 
     private void OnTriggerEnter(Collider other)

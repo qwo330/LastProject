@@ -23,7 +23,6 @@ public class StageManager : Singleton<StageManager>{
 
     float fadeTime = 1f, waitTime = 1f;
     Color fadeColor;
-    [SerializeField]
     SpriteRenderer fadeObject;
 
     public void Init()
@@ -34,7 +33,7 @@ public class StageManager : Singleton<StageManager>{
         ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
 
-        fadeObject = GameObject.FindGameObjectWithTag("LoadingImg").GetComponent<SpriteRenderer>();
+        fadeObject = player.GetComponentInChildren<SpriteRenderer>();
     }
 
     public void SetPlayerPosition(Vector3 startPosition)
@@ -48,40 +47,48 @@ public class StageManager : Singleton<StageManager>{
         stage.SetStage(next);
 
         Debug.Log("씬 전환 시작");
+        StartCoroutine(FadeOut());
 
         SceneManager.LoadScene(currentStage.ToString());
 
-        Debug.Log("씬 전환 종료");
         Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
 
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
+
+        StartCoroutine(FadeIn());
+        Debug.Log("씬 전환 종료");
     }
 
-    IEnumerator FadeIn()
+    IEnumerator FadeOut() // 시작 // 점점 검게
     {
+        Debug.Log("페이드 아웃");
         float elapsedTime = 0f;
+
         while (elapsedTime < fadeTime)
-        {
-            yield return new WaitForEndOfFrame();
-            elapsedTime += Time.deltaTime;
-            fadeColor.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
-            fadeObject.color = fadeColor;
-        }      
-    }
-
-    IEnumerator FadeOut()
-    {
-        float elapsedTime = 0f;
-
-        yield return new WaitForSeconds(waitTime);
-
-        while(elapsedTime < fadeTime)
         {
             yield return new WaitForEndOfFrame();
             elapsedTime += Time.deltaTime;
             fadeColor.a = Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
         }
+        Debug.Log("페이드 아웃 종료");
+    }
+
+    IEnumerator FadeIn() // 끝 // 점점 투명하게
+    {
+        Debug.Log("페이드 인");
+        float elapsedTime = 0f;
+
+        yield return new WaitForSeconds(waitTime);
+
+        while (elapsedTime < fadeTime)
+        {
+            yield return new WaitForEndOfFrame();
+            elapsedTime += Time.deltaTime;
+            fadeColor.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
+            fadeObject.color = fadeColor;
+        }
+        Debug.Log("페이드 인 종료");
     }
 }
 
