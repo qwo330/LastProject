@@ -2,15 +2,18 @@
 
 public delegate void TimerCallback();
 
-public class GameTimer : MonoBehaviour{
+public class GameTimer : MonoBehaviour
+{
     public TimerCallback Callback;
 
-    public float callTime;
+    float callTime, elapseTime;
     bool isWorking = false;
+    bool isRepeat = false;
 
-    public void SetTimer(float time = 1)
+    public void SetTimer(float time = 1f, bool isRepeat = false)
     {
         callTime = time;
+        this.isRepeat = isRepeat;
     }
 
     public void StartTimer()
@@ -20,12 +23,13 @@ public class GameTimer : MonoBehaviour{
 
     public void SleepTimer()
     {
-        isWorking = false;
+        isWorking = !isWorking;
     }
 
     public void StopTimer()
     {
         isWorking = false;
+        elapseTime = 0f;
     }
 
     public void ReturnTimer()
@@ -35,18 +39,21 @@ public class GameTimer : MonoBehaviour{
 
     public float GetRemainTime()
     {
-        return callTime;
+        return callTime - elapseTime;
     }
 
     private void Update()
     {
-        if(isWorking)
+        if (isWorking)
         {
-            if (callTime > 0)
-                callTime -= TimerManager.Instance.DeltaTime;
+            if (elapseTime < callTime)
+                elapseTime += TimerManager.Instance.DeltaTime;
+
             else
             {
-                StopTimer();
+                if (isRepeat) elapseTime = 0;
+                else StopTimer();
+
                 Callback();
             }
         }
