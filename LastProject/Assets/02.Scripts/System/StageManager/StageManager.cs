@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=84613
 public enum SceneState
 {
     ForestVillage, // 숲 마을
@@ -24,11 +23,12 @@ public class StageManager : Singleton<StageManager>{
     float fadeTime = 1f, waitTime = 1f;
     Color fadeColor;
     SpriteRenderer fadeObject;
+    WaitForEndOfFrame frameDelay = new WaitForEndOfFrame();
 
     public void Init()
     {
         currentStage = SceneState.Field1;
-        stage = new BattleMap();
+        stage = new BattleMap(); 
 
         ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
@@ -46,18 +46,9 @@ public class StageManager : Singleton<StageManager>{
         currentStage = next;
         stage.SetStage(next);
 
-        Debug.Log("씬 전환 시작");
-        StartCoroutine(FadeOut());
-
-        SceneManager.LoadScene(currentStage.ToString());
-
-        Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
-
-        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
-
-        StartCoroutine(FadeIn());
-        Debug.Log("씬 전환 종료");
+        StartCoroutine(FadeOut()); // 로딩
     }
+
 
     IEnumerator FadeOut() // 시작 // 점점 검게
     {
@@ -66,12 +57,21 @@ public class StageManager : Singleton<StageManager>{
 
         while (elapsedTime < fadeTime)
         {
-            yield return new WaitForEndOfFrame();
+            yield return frameDelay;
             elapsedTime += Time.deltaTime;
             fadeColor.a = Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
         }
         Debug.Log("페이드 아웃 종료");
+
+        Debug.Log("씬 전환 시작");
+        SceneManager.LoadScene(currentStage.ToString()); // 씬 전환
+
+        Debug.Log("씬 전환 종료");
+        Debug.Log("플레이어 시작위치 설정 :  " + playerStartPosition);
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
+
+        StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeIn() // 끝 // 점점 투명하게
@@ -79,11 +79,9 @@ public class StageManager : Singleton<StageManager>{
         Debug.Log("페이드 인");
         float elapsedTime = 0f;
 
-        yield return new WaitForSeconds(waitTime);
-
         while (elapsedTime < fadeTime)
         {
-            yield return new WaitForEndOfFrame();
+            yield return frameDelay;
             elapsedTime += Time.deltaTime;
             fadeColor.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
@@ -185,9 +183,3 @@ public class BattleMap : Stage
 //    public GameObject Spawner; // class
 //    //BattleMediator
 //}
-
-/* 
- * 비동기 loadscene 참고 링크
- http://wergia.tistory.com/59
- https://ssscool.tistory.com/309     
-*/
