@@ -20,10 +20,13 @@ public class TradePanelController : MonoBehaviour {
 
     private void CreateTradePanel()
     {
+        int count = 0;
         for (int i = 0; i < SoldItemCount; i++)
         {
             GameObject obj = Instantiate(TradeSlotPrefab, TradePanel.transform);
-
+            RectTransform rt = TradePanel.GetComponent<RectTransform>();
+            if (i > 4)
+                rt.offsetMin = new Vector2(0, rt.offsetMin.y - 104f);
         }
     }
 }

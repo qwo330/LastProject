@@ -42,6 +42,10 @@ public enum ItemCodes
     HalfRedPotion = 41,
     RedPotion = 42,
 
+    Herb = 51,
+    Apple = 52,
+    Meat = 53,
+
     Count,
 }
 
@@ -86,6 +90,10 @@ public class ItemList : Singleton<ItemList>
 
         ItemIndex[41] = new ItemData(ItemCodes.HalfRedPotion, ItemTypes.Eat, 10, 25);
         ItemIndex[42] = new ItemData(ItemCodes.RedPotion, ItemTypes.Eat, 10, 50);
+
+        ItemIndex[51] = new ItemData(ItemCodes.Herb, ItemTypes.RawMaterial, 999, 0);
+        ItemIndex[52] = new ItemData(ItemCodes.Apple, ItemTypes.RawMaterial, 999, 0);
+        ItemIndex[53] = new ItemData(ItemCodes.Meat, ItemTypes.RawMaterial, 999, 0);
     }
 
     void getItemTypeCount()

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 // http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=84613
 public enum SceneState
 {
@@ -20,6 +21,11 @@ public class StageManager : Singleton<StageManager>{
     [SerializeField]
     Player player;
 
+    float fadeTime = 1f, waitTime = 1f;
+    Color fadeColor;
+    [SerializeField]
+    SpriteRenderer fadeObject;
+
     public void Init()
     {
         currentStage = SceneState.Field1;
@@ -27,6 +33,8 @@ public class StageManager : Singleton<StageManager>{
 
         ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
+
+        fadeObject = GameObject.FindGameObjectWithTag("LoadingImg").GetComponent<SpriteRenderer>();
     }
 
     public void SetPlayerPosition(Vector3 startPosition)
@@ -48,10 +56,6 @@ public class StageManager : Singleton<StageManager>{
 
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
     }
-
-    float fadeTime = 1f, waitTime = 1f;
-    Color fadeColor;
-    SpriteRenderer fadeObject;
 
     IEnumerator FadeIn()
     {
@@ -85,49 +89,6 @@ public abstract class Stage
 {
     abstract public void SetStage(SceneState next);
 }
-
-//public abstract class TownStage : Stage
-//{
-//    // TODO : 마을 배치, NPC 배치
-//    public GameObject[] Level1s;
-//    public GameObject[] Level2s;
-
-//    override public void LoadScene(SceneState next)
-//    {
-//        SceneManager.LoadScene(next.ToString());
-//    }
-
-//    public override void Test()
-//    {
-//        Level1s = GameObject.FindGameObjectsWithTag("TownLevel1");
-//        Level2s = GameObject.FindGameObjectsWithTag("TownLevel2");
-
-//        for (int i = 0; i < Level1s.Length; i++)
-//        {
-//            Debug.Log(Level1s[i].name);
-//        }
-//    }
-
-
-//    //Townsystem
-//}
-
-//public abstract class FieldStage : Stage
-//{
-//    // TODO : 스포너, 배틀시스템, 몬스터 배치
-//    override public void LoadScene(SceneState next)
-//    {
-//        SceneManager.LoadScene(next.ToString());
-//    }
-
-//    public override void Test()
-//    {
-//        Debug.Log("배틀맵");
-//    }
-
-//    public GameObject Spawner; // class
-//    //BattleMediator
-//}
 
 public class ForestVillage : Stage
 {
@@ -175,6 +136,48 @@ public class BattleMap : Stage
     }
 }
 
+//public abstract class TownStage : Stage
+//{
+//    // TODO : 마을 배치, NPC 배치
+//    public GameObject[] Level1s;
+//    public GameObject[] Level2s;
+
+//    override public void LoadScene(SceneState next)
+//    {
+//        SceneManager.LoadScene(next.ToString());
+//    }
+
+//    public override void Test()
+//    {
+//        Level1s = GameObject.FindGameObjectsWithTag("TownLevel1");
+//        Level2s = GameObject.FindGameObjectsWithTag("TownLevel2");
+
+//        for (int i = 0; i < Level1s.Length; i++)
+//        {
+//            Debug.Log(Level1s[i].name);
+//        }
+//    }
+
+
+//    //Townsystem
+//}
+
+//public abstract class FieldStage : Stage
+//{
+//    // TODO : 스포너, 배틀시스템, 몬스터 배치
+//    override public void LoadScene(SceneState next)
+//    {
+//        SceneManager.LoadScene(next.ToString());
+//    }
+
+//    public override void Test()
+//    {
+//        Debug.Log("배틀맵");
+//    }
+
+//    public GameObject Spawner; // class
+//    //BattleMediator
+//}
 
 /* 
  * 비동기 loadscene 참고 링크
