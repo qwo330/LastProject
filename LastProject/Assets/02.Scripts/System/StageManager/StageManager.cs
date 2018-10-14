@@ -8,6 +8,7 @@ public enum SceneState
     SnowVillage, // 저주받은 눈 마을
     BattleMap,
     Field1,
+    Village1,
 }
 
 public class StageManager : Singleton<StageManager>{
@@ -129,7 +130,7 @@ public class BattleMap : Stage
     {
         switch (next)
         {
-            case SceneState.ForestVillage:
+            case SceneState.Village1:
                 StageManager.Instance.SetPlayerPosition(new Vector3(33f, 1.5f, -13f));
                 StageManager.Instance.stage = new ForestVillage(); // 미리 만들어도 될 듯
                 break;
