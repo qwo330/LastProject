@@ -9,8 +9,8 @@ public class EnemySpawner : MonoBehaviour
     const float spawnTime = 2f;
     List<Ent> entList;
 
-    const float MinRandomPos = -3f;
-    const float MaxRandomPos = 3f;
+    const float MinRandomPos = -2f;
+    const float MaxRandomPos = 2f;
 
     public void Init(int maxCount)
     {
@@ -25,8 +25,8 @@ public class EnemySpawner : MonoBehaviour
     {
         if (entList.Count < MaxCount)
         {
-            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), 0f, Random.Range(MinRandomPos, MaxRandomPos));
-            Debug.Log(randomPosition);
+            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), transform.position.y+2f, Random.Range(MinRandomPos, MaxRandomPos));
+            Debug.Log(transform.position + randomPosition);
             entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, 100, 10, 1, 500, entList));
             spawnTimer.SetTimer(spawnTime);
             spawnTimer.StartTimer();

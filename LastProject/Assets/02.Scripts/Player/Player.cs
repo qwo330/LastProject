@@ -134,6 +134,7 @@ public class Player : MonoBehaviour
                 //idle
                 else if(playerStates != CharacterState.Idle)
                 {
+                    transform.LookAt(transform);
                     playerStates = CharacterState.Idle;
                     ChangeState(playerStates);
                 }

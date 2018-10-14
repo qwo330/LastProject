@@ -45,6 +45,7 @@ public class Ent : abstractEnemy
                 }
                 else
                 {
+
                     ChangeState(CharacterState.Idle);
                 }
             }
@@ -60,7 +61,7 @@ public class Ent : abstractEnemy
         switch (state)
         {
             case CharacterState.Idle:
-                currentState = new EnemyIdle(animatorComponent, navMeshAgent);
+                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform, rigidbodyComponent);
                 break;
             case CharacterState.Running:
                 currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer); 
