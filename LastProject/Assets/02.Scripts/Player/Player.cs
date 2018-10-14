@@ -184,7 +184,7 @@ public class Player : MonoBehaviour
 
     public void PlayerWound(int damege)
     {
-        //status.cHealth -= damege;
+        status.cHealth -= damege;
         if(status.cHealth < 0)
         {
             playerStates = CharacterState.Death;  

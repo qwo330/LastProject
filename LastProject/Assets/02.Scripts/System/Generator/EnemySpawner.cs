@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     GameTimer spawnTimer;
     const float spawnTime = 2f;
     List<Ent> entList;
+    bool isRespawn;
 
     const float MinRandomPos = 0f;
     const float MaxRandomPos = 0f;
@@ -17,33 +18,42 @@ public class EnemySpawner : MonoBehaviour
         MaxCount = maxCount;
         spawnTimer = TimerManager.Instance.GetTimer();
         spawnTimer.SetTimer(spawnTime);
-        spawnTimer.Callback = Spawn;
+        spawnTimer.Callback= Spawn;
         entList = new List<Ent>();
+        isRespawn = false;
     }
 
     void Spawn()
     {
         if (entList.Count < MaxCount)
         {
-            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), transform.position.y+2f, Random.Range(MinRandomPos, MaxRandomPos));
+            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
             entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, 100, 10, 1, 500, entList));
-            spawnTimer.SetTimer(spawnTime);
-            spawnTimer.StartTimer();
         }
-        Debug.Log(entList.Count);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == Defines.TAG_Player)
         {
-            spawnTimer.SetTimer(spawnTime);
-            spawnTimer.StartTimer();
+            isRespawn = true;
+            StartCoroutine(respawn());
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        spawnTimer.StopTimer();
+        isRespawn = false;
+        StopCoroutine(respawn());
+    }
+
+    IEnumerator respawn()
+    {
+        while (isRespawn)
+        {
+            yield return new WaitForSeconds(spawnTime);
+
+            Spawn();
+        }
     }
 }

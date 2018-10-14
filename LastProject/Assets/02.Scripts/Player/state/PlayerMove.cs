@@ -24,7 +24,6 @@ public class PlayerMove : PlayerState
         float rotation = HorizontalAxis * MovingSpeed; 
         Vector3 v = new Vector3(rotation, 0, traslation);
         Quaternion q = Quaternion.LookRotation(v);
-        //rigidbodyComponent.velocity = v;
         transformComponent.position = new Vector3(transformComponent.position.x + rotation * TimerManager.Instance.DeltaTime, transformComponent.position.y, transformComponent.position.z + traslation * TimerManager.Instance.DeltaTime);
         transformComponent.rotation = q;
         animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, playerStates == CharacterState.Running);

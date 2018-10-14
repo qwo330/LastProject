@@ -4,56 +4,54 @@ using UnityEngine;
 
 public class Ent : abstractEnemy
 {
-    //private void Awake()
-    //{
-    //   Init(0, 0, 0, 1);
-    //}
-
     public List<Ent> MemberList;
 
     private void Update()
     {
-        //if (targetPlayer != null)
-        //{
-        //    TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
+        if (targetPlayer != null)
+        {
+            TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
 
-        //    if (!(currentState is EnemyAttack || currentState is EnemyDeath || currentState is EnemyWound))
-        //    {
-        //        if (TargetDistance < MaxChaseDistance)
-        //        {
-        //            if (TargetDistance > MinChaseDistance)
-        //            {
-        //                if (navMeshAgent.isStopped)
-        //                {
-        //                    ChangeState(CharacterState.Running);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                if ((currentState is EnemyIdle || currentState is EnemyMove))
-        //                {
-        //                    if (isAttackable)
-        //                    {
-        //                        navMeshAgent.isStopped = true;
-        //                        isAttackable = false;
-        //                        attackTimer.SetTimer(2f);
-        //                        attackTimer.StartTimer();
-        //                        ChangeState(CharacterState.Attack);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
+            if(!(currentState is EnemyDeath))
+            {
+                if (!(currentState is EnemyAttack && currentState is EnemyWound))
+                {
+                    if (TargetDistance < MaxChaseDistance)
+                    {
+                        if (TargetDistance > MinChaseDistance)
+                        {
+                            if (navMeshAgent.isStopped)
+                            {
+                                ChangeState(CharacterState.Running);
+                            }
+                        }
+                        else
+                        {
+                            if ((currentState is EnemyIdle || currentState is EnemyMove))
+                            {
+                                if (isAttackable)
+                                {
+                                    navMeshAgent.isStopped = true;
+                                    isAttackable = false;
+                                    attackTimer.SetTimer(2f);
+                                    attackTimer.StartTimer();
+                                    ChangeState(CharacterState.Attack);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
 
-        //            ChangeState(CharacterState.Idle);
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    ChangeState(CharacterState.Idle);
-        //}
+                        ChangeState(CharacterState.Idle);
+                    }
+                }
+            }
+        }
+        else
+        {
+            ChangeState(CharacterState.Idle);
+        }
     }
 
     protected override void ChangeState(CharacterState state)
