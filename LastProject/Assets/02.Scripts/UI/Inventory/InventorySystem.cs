@@ -138,7 +138,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         if (isDrag) return;
 
         Slot targetItem = getItemInfo();
-        if (targetItem.Item.Count == 0) return;
+        if (targetItem == null || targetItem.Item.Count == 0) return;
 
         ItemData itemData = targetItem.Item[0];
         if (itemData.ItemCode == ItemCodes.Empty) return;
