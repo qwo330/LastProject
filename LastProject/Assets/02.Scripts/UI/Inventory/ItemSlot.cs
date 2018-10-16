@@ -17,8 +17,6 @@ public abstract class Slot : MonoBehaviour
             ItemData tmp = Item[i];
             tmp.Time--;
             Item[i] = tmp;
-
-            //Debug.Log(i);
         }
 
         if (Item[0].Time <= 0)

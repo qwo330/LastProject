@@ -8,8 +8,9 @@ public struct ItemData : IComparer
     public string ItemName;
     public int Time, MaxTime;
     public int Value; // 무기는 공격력, 방어구는 방어력, 포션은 회복력
+    public int Cost;
 
-    public ItemData(ItemCodes itemCode, ItemTypes itemType, int maxDurability, int value)
+    public ItemData(ItemCodes itemCode, ItemTypes itemType, int maxDurability, int value, int cost)
     {
         ItemCode = itemCode;
         ItemType = itemType;
@@ -17,6 +18,7 @@ public struct ItemData : IComparer
         MaxTime = maxDurability;
         Time = MaxTime;
         Value = value;
+        Cost = cost;
     }
 
     public ItemData(ItemData proto)
@@ -27,6 +29,7 @@ public struct ItemData : IComparer
         MaxTime = proto.MaxTime;
         Time = MaxTime;
         Value = proto.Value;
+        Cost = proto.Cost;
     }
 
     int IComparer.Compare(object _x, object _y)
