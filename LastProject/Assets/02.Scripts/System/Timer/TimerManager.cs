@@ -9,7 +9,7 @@ public class TimerManager : Singleton<TimerManager> {
     float fixedDeltaTime;
 
     [SerializeField]
-    int timerCount = 50;
+    int timerCount = 128;
 
     Queue<GameTimer> timerPool;
 

@@ -14,7 +14,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     public GameObject ItemPopUp;
     public Image ItemPopUpImg;
-    Text ItemPopUpText;
+    Text itemPopUpText;
 
     [SerializeField]
     EquipmentSlot[] equipmentSlots = new EquipmentSlot[4];
@@ -49,20 +49,29 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         AddIteminInventory(new ItemData(ItemList.Instance.ItemIndex[41]));
     }
     /* ===================================*/
-    void CreateInventory()
+
+    public void Init()
     {
         gr = GetComponentInParent<GraphicRaycaster>();
         ped = new PointerEventData(null);
-        EmptyImg.gameObject.SetActive(false);
-
-        ItemPopUpText = ItemPopUp.GetComponentInChildren<Text>();
-        ItemPopUp.SetActive(false);
 
         itemTimer = TimerManager.Instance.GetTimer();
-
         for (int i = 0; i < 4; i++)
             itemTimer.Callback += equipmentSlots[i].Elapse;
 
+        itemTimer.SetTimer(1f, true);
+        itemTimer.StartTimer();
+
+        CreateInventory();
+
+        EmptyImg.gameObject.SetActive(false);
+
+        itemPopUpText = ItemPopUp.GetComponentInChildren<Text>();
+        ItemPopUp.SetActive(false);
+    }
+
+    void CreateInventory()
+    {
         for (int i = 0; i < Defines.InventorySize; i++)
         {
             GameObject obj = Instantiate(SlotPrefab, InventoryPanel.transform);
@@ -70,11 +79,9 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             slot.Position = i;
             inventorySlots.Add(slot);
 
-            itemTimer.Callback += slot.Elapse;
+            if(itemTimer != null)
+                itemTimer.Callback += slot.Elapse;
         }
-
-        itemTimer.SetTimer(1f, true);
-        itemTimer.StartTimer();
     }
 
     public void OnBeginDrag(PointerEventData data)
@@ -144,12 +151,13 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         if (itemData.ItemCode == ItemCodes.Empty) return;
 
         ItemPopUp.SetActive(true);
-        ItemPopUpText.text = itemData.ItemName + "\n" + itemData.Time.ToString();
+        itemPopUpText.text = itemData.ItemName + "\n" + itemData.Time.ToString();
         ItemPopUpImg.sprite = ImageStorage.Instance.sprites[(int)itemData.ItemCode];
     }
 
     Slot getItemInfo()
     {
+        if (ped == null) return null;
         Slot result = null;
 
         ped.position = Input.mousePosition;

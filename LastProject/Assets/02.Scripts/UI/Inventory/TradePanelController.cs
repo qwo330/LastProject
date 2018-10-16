@@ -1,12 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TradePanelController : MonoBehaviour {
+public class TradePanelController : MonoBehaviour
+{
     public GameObject EquipmentPanel, FoodPanel;
     public GameObject TradeListPrefab;
     public ScrollRect Mask;
+
+    public GraphicRaycaster gr;
+    PointerEventData ped;
+
+    public GameObject TradePopUp;
+    public Image TradePopUpImg;
+    Text tradePopUpText;
 
     public int EquipmentCount, FoodCount;
 
@@ -17,14 +24,29 @@ public class TradePanelController : MonoBehaviour {
 
     public void Init()
     {
+        gr = GetComponentInParent<GraphicRaycaster>();
+        ped = new PointerEventData(null);
+
         CreateTradePanel();
+
+        TradePopUp.SetActive(false);
     }
 
-    private void CreateTradePanel()
+    void CreateTradePanel()
     {
         for (int i = 0; i < EquipmentCount; i++)
         {
             GameObject obj = Instantiate(TradeListPrefab, EquipmentPanel.transform);
+            SalesItemSlot slot = obj.GetComponent<SalesItemSlot>();
+            //NPC가 판매할 아이템 정보
+            //slot.SalesItem = 
+
+            Button btn = obj.GetComponentInChildren<Button>();
+            btn.onClick.AddListener(() => Buy(obj));
+
+            Text text = obj.GetComponentInChildren<Text>();
+            text.text = "ItemName\n" + "ItemCost\n" + "ItemDetailText";
+
             RectTransform rt = EquipmentPanel.GetComponent<RectTransform>();
             if (i > 4)
                 rt.offsetMin = new Vector2(0, rt.offsetMin.y - 104f);
@@ -33,10 +55,26 @@ public class TradePanelController : MonoBehaviour {
         for (int i = 0; i < FoodCount; i++)
         {
             GameObject obj = Instantiate(TradeListPrefab, FoodPanel.transform);
+            SalesItemSlot slot = obj.GetComponent<SalesItemSlot>();
+            //NPC가 판매할 아이템 정보
+            //slot.SalesItem = 
+
+            Button btn = obj.GetComponentInChildren<Button>();
+            btn.onClick.AddListener(() => Buy(obj));
+
+            Text text = obj.GetComponentInChildren<Text>();
+            text.text = "ItemName\n" + "ItemCost\n" + "ItemDetailText";
+
             RectTransform rt = FoodPanel.GetComponent<RectTransform>();
             if (i > 4)
                 rt.offsetMin = new Vector2(0, rt.offsetMin.y - 104f);
         }
+    }
+
+    public void Buy(GameObject obj)
+    {
+        SalesItemSlot target = obj.GetComponent<SalesItemSlot>();
+        Debug.Log(target.SalesItem.ItemCode);
     }
 
     public void ChangeFoodTap()
