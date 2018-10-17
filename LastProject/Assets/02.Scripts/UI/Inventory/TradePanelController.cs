@@ -45,8 +45,8 @@ public class TradePanelController : MonoBehaviour
             //NPC가 판매할 아이템 정보
             //slot.SalesItem = 
 
-            Button btn = obj.GetComponentInChildren<Button>();
-            btn.onClick.AddListener(() => Buy(obj));
+            //Button btn = obj.GetComponentInChildren<Button>();
+            //btn.onClick.AddListener(() => Buy(obj));
 
             Text text = obj.GetComponentInChildren<Text>();
             text.text = "ItemName\n" + "ItemCost\n" + "ItemDetailText";
@@ -63,8 +63,8 @@ public class TradePanelController : MonoBehaviour
             //NPC가 판매할 아이템 정보
             //slot.SalesItem = 
 
-            Button btn = obj.GetComponentInChildren<Button>();
-            btn.onClick.AddListener(() => Buy(obj));
+            //Button btn = obj.GetComponentInChildren<Button>();
+            //btn.onClick.AddListener(() => Buy(obj));
 
             Text text = obj.GetComponentInChildren<Text>();
             text.text = "ItemName\n" + "ItemCost\n" + "ItemDetailText";
@@ -73,14 +73,6 @@ public class TradePanelController : MonoBehaviour
             if (i > 4)
                 rt.offsetMin = new Vector2(0, rt.offsetMin.y - 104f);
         }
-    }
-
-    public void Buy(GameObject obj)
-    {
-        SaleItemSlot target = obj.GetComponent<SaleItemSlot>();
-        //ItemData item = target.SalesItem;
-        //TradePopUp.SetActive(true);
-        //tradePopUpText.text = item.ItemName + "\n" + item.Cost + "\n";
     }
 
     public void ChangeFoodTap()

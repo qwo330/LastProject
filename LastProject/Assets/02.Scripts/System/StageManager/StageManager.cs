@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 public enum SceneState
 {
     ForestVillage, // 숲 마을
-    SnowVillage, // 저주받은 눈 마을
+    SnowVillage = 11, // 저주받은 눈 마을
     BattleMap,
-    Field1,
-    Village1,
+    Field1 = 100,
+    Village1 = 10,
 }
 
 public class StageManager : Singleton<StageManager>{
@@ -46,6 +46,8 @@ public class StageManager : Singleton<StageManager>{
     {
         currentStage = next;
         stage.SetStage(next);
+                                                   // 마을 : 필드
+        player.isInHome = ((int)currentStage < 100) ? true : false;
 
         StartCoroutine(FadeOut()); // 로딩
     }
