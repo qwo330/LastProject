@@ -8,7 +8,7 @@ public class Ent : abstractEnemy
 
     private void Update()
     {
-        if (targetPlayer != null)
+        if (targetPlayer != null && !isDead)
         {
             TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
 
@@ -68,7 +68,7 @@ public class Ent : abstractEnemy
                 currentState = new EnemyAttack(animatorComponent, targetPlayer, transform);
                 break;
             case CharacterState.Death:
-                currentState = new EnemyDeath(animatorComponent);
+                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent);
                 break;
             case CharacterState.Wound:
                 currentState = new EnemyWound(animatorComponent);
@@ -113,12 +113,13 @@ public class Ent : abstractEnemy
     public override void PlayerWound(int damage)
     {
         status.cHealth -= damage;
-        if(status.cHealth <= 0)
+        if(status.cHealth <= 0 && !isDead)
         {
             if(MemberList != null && MemberList.Contains(this))
             {
                 MemberList.Remove(this);
             }
+            isDead = true;
             ChangeState(CharacterState.Death);
         }
         else

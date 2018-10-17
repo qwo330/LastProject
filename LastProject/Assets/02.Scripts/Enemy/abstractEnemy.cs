@@ -20,6 +20,7 @@ public abstract class abstractEnemy : MonoBehaviour
     protected GameTimer deadTimer;
     protected GameTimer attackTimer;
     protected bool isAttackable;
+    protected bool isDead;
 
     protected float MinChaseDistance = 2f;
     protected float MaxChaseDistance = 8f;
@@ -41,6 +42,7 @@ public abstract class abstractEnemy : MonoBehaviour
         status = new CharacterStatus(atk, def, hp, lv);
         navMeshAgent.isStopped = true;
         isAttackable = true;
+        isDead = false;
 
         currentState = null;
         targetPlayer = null;
