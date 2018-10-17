@@ -32,7 +32,6 @@ public class StageManager : Singleton<StageManager>{
         stage = new BattleMap();
 
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
-
         ChangeScene(currentStage);
         
         fadeObject = player.GetComponentInChildren<SpriteRenderer>();
