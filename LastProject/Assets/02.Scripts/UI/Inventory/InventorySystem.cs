@@ -32,7 +32,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     private void Start()
     {
         //임시로 배치
-        CreateInventory();
+        Init();
     }
 
     public void AddWoodSword()
@@ -54,6 +54,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         gr = GetComponentInParent<GraphicRaycaster>();
         ped = new PointerEventData(null);
+        EmptyImg.gameObject.SetActive(false);
 
         itemTimer = TimerManager.Instance.GetTimer();
         for (int i = 0; i < 4; i++)
@@ -61,10 +62,8 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
         itemTimer.SetTimer(1f, true);
         itemTimer.StartTimer();
-
+        
         CreateInventory();
-
-        EmptyImg.gameObject.SetActive(false);
 
         itemPopUpText = ItemPopUp.GetComponentInChildren<Text>();
         ItemPopUp.SetActive(false);
@@ -94,7 +93,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     public void OnDrag(PointerEventData data)
     {
-        if(dragItem.Item.Count == 0)
+        if(dragItem == null || dragItem.Item.Count == 0)
         {
             isDrag = false;
             EmptyImg.gameObject.SetActive(false);
@@ -120,22 +119,35 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         isDrag = false;
         EmptyImg.gameObject.SetActive(false);
-        if (dragItem.Item.Count == 0) return;
+        if (dragItem == null || dragItem.Item.Count == 0) return;
 
         Slot targetItem = getItemInfo();
-        if (targetItem is ItemSlot) // 인벤토리의 slot
+        if (targetItem == null) // End 지점이 TradePanel 일때
         {
-            swapItem(targetItem);
-        }
-        else if(targetItem is EquipmentSlot) // 장비의 slot //장비창에서 등록처리
-        {
-            //TODO : 인벤토리와 장비 slot에서 아이템 교체
-            ItemTypes part = targetItem.GetComponent<EquipmentSlot>().Part;
+            GameObject obj = getSaleItem();
+            if (obj== null) return;
 
-            if (part == dragItem.Item[0].ItemType)
+            //TODO : TradePanel에서 판매 호출
+            Debug.Log("SELL");
+            //TradePopUp.SetActive(true);
+            //tradePopUpText.text = item.ItemName + "\n" + item.Cost + "\n";
+        }
+        else // End 지점이 Item, EquipmentPanel 일때
+        {
+            if (targetItem is ItemSlot) // 인벤토리의 slot
+            {
                 swapItem(targetItem);
-            else
-                Debug.Log("올바르지 못한 착용 부위입니다.");
+            }
+            else if (targetItem is EquipmentSlot) // 장비의 slot //장비창에서 등록처리
+            {
+                //TODO : 인벤토리와 장비 slot에서 아이템 교체
+                ItemTypes part = targetItem.GetComponent<EquipmentSlot>().Part;
+
+                if (part == dragItem.Item[0].ItemType)
+                    swapItem(targetItem);
+                else
+                    Debug.Log("올바르지 못한 착용 부위입니다.");
+            }
         }
     }
 
@@ -145,7 +157,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         if (isDrag) return;
 
         Slot targetItem = getItemInfo();
-        if (targetItem == null || targetItem.Item.Count == 0) return;
+        if (targetItem == null ||targetItem.Item.Count == 0) return;
 
         ItemData itemData = targetItem.Item[0];
         if (itemData.ItemCode == ItemCodes.Empty) return;
@@ -168,6 +180,23 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             if (results[0].gameObject.CompareTag("ItemSlot"))
             {
                 result = results[0].gameObject.GetComponent<Slot>();
+            }
+        }
+        return result;
+    }
+
+    GameObject getSaleItem()
+    {
+        GameObject result = null;
+
+        ped.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        gr.Raycast(ped, results);
+        if (results.Count != 0)
+        {
+            if (results[0].gameObject.CompareTag("TradeUI"))
+            {
+                result = results[0].gameObject;
             }
         }
         return result;
@@ -279,14 +308,6 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
 
     }
-    /*====================================================*/
-    /// <summary>
-    /// 장비창으로 아이템을 옮겼을 때 추가
-    /// </summary>
-    public void EquipItem(ItemData item)
-    {
-
-    }
 }
 
 //bool checkUsedSlot()
@@ -305,29 +326,27 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 //    return false;
 //}
 
-/* 하정님 조합슬롯 추가,삭제에 참고
-    ///// <summary>
-    ///// 인벤토리에 보이는 라인 수를 늘린다.
-    ///// </summary>
-    //public bool AddSlot()
-    //{
-    //    if (shownSlotCount >= 30) return false;
+///// <summary>
+///// 인벤토리에 보이는 라인 수를 늘린다.
+///// </summary>
+//public bool AddSlot()
+//{
+//    if (shownSlotCount >= 30) return false;
 
-    //    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
-    //    rt.offsetMin = new Vector2(0, rt.offsetMin.y - 58f); // slotImageSize
-    //    shownSlotCount += 6;
-    //    return true;
-    //}
+//    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
+//    rt.offsetMin = new Vector2(0, rt.offsetMin.y - 58f); // slotImageSize
+//    shownSlotCount += 6;
+//    return true;
+//}
 
-    ///// <summary>
-    ///// 인벤토리에 보이는 라인 수를 줄인다.
-    ///// </summary>
-    //public void RemoveSlot()
-    //{
-    //    if (shownSlotCount <= 12 && itemCount >= shownSlotCount) return;
+///// <summary>
+///// 인벤토리에 보이는 라인 수를 줄인다.
+///// </summary>
+//public void RemoveSlot()
+//{
+//    if (shownSlotCount <= 12 && itemCount >= shownSlotCount) return;
 
-    //    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
-    //    rt.offsetMin = new Vector2(0, rt.offsetMin.y + 58f);
-    //    shownSlotCount -= 6;
-    //}
-     */
+//    RectTransform rt = InventoryPanel.GetComponent<RectTransform>();
+//    rt.offsetMin = new Vector2(0, rt.offsetMin.y + 58f);
+//    shownSlotCount -= 6;
+//}

@@ -14,6 +14,7 @@ public class TradePanelController : MonoBehaviour
     public GameObject TradePopUp;
     public Image TradePopUpImg;
     Text tradePopUpText;
+    InventorySystem inventory;
 
     public int EquipmentCount, FoodCount;
 
@@ -28,7 +29,10 @@ public class TradePanelController : MonoBehaviour
         ped = new PointerEventData(null);
 
         CreateTradePanel();
+        inventory = GetComponentInParent<InventorySystem>();
 
+        // Button의 Text가 잡히지 않게 주의할것.
+        tradePopUpText = TradePopUp.GetComponentInChildren<Text>();
         TradePopUp.SetActive(false);
     }
 
@@ -37,7 +41,7 @@ public class TradePanelController : MonoBehaviour
         for (int i = 0; i < EquipmentCount; i++)
         {
             GameObject obj = Instantiate(TradeListPrefab, EquipmentPanel.transform);
-            SalesItemSlot slot = obj.GetComponent<SalesItemSlot>();
+            SaleItemSlot slot = obj.GetComponent<SaleItemSlot>();
             //NPC가 판매할 아이템 정보
             //slot.SalesItem = 
 
@@ -55,7 +59,7 @@ public class TradePanelController : MonoBehaviour
         for (int i = 0; i < FoodCount; i++)
         {
             GameObject obj = Instantiate(TradeListPrefab, FoodPanel.transform);
-            SalesItemSlot slot = obj.GetComponent<SalesItemSlot>();
+            SaleItemSlot slot = obj.GetComponent<SaleItemSlot>();
             //NPC가 판매할 아이템 정보
             //slot.SalesItem = 
 
@@ -73,8 +77,10 @@ public class TradePanelController : MonoBehaviour
 
     public void Buy(GameObject obj)
     {
-        SalesItemSlot target = obj.GetComponent<SalesItemSlot>();
-        Debug.Log(target.SalesItem.ItemCode);
+        SaleItemSlot target = obj.GetComponent<SaleItemSlot>();
+        //ItemData item = target.SalesItem;
+        //TradePopUp.SetActive(true);
+        //tradePopUpText.text = item.ItemName + "\n" + item.Cost + "\n";
     }
 
     public void ChangeFoodTap()
