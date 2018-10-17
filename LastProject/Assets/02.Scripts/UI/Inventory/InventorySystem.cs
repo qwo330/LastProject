@@ -344,6 +344,8 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         else if (type == ItemTypes.Eat)
         {
             messageText.text = "아이템을 사용하였습니다.";
+            // TODO : 체력 회복 or 버프 & 아이템 카운트 1개 감소
+
         }
         else // equipment
         {
@@ -358,8 +360,9 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
             else if (type == equipmentSlots[2].Part)
                 swapItem(dragTarget, equipmentSlots[2]);
 
-            else // (type == equipmentSlots[0].Part)
+            else if (type == equipmentSlots[3].Part)
                 swapItem(dragTarget, equipmentSlots[3]);
+            else;   
         }
 
         yield return new WaitForSeconds(1f);

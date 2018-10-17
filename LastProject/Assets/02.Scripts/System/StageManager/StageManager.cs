@@ -29,11 +29,12 @@ public class StageManager : Singleton<StageManager>{
     public void Init()
     {
         currentStage = SceneState.Field1;
-        stage = new BattleMap(); 
+        stage = new BattleMap();
 
-        ChangeScene(currentStage);
         player = ObjectPool.Instance.PopPlayer(playerStartPosition);
 
+        ChangeScene(currentStage);
+        
         fadeObject = player.GetComponentInChildren<SpriteRenderer>();
     }
 
