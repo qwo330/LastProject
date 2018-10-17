@@ -69,11 +69,12 @@ public class Player : MonoBehaviour
     public PlayerState CurrentState;
     public bool isInHome;
     public CharacterStatus status;
-
+    
     CharacterState playerStates;
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
     PlayerAttackBox attackBoxCollider;
+    bool isDead;
 
     float VerticalAxis;
     float HorizontalAxis;
@@ -184,6 +185,11 @@ public class Player : MonoBehaviour
 
     public void PlayerWound(int damege)
     {
+        if(playerStates == CharacterState.Death)
+        {
+            return;
+        }
+
         status.cHealth -= damege;
         if(status.cHealth < 0)
         {
