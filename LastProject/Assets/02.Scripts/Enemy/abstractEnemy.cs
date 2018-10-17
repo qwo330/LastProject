@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,10 +36,12 @@ public abstract class abstractEnemy : MonoBehaviour
         animatorComponent = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyAttackBox = GetComponentsInChildren<EnemyAttackBox>();
+
         for (int i = 0; i < enemyAttackBox.Length; i++)
         {
             enemyAttackBox[i].enemy = this;
         }
+
         status = new CharacterStatus(atk, def, hp, lv);
         navMeshAgent.isStopped = true;
         isAttackable = true;
@@ -53,6 +56,9 @@ public abstract class abstractEnemy : MonoBehaviour
         attackTimer = TimerManager.Instance.GetTimer();
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;
+
+        ObjectPool.Instance.allPushEnt += PushSelf;
+
         return this;
     }
 
@@ -61,20 +67,17 @@ public abstract class abstractEnemy : MonoBehaviour
         isAttackable = true;
     }
 
-    public abstract void PlayerWound(int damage);
-
     protected virtual void ChangeState(CharacterState state)
     {
         currentState.DoAction();
     }
 
+    public abstract void PlayerWound(int damage);
     protected abstract void ONAttackExit();
-
     protected abstract void OnWoundExit();
-
     protected abstract void OnDeadExit();
-
     protected abstract void DeadExit();
+    protected abstract void PushSelf();
 
     protected void OnTriggerStay(Collider other)
     {
@@ -90,6 +93,5 @@ public abstract class abstractEnemy : MonoBehaviour
         {
             targetPlayer = null;
         }
-        
     }
 }

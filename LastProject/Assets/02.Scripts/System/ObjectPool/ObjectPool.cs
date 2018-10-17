@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+
+public delegate void AllPushEnt();
 
 public class ObjectPool : Singleton<ObjectPool>
 {
@@ -10,6 +11,8 @@ public class ObjectPool : Singleton<ObjectPool>
     Player playerCharacter;
     GameObject entPrefab;
     Queue<Ent> EntQueue;
+
+    public AllPushEnt allPushEnt;
 
     public void Init()
     {
