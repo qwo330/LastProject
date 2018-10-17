@@ -5,11 +5,12 @@ using UnityEngine.SceneManagement;
 
 public enum SceneState
 {
-    ForestVillage, // 숲 마을
-    SnowVillage = 11, // 저주받은 눈 마을
-    BattleMap,
-    Field1 = 100,
+    Title = 1,
+
     Village1 = 10,
+    SnowVillage = 11, // 저주받은 눈 마을
+
+    Field1 = 100, 
 }
 
 public class StageManager : Singleton<StageManager>{
@@ -29,12 +30,10 @@ public class StageManager : Singleton<StageManager>{
 
     public void Init()
     {
-        currentStage = SceneState.Field1;
-        stage = new BattleMap();
+        currentStage = SceneState.Title;
+        stage = new ForestVillage();
 
-        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
-        ChangeScene(currentStage);
-        
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);        
         fadeObject = player.GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -45,6 +44,9 @@ public class StageManager : Singleton<StageManager>{
 
     public void ChangeScene(SceneState next)
     {
+        if (currentStage != SceneState.Title)
+            ObjectPool.Instance.allPushEnt();
+
         currentStage = next;
         stage.SetStage(next);
                                                    // 마을 : 필드
