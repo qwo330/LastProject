@@ -15,13 +15,13 @@ public class TurnUIOnAndOff : MonoBehaviour {
 
     public void TurnOnInventory()
     {
+        GameObject uicanvas = StageManager.Instance.UICanvas;
         
-
         InventorySystem a;
-        a = StageManager.Instance.UICanvas.GetComponentInChildren<InventorySystem>();
+        a = uicanvas.GetComponentInChildren<InventorySystem>();
 
         if(inventory == null)
-            inventory = StageManager.Instance.UICanvas.GetComponentInChildren<InventorySystem>().gameObject;
+        inventory = a.gameObject;
         inventory.SetActive(true);
     }
     public void TurnOffInventory()
