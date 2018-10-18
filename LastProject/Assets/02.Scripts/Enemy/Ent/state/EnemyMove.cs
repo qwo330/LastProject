@@ -7,11 +7,12 @@ public class EnemyMove : EnemyState
 {
     const float chaseDistance = 4f;
 
-    public EnemyMove(Animator animator, NavMeshAgent navMeshAgent, GameObject targetPlayer)
+    public EnemyMove(Animator animator, NavMeshAgent navMeshAgent, GameObject targetPlayer, float currentSpeed)
     {
         this.navMeshAgent = navMeshAgent;
         this.animatorComponent = animator;
         this.targetPlayer = targetPlayer;
+        this.currentSpeed = currentSpeed;
     }
 
     public override void DoAction()
@@ -20,6 +21,7 @@ public class EnemyMove : EnemyState
         {
             animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, true);
             navMeshAgent.SetDestination(targetPlayer.transform.position);
+            navMeshAgent.speed = currentSpeed;
             navMeshAgent.isStopped = false;
         }
     }

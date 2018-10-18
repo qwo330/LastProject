@@ -12,8 +12,9 @@ public class Ent : abstractEnemy
         if (targetPlayer != null && !isDead)
         {
             TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
+            currentSpeed = MovingSpeed;
 
-            if(!(currentState is EnemyDeath))
+            if (!(currentState is EnemyDeath))
             {
                 if (!(currentState is EnemyAttack && currentState is EnemyWound))
                 {
@@ -43,7 +44,6 @@ public class Ent : abstractEnemy
                     }
                     else
                     {
-
                         ChangeState(CharacterState.Idle);
                     }
                 }
@@ -60,16 +60,16 @@ public class Ent : abstractEnemy
         switch (state)
         {
             case CharacterState.Idle:
-                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform, rigidbodyComponent);
+                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform);
                 break;
             case CharacterState.Running:
-                currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer); 
+                currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer, currentSpeed); 
                 break;
             case CharacterState.Attack:
                 currentState = new EnemyAttack(animatorComponent, targetPlayer, transform);
                 break;
             case CharacterState.Death:
-                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent);
+                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent, currentSpeed);
                 break;
             case CharacterState.Wound:
                 currentState = new EnemyWound(animatorComponent);
@@ -121,6 +121,7 @@ public class Ent : abstractEnemy
                 MemberList.Remove(this);
             }
             isDead = true;
+            currentSpeed = 0;
             ChangeState(CharacterState.Death);
         }
         else

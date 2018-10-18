@@ -13,7 +13,7 @@ public abstract class PlayerState
     protected float VerticalAxis;
     protected float HorizontalAxis;
     protected CharacterState playerStates;
-    protected float MovingSpeed;
+    protected float currentSpeed;
 
     public abstract void DoAction();
 }
