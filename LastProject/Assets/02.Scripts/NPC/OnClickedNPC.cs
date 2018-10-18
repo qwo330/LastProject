@@ -54,6 +54,7 @@ public class OnClickedNPC : MonoBehaviour {
             if (Physics.Raycast(ray, out hitInfo))
             {
                     ShowUI();
+                
             }
         }
     }
@@ -73,11 +74,11 @@ public class OnClickedNPC : MonoBehaviour {
         {
             npc.OnClickedNPC((int)NPCType.ForestFactory);
             dialogueObject.SetActive(true);
-                acceptButton.onClick.AddListener(delegate () { upgradeObject.SetActive(false); });
+            acceptButton.onClick.AddListener(delegate () { upgradeObject.SetActive(false); });
             Debug.Log("another");
         }
 
-        
+
 
     }
 
