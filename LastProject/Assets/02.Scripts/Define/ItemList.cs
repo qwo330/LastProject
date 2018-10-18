@@ -64,9 +64,9 @@ public enum ItemCodes
 public class ItemList : Singleton<ItemList>
 {
     public ItemData[] ItemIndex;
-    public int EquipmentCount {private set; get;}
-    public int FoodCount { private set; get; }
-    public int RawMaterialCount { private set; get; }
+    public int EquipmentCount { get; private set; }
+    public int FoodCount { get; private set; }
+    public int RawMaterialCount { get; private set; }
 
     private void Start()
     {
@@ -106,17 +106,18 @@ public class ItemList : Singleton<ItemList>
         ItemIndex[51] = new ItemData(ItemCodes.Herb, ItemTypes.RawMaterial, 999, 0, 800);
         ItemIndex[52] = new ItemData(ItemCodes.Apple, ItemTypes.RawMaterial, 999, 0, 500);
         ItemIndex[53] = new ItemData(ItemCodes.Meat, ItemTypes.RawMaterial, 999, 0, 1000);
-        ItemIndex[54] = new ItemData(ItemCodes.Mushroom, ItemTypes.RawMaterial, 999, 0, 800);
-        ItemIndex[55] = new ItemData(ItemCodes.Salt, ItemTypes.RawMaterial, 999, 0, 200);
-        ItemIndex[56] = new ItemData(ItemCodes.Wood, ItemTypes.RawMaterial, 999, 0, 700);
-        ItemIndex[57] = new ItemData(ItemCodes.Stone, ItemTypes.RawMaterial, 999, 0, 300);
-        ItemIndex[58] = new ItemData(ItemCodes.Iron, ItemTypes.RawMaterial, 999, 0, 1300);
-        ItemIndex[59] = new ItemData(ItemCodes.Adamantium, ItemTypes.RawMaterial, 999, 0, 5000);
-        ItemIndex[60] = new ItemData(ItemCodes.Mithril, ItemTypes.RawMaterial, 999, 0, 12000);
-        ItemIndex[61] = new ItemData(ItemCodes.Ruby, ItemTypes.RawMaterial, 999, 0, 9000);
-        ItemIndex[62] = new ItemData(ItemCodes.Cotton, ItemTypes.RawMaterial, 999, 0, 800);
-        ItemIndex[63] = new ItemData(ItemCodes.Wool, ItemTypes.RawMaterial, 999, 0, 1000);
-        ItemIndex[64] = new ItemData(ItemCodes.Leather, ItemTypes.RawMaterial, 999, 0, 2000);
+        ItemIndex[54] = new ItemData(ItemCodes.Water, ItemTypes.RawMaterial, 999, 0, 800);
+        ItemIndex[55] = new ItemData(ItemCodes.Mushroom, ItemTypes.RawMaterial, 999, 0, 800);
+        ItemIndex[56] = new ItemData(ItemCodes.Salt, ItemTypes.RawMaterial, 999, 0, 200);
+        ItemIndex[57] = new ItemData(ItemCodes.Wood, ItemTypes.RawMaterial, 999, 0, 700);
+        ItemIndex[58] = new ItemData(ItemCodes.Stone, ItemTypes.RawMaterial, 999, 0, 300);
+        ItemIndex[59] = new ItemData(ItemCodes.Iron, ItemTypes.RawMaterial, 999, 0, 1300);
+        ItemIndex[60] = new ItemData(ItemCodes.Adamantium, ItemTypes.RawMaterial, 999, 0, 5000);
+        ItemIndex[61] = new ItemData(ItemCodes.Mithril, ItemTypes.RawMaterial, 999, 0, 12000);
+        ItemIndex[62] = new ItemData(ItemCodes.Ruby, ItemTypes.RawMaterial, 999, 0, 9000);
+        ItemIndex[63] = new ItemData(ItemCodes.Cotton, ItemTypes.RawMaterial, 999, 0, 800);
+        ItemIndex[64] = new ItemData(ItemCodes.Wool, ItemTypes.RawMaterial, 999, 0, 1000);
+        ItemIndex[65] = new ItemData(ItemCodes.Leather, ItemTypes.RawMaterial, 999, 0, 2000);
     }
 
     void getItemTypeCount()
