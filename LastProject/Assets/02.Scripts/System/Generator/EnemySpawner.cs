@@ -30,8 +30,12 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
 <<<<<<< HEAD
+<<<<<<< HEAD
             entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, 100, 10, 1, 500, entList));
             Debug.Log(name.ToString() + "  :  "  + transform.position);
+=======
+            entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, entList));
+>>>>>>> 26e58d00b08b0ed678fc9a2bd36e3c1054848006
 =======
             entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, entList));
 >>>>>>> 26e58d00b08b0ed678fc9a2bd36e3c1054848006
