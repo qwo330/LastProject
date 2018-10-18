@@ -23,7 +23,8 @@ public class PlayerMove : PlayerState
         float traslation = VerticalAxis * currentSpeed;
         float rotation = HorizontalAxis * currentSpeed; 
         Vector3 v = new Vector3(rotation, 0, traslation);
-        Quaternion q = Quaternion.LookRotation(v);
+        Quaternion q = Quaternion.identity;
+        if (v != Vector3.zero) q = Quaternion.LookRotation(v);
         transformComponent.position = new Vector3(transformComponent.position.x + rotation * TimerManager.Instance.DeltaTime, transformComponent.position.y, transformComponent.position.z + traslation * TimerManager.Instance.DeltaTime);
         transformComponent.rotation = q;
         animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, playerStates == CharacterState.Running);
