@@ -334,7 +334,14 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
     IEnumerator showUseMessage()
     {
+        if (dragTarget == null)// || dragTarget.Item.Count == 0)
+        {
+            MessagePanel.SetActive(false);
+            yield break;
+        }
+
         MessagePanel.SetActive(true);
+
         ItemTypes type = dragTarget.Item[0].ItemType;
 
         if (type == ItemTypes.RawMaterial)
@@ -344,8 +351,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         else if (type == ItemTypes.Eat)
         {
             messageText.text = "아이템을 사용하였습니다.";
-            // TODO : 체력 회복 or 버프 & 아이템 카운트 1개 감소
-
+            dragTarget.Use(0);
         }
         else // equipment
         {
@@ -362,16 +368,18 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
             else if (type == equipmentSlots[3].Part)
                 swapItem(dragTarget, equipmentSlots[3]);
-            else;   
+            else
+                Debug.Log("잘못된 장비입니다.");
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.7f);
         MessagePanel.SetActive(false);
     }
 
     // 내구도에 따른 아이템 경고
     public void WarnItemDelete()
     {
-
+        // TODO : 아이템의 내구도가 x분 이하이면 경고 UI 표기 
+        // (장비 / 음식 따로 표기 & 개수 표기)
     }
 }

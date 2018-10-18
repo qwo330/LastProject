@@ -10,7 +10,5 @@ public class ManagerCaller : MonoBehaviour {
         StageManager.Instance.Init();
         DataManager.Instance.Init();
         //AudioManager.Instance.Init();
-
-        StageManager.Instance.ChangeScene(SceneState.Field1);
     }
 }

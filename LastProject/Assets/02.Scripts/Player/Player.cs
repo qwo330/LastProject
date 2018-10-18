@@ -57,7 +57,8 @@ public enum CharacterState
     Death = 8,
     Wound = 16,
     DeathOrWound = Death | Wound,
-    DeathAndWound = Death & Wound
+    DeathAndWound = Death & Wound,
+    DeathXorWound = Death ^ Wound,
 }
 
 /// <summary>

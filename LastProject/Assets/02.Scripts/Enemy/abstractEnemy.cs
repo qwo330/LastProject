@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,20 +27,33 @@ public abstract class abstractEnemy : MonoBehaviour
     protected float MaxChaseDistance = 8f;
     protected float TargetDistance;
 
+    protected const int DefaultAtk = 100;
+    protected const int DefaultDef = 10;
+    protected const int DefaultHP = 500;
+    protected const int IncreaseAtk = 10;
+    protected const int IncreaseDef = 1;
+    protected const int IncreaseHP = 50;
+
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
 
-    public virtual abstractEnemy Init(int atk, int def, int hp, int lv)
+    public virtual abstractEnemy Init(int lv)
     {
         rigidbodyComponent = GetComponent<Rigidbody>();
         animatorComponent = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyAttackBox = GetComponentsInChildren<EnemyAttackBox>();
+
         for (int i = 0; i < enemyAttackBox.Length; i++)
         {
             enemyAttackBox[i].enemy = this;
         }
-        status = new CharacterStatus(atk, def, hp, lv);
+
+        status = new CharacterStatus(
+            DefaultAtk + IncreaseAtk * (lv-1), 
+            DefaultDef + IncreaseDef * (lv - 1), 
+            DefaultHP + IncreaseHP * (lv - 1), 
+            lv);
         navMeshAgent.isStopped = true;
         isAttackable = true;
         isDead = false;
@@ -53,6 +67,9 @@ public abstract class abstractEnemy : MonoBehaviour
         attackTimer = TimerManager.Instance.GetTimer();
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;
+
+        ObjectPool.Instance.allPushEnt += PushSelf;
+
         return this;
     }
 
@@ -61,20 +78,17 @@ public abstract class abstractEnemy : MonoBehaviour
         isAttackable = true;
     }
 
-    public abstract void PlayerWound(int damage);
-
     protected virtual void ChangeState(CharacterState state)
     {
         currentState.DoAction();
     }
 
+    public abstract void PlayerWound(int damage);
     protected abstract void ONAttackExit();
-
     protected abstract void OnWoundExit();
-
     protected abstract void OnDeadExit();
-
     protected abstract void DeadExit();
+    protected abstract void PushSelf();
 
     protected void OnTriggerStay(Collider other)
     {
@@ -90,6 +104,5 @@ public abstract class abstractEnemy : MonoBehaviour
         {
             targetPlayer = null;
         }
-        
     }
 }
