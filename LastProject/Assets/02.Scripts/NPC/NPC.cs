@@ -26,7 +26,7 @@ public class NPC : MonoBehaviour {
     {
         LoadDialogue();
     }
-
+    
     //NPC에서 호출
     public void OnClickedNPC(int ID)
     {
@@ -41,7 +41,7 @@ public class NPC : MonoBehaviour {
         {
             if (data[i]["DialogueId"].ToString() == ID.ToString())
             {
-              scripts.Add(data[i]["Scripts"].ToString());
+                scripts.Add(data[i]["Scripts"].ToString());
             }
         }
         dialogueText.text = scripts[0];

@@ -41,6 +41,7 @@ public class OnClickedNPC : MonoBehaviour {
     {
         npc = dialogueObject.GetComponent<NPC>();
         dialogueObject.SetActive(false);//clickedObject값을 가져오기위해 처음에 true였다가 false로 바꿔줌.
+        camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
     }
 
    
