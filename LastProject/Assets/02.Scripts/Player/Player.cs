@@ -57,7 +57,8 @@ public enum CharacterState
     Death = 8,
     Wound = 16,
     DeathOrWound = Death | Wound,
-    DeathAndWound = Death & Wound
+    DeathAndWound = Death & Wound,
+    DeathXorWound = Death ^ Wound,
 }
 
 /// <summary>
@@ -69,11 +70,12 @@ public class Player : MonoBehaviour
     public PlayerState CurrentState;
     public bool isInHome;
     public CharacterStatus status;
-
+    
     CharacterState playerStates;
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
     PlayerAttackBox attackBoxCollider;
+    bool isDead;
 
     float VerticalAxis;
     float HorizontalAxis;
@@ -81,6 +83,7 @@ public class Player : MonoBehaviour
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
+    float currentSpeed;
 
     public Player Init(int atk, int def, int hp)
     {
@@ -94,7 +97,7 @@ public class Player : MonoBehaviour
         status = new CharacterStatus(atk, def, hp);
         playerStates = CharacterState.Idle;
         ChangeState(playerStates);
-        
+        currentSpeed = MovingSpeed;
 
         return this;
     }
@@ -113,7 +116,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if((playerStates != CharacterState.DeathOrWound))
+        if((playerStates != CharacterState.Wound) && (playerStates != CharacterState.Death))
         {
             if (playerStates != CharacterState.Attack)
             {
@@ -125,7 +128,7 @@ public class Player : MonoBehaviour
                 }
                 
                 //moving
-                else if (VerticalAxis != 0 || HorizontalAxis != 0)
+                else if ((VerticalAxis != 0 || HorizontalAxis != 0))
                 {
                     playerStates = CharacterState.Running;
                     ChangeState(playerStates);
@@ -138,6 +141,8 @@ public class Player : MonoBehaviour
                     playerStates = CharacterState.Idle;
                     ChangeState(playerStates);
                 }
+
+                currentSpeed = MovingSpeed;
             }  
         }
     }
@@ -150,16 +155,16 @@ public class Player : MonoBehaviour
                 CurrentState = new PlayerIdle(animatorComponent, playerStates, isInHome);
                 break;
             case CharacterState.Running:
-                CurrentState = new PlayerMove(transform, MovingSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
+                CurrentState = new PlayerMove(transform, currentSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
                 break;
             case CharacterState.Attack:
                 CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
                 break;
             case CharacterState.Wound:
-                CurrentState = new PlayerWound(animatorComponent, rigidbodyComponent);
+                CurrentState = new PlayerWound(animatorComponent, currentSpeed);
                 break;
             case CharacterState.Death:
-                CurrentState = new PlayerDeath(animatorComponent, rigidbodyComponent);
+                CurrentState = new PlayerDeath(animatorComponent, currentSpeed);
                 break;
             default:
                 break;
@@ -184,8 +189,14 @@ public class Player : MonoBehaviour
 
     public void PlayerWound(int damege)
     {
+        if(playerStates == CharacterState.Death)
+        {
+            return;
+        }
+
+        currentSpeed = 0;
         status.cHealth -= damege;
-        if(status.cHealth < 0)
+        if (status.cHealth < 0)
         {
             playerStates = CharacterState.Death;  
         }

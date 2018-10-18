@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,11 +9,12 @@ public class Ent : abstractEnemy
 
     private void Update()
     {
-        if (targetPlayer != null)
+        if (targetPlayer != null && !isDead)
         {
             TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
+            currentSpeed = MovingSpeed;
 
-            if(!(currentState is EnemyDeath))
+            if (!(currentState is EnemyDeath))
             {
                 if (!(currentState is EnemyAttack && currentState is EnemyWound))
                 {
@@ -42,7 +44,6 @@ public class Ent : abstractEnemy
                     }
                     else
                     {
-
                         ChangeState(CharacterState.Idle);
                     }
                 }
@@ -59,16 +60,16 @@ public class Ent : abstractEnemy
         switch (state)
         {
             case CharacterState.Idle:
-                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform, rigidbodyComponent);
+                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform);
                 break;
             case CharacterState.Running:
-                currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer); 
+                currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer, currentSpeed); 
                 break;
             case CharacterState.Attack:
                 currentState = new EnemyAttack(animatorComponent, targetPlayer, transform);
                 break;
             case CharacterState.Death:
-                currentState = new EnemyDeath(animatorComponent);
+                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent, currentSpeed);
                 break;
             case CharacterState.Wound:
                 currentState = new EnemyWound(animatorComponent);
@@ -113,12 +114,14 @@ public class Ent : abstractEnemy
     public override void PlayerWound(int damage)
     {
         status.cHealth -= damage;
-        if(status.cHealth <= 0)
+        if(status.cHealth <= 0 && !isDead)
         {
             if(MemberList != null && MemberList.Contains(this))
             {
                 MemberList.Remove(this);
             }
+            isDead = true;
+            currentSpeed = 0;
             ChangeState(CharacterState.Death);
         }
         else
@@ -134,6 +137,11 @@ public class Ent : abstractEnemy
     }
 
     protected override void DeadExit()
+    {
+        ObjectPool.Instance.PushEnt(this);
+    }
+
+    protected override void PushSelf()
     {
         ObjectPool.Instance.PushEnt(this);
     }

@@ -11,9 +11,13 @@ public class GatherRawMaterial : MonoBehaviour {
     {
         if(other.tag == "Player")
         {
-            Debug.Log("아이템 추가");
-            // TODO: inventory.AddIteminInventory(itemList.ItemIndex[(int)itemCode]);
-            // TODO : ObjectPool.push(this.gameobject);
+            InventorySystem a;
+            //if (inventory.FindEmptySlot != -1)
+            {
+                Debug.Log("아이템 추가");
+                // TODO: inventory.AddIteminInventory(itemList.ItemIndex[(int)itemCode]);
+                // TODO : ObjectPool.push(this.gameobject);
+            }
         }
     }
 }

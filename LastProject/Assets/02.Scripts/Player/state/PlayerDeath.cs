@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerDeath : PlayerState
 {
-    public PlayerDeath(Animator animatorComponent, Rigidbody rigidbodyComponent)
+    public PlayerDeath(Animator animatorComponent, float currentSpeed)
     {
         this.animatorComponent = animatorComponent;
-        this.rigidbodyComponent = rigidbodyComponent;
+        this.currentSpeed = currentSpeed;
     }
 
     public override void DoAction()
     {
+        currentSpeed = 0;
         animatorComponent.SetBool(PlayerAniTrigger.DEATH, true);
-        rigidbodyComponent.velocity = Vector3.zero;
     }   
 }

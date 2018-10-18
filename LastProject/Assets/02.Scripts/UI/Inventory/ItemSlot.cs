@@ -18,18 +18,16 @@ public abstract class Slot : MonoBehaviour
             tmp.Time--;
             Item[i] = tmp;
 
-            //Debug.Log(i);
+            if (Item[i].Time <= 0)
+                deleteItem(i);
         }
-
-        if (Item[0].Time <= 0)
-            deleteItem();
     }
 
-    void deleteItem()
+    void deleteItem(int p)
     {
-        for (int i = 0; i < Item.Count; i++)
+        if(Item.Count != 0)
         {
-            if(Item[i].Time <= 0) Item.RemoveAt(i);
+            Item.RemoveAt(p);
             //inventorySystem.instance.SetCountText(this);
         }
 
@@ -37,6 +35,17 @@ public abstract class Slot : MonoBehaviour
         {
             GetComponent<Image>().sprite = ImageStorage.Instance.sprites[0];
         }
+    }
+
+    // 소모성 아이템을 사용 했을 때 그 효과를 실행하는 함수
+    public void Use(int p)
+    {
+        deleteItem(p);
+
+        CharacterStatus status = StageManager.Instance.player.status;
+        status.cHealth += (Item[0].Value / 100) * status.MaxHealth;
+
+        Debug.Log("회복량 : " + (Item[0].Value / 100) * status.MaxHealth);
     }
 }
 

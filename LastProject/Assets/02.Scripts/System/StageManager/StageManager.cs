@@ -4,22 +4,26 @@ using UnityEngine.SceneManagement;
 
 public enum SceneState
 {
-    ForestVillage, // 숲 마을
-    SnowVillage, // 저주받은 눈 마을
-    BattleMap,
-    Field1,
-    Village1,
+    Title = 1,
+
+    Village1 = 10,
+    SnowVillage = 11, // 저주받은 눈 마을
+
+    Field1 = 100, 
 }
 
-public class StageManager : Singleton<StageManager>{
+public class StageManager : Singleton<StageManager>
+{
+    public GameObject UICanvas;
+    public GameObject UIRoot;
+
     public Vector3 playerStartPosition;
     public Stage stage;
 
     [SerializeField]
     SceneState currentStage;
 
-    [SerializeField]
-    Player player;
+    public Player player { get; private set; }
 
     float fadeTime = 1f, waitTime = 1f;
     Color fadeColor;
@@ -28,13 +32,17 @@ public class StageManager : Singleton<StageManager>{
 
     public void Init()
     {
-        currentStage = SceneState.Field1;
-        stage = new BattleMap(); 
+        currentStage = SceneState.Title;
+        stage = new ForestVillage();
 
-        ChangeScene(currentStage);
-        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
-
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);        
         fadeObject = player.GetComponentInChildren<SpriteRenderer>();
+
+        UICanvas = Instantiate(Resources.Load("Prefabs/UI Canvas"), transform) as GameObject;
+        UIRoot = Instantiate(Resources.Load("Prefabs/UI Root"), transform) as GameObject;
+
+        UICanvas.SetActive(false);
+        UIRoot.SetActive(false);
     }
 
     public void SetPlayerPosition(Vector3 startPosition)
@@ -44,8 +52,13 @@ public class StageManager : Singleton<StageManager>{
 
     public void ChangeScene(SceneState next)
     {
+        if (ObjectPool.Instance.allPushEnt != null)
+            ObjectPool.Instance.allPushEnt();
+
         currentStage = next;
         stage.SetStage(next);
+                                                   // 마을 : 필드
+        player.isInHome = ((int)currentStage < 100) ? true : false;
 
         StartCoroutine(FadeOut()); // 로딩
     }
@@ -53,6 +66,9 @@ public class StageManager : Singleton<StageManager>{
 
     IEnumerator FadeOut() // 시작 // 점점 검게
     {
+        UICanvas.SetActive(false);
+        UIRoot.SetActive(false);
+
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeTime)
@@ -80,6 +96,9 @@ public class StageManager : Singleton<StageManager>{
             fadeColor.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
             fadeObject.color = fadeColor;
         }
+
+        UICanvas.SetActive(true);
+        UIRoot.SetActive(true);
     }
 }
 

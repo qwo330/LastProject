@@ -24,27 +24,31 @@ public class NPC : MonoBehaviour {
 
     private void Awake()
     {
-        LoadDialogue();
+        //LoadDialogue();
     }
-
+    
     //NPC에서 호출
     public void OnClickedNPC(int ID)
     {
-        ShowDialogue(ID);
+        ShowDialogue(0);
         questID = (ID);
         
     }
 
     public  void ShowDialogue(int ID)
     {
+        LoadDialogue();
+
         for (int i = 0; i < data.Count; i++)
         {
             if (data[i]["DialogueId"].ToString() == ID.ToString())
             {
-              scripts.Add(data[i]["Scripts"].ToString());
+                scripts.Add(data[i]["Scripts"].ToString());
             }
+            Debug.Log("테스트 으아");
         }
         dialogueText.text = scripts[0];
+        
     }
 
     private JsonData data;

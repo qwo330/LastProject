@@ -12,11 +12,18 @@ public class TurnUIOnAndOff : MonoBehaviour {
     private GameObject craft;
     [SerializeField]
     private GameObject monsterBook;
- 
+
     public void TurnOnInventory()
     {
+        
+
+        InventorySystem a;
+        a = StageManager.Instance.UICanvas.GetComponentInChildren<InventorySystem>();
+
+        if(inventory == null)
+            inventory = StageManager.Instance.UICanvas.GetComponentInChildren<InventorySystem>().gameObject;
         inventory.SetActive(true);
-;    }
+    }
     public void TurnOffInventory()
     {
         inventory.SetActive(false);
