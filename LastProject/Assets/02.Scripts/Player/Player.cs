@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if((playerStates != CharacterState.Wound) || (playerStates != CharacterState.Death))
+        if((playerStates != CharacterState.Wound) && (playerStates != CharacterState.Death))
         {
             if (playerStates != CharacterState.Attack)
             {
