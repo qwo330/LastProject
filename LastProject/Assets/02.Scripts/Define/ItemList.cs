@@ -81,7 +81,7 @@ public class ItemList : Singleton<ItemList>
 
     void setItemData()
     {
-        ItemIndex = new ItemData[60];
+        ItemIndex = new ItemData[99];
 
         ItemIndex[0] = new ItemData(0, 0, 0, 0, 0);
         ItemIndex[1] = new ItemData(ItemCodes.WoodSword, ItemTypes.Weapon, 5, 5, 500);
