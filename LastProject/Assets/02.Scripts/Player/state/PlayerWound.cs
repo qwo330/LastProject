@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerWound : PlayerState
 {
-    public PlayerWound(Animator animator, Rigidbody rigidbody)
+    public PlayerWound(Animator animator, float currentSpeed)
     {
         this.animatorComponent = animator;
-        this.rigidbodyComponent = rigidbody;
+        this.currentSpeed = currentSpeed;
     }
 
     public override void DoAction()
     {
-        rigidbodyComponent.velocity = Vector3.zero;
+        currentSpeed = 0;
         animatorComponent.SetBool(PlayerAniTrigger.WOUND, true);
     }
 }

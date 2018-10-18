@@ -36,6 +36,7 @@ public abstract class abstractEnemy : MonoBehaviour
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
+    protected float currentSpeed;
 
     public virtual abstractEnemy Init(int lv)
     {
@@ -57,7 +58,7 @@ public abstract class abstractEnemy : MonoBehaviour
         navMeshAgent.isStopped = true;
         isAttackable = true;
         isDead = false;
-
+        currentSpeed = MovingSpeed;
         currentState = null;
         targetPlayer = null;
 

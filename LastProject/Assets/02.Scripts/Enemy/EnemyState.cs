@@ -13,6 +13,7 @@ public abstract class EnemyState
     protected NavMeshAgent navMeshAgent;
     protected GameObject targetPlayer;
     protected Transform transform;
+    protected float currentSpeed;
 
     public abstract void DoAction();
 }

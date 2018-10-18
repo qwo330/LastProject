@@ -5,17 +5,18 @@ using UnityEngine.AI;
 
 public class EnemyDeath : EnemyState 
 {
-    public EnemyDeath(Animator animator, Rigidbody rigidbodyComponent, NavMeshAgent navMeshAgent)
+    public EnemyDeath(Animator animator, Rigidbody rigidbodyComponent, NavMeshAgent navMeshAgent, float currentSpeed)
     {
         this.animatorComponent = animator;
         this.rigidbodyComponent = rigidbodyComponent;
         this.navMeshAgent = navMeshAgent;
+        this.currentSpeed = currentSpeed;
     }
 
     public override void DoAction()
     {
         navMeshAgent.isStopped = true;
-        rigidbodyComponent.velocity = Vector3.zero;
+        navMeshAgent.speed = currentSpeed;
         animatorComponent.SetTrigger(PlayerAniTrigger.DEATH);
     }
 }
