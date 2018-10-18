@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,8 +19,7 @@ public class StageManager : Singleton<StageManager>{
     [SerializeField]
     SceneState currentStage;
 
-    [SerializeField]
-    Player player;
+    public Player player { get; private set; }
 
     float fadeTime = 1f, waitTime = 1f;
     Color fadeColor;
