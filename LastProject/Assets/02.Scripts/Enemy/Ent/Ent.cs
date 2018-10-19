@@ -114,16 +114,19 @@ public class Ent : abstractEnemy
     public override void PlayerWound(int damage)
     {
         status.cHealth -= damage;
+
         if(status.cHealth <= 0 && !isDead)
         {
             if(MemberList != null && MemberList.Contains(this))
             {
                 MemberList.Remove(this);
             }
+
             isDead = true;
             currentSpeed = 0;
             ChangeState(CharacterState.Death);
         }
+
         else
         {
             ChangeState(CharacterState.Wound);

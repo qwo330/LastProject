@@ -55,9 +55,11 @@ public abstract class abstractEnemy : MonoBehaviour
             DefaultDef + IncreaseDef * (lv - 1), 
             DefaultHP + IncreaseHP * (lv - 1), 
             lv);
+
         navMeshAgent.isStopped = true;
         isAttackable = true;
         isDead = false;
+
         currentSpeed = MovingSpeed;
         currentState = null;
         targetPlayer = null;
@@ -65,6 +67,7 @@ public abstract class abstractEnemy : MonoBehaviour
         deadTimer = TimerManager.Instance.GetTimer();
         deadTimer.SetTimer(3f);
         deadTimer.Callback = DeadExit;
+
         attackTimer = TimerManager.Instance.GetTimer();
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;

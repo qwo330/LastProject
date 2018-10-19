@@ -20,6 +20,7 @@ public class EnemyIdle : EnemyState
         animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
         animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, false);
         animatorComponent.SetTrigger(PlayerAniTrigger.ISIDLE);
+
         navMeshAgent.isStopped = true;
         navMeshAgent.speed = 0;
     }

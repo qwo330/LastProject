@@ -9,7 +9,7 @@ public class EnemySpawner : MonoBehaviour
     const float spawnTime = 2f;
     List<Ent> entList;
     bool isRespawn;
-    [SerializeField, Range(1, 100)] int RespawnLevel;
+    [SerializeField, Range(1, 10)] int RespawnLevel;
 
     const float MinRandomPos = 0f;
     const float MaxRandomPos = 0f;
@@ -28,7 +28,9 @@ public class EnemySpawner : MonoBehaviour
     {
         if (entList.Count < MaxCount)
         {
-            Vector3 randomPosition = new Vector3(Random.Range(MinRandomPos, MaxRandomPos), transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
+            Vector3 randomPosition = 
+                new Vector3(Random.Range(MinRandomPos, MaxRandomPos), 
+                transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
             entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, entList));
         }
     }

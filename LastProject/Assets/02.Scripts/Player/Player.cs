@@ -196,14 +196,17 @@ public class Player : MonoBehaviour
 
         currentSpeed = 0;
         status.cHealth -= damege;
+
         if (status.cHealth < 0)
         {
             playerStates = CharacterState.Death;  
         }
+
         else
         {
             playerStates = CharacterState.Wound;
         }
+
         ChangeState(playerStates);
     }
 }
