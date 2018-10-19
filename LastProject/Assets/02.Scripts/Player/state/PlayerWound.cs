@@ -13,6 +13,7 @@ public class PlayerWound : PlayerState
     public override void DoAction()
     {
         currentSpeed = 0;
+        animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
         animatorComponent.SetBool(PlayerAniTrigger.WOUND, true);
     }
 }
