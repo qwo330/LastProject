@@ -33,6 +33,8 @@ public class Generator : MonoBehaviour
         gatherSpawner[index].gameObject.SetActive(false);
         StartCoroutine(Respawn(index, Defines.GatherRespawnTime)); 
         //플레이어가 아이템 획득(채집) 추가
+        //StageManager.Instance.UICanvas.inventory?????
+
     }
 
     IEnumerator Respawn(int index, float time)

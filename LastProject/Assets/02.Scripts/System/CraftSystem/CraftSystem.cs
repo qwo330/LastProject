@@ -102,7 +102,7 @@ public class CraftSystem : MonoBehaviour
                     {
                         //현재 보유 수량과 제작에 필요한 수량을 읽어와서 대입
                         int itemIndex = InventorySystem.FindItemPosition(itemData);
-                        //NeedList[index].SetCurrentCount(InventorySystem.GetTargetItemCount(itemIndex));
+                        NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
                         if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
                         {

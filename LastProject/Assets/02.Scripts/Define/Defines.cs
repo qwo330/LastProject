@@ -22,6 +22,16 @@
     /// <returns></returns>
     public static int CalculateDamage(int atk, int def)
     {
-        return atk - def;
+        int totalDamage = atk - def;
+
+        if (totalDamage > 0)
+        {
+            return totalDamage;
+        }
+        else
+        {
+            return 0;
+        }
+        
     }
 }
