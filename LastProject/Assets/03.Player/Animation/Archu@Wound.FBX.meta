@@ -111,7 +111,8 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: Event OnWoundExit has a time (0.633333) outside the clip's
+      valid range (0.000000..0.600000). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 3
@@ -145,7 +146,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
+      - time: 0.92783505
         functionName: OnWoundExit
         data: 
         objectReferenceParameter: {instanceID: 0}

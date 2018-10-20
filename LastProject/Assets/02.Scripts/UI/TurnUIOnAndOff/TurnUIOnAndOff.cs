@@ -4,52 +4,36 @@ using UnityEngine;
 
 public class TurnUIOnAndOff : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject inventory;
-    [SerializeField]
-    private GameObject quest;
-    [SerializeField]
-    private GameObject craft;
-    [SerializeField]
-    private GameObject monsterBook;
-
     public void TurnOnInventory()
     {
-        GameObject uicanvas = StageManager.Instance.UICanvas;
-        
-        InventorySystem a;
-        a = uicanvas.GetComponentInChildren<InventorySystem>();
-
-        if(inventory == null)
-        inventory = a.gameObject;
-        inventory.SetActive(true);
+        UIPresenter.Instance.Inventory.SetActive(true);
     }
     public void TurnOffInventory()
     {
-        inventory.SetActive(false);
+        UIPresenter.Instance.Inventory.SetActive(false);
     }
 
     public void TurnOnQuest()
     {
-        quest.transform.position = new Vector3(0,0,0);
+        UIPresenter.Instance.quest.transform.position = new Vector3(0,0,0);
     }
     public void TurnOffQuest()
     {
-        quest.transform.position = new Vector3(0, -2, 0);
+        UIPresenter.Instance.quest.transform.position = new Vector3(0, -2, 0);
     }
 
     public void TurnOnMonsterBook()
     {
-        monsterBook.SetActive(true);
+        UIPresenter.Instance.monsterBook.SetActive(true);
     }
     public void TurnOffMonsterBook()
     {
-        monsterBook.SetActive(false);
+        UIPresenter.Instance.monsterBook.SetActive(false);
     }
 
     public void TurnOnCraft()
     {
-        craft.SetActive(true);
+        UIPresenter.Instance.craft.SetActive(true);
     }
    
 }

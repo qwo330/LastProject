@@ -9,6 +9,7 @@ public class ManagerCaller : MonoBehaviour {
         ItemList.Instance.Init();
         StageManager.Instance.Init();
         DataManager.Instance.Init();
+        UIPresenter.Instance.Init();
         //AudioManager.Instance.Init();
     }
 }
