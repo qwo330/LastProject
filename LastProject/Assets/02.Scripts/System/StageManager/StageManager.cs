@@ -14,9 +14,6 @@ public enum SceneState
 
 public class StageManager : Singleton<StageManager>
 {
-    public GameObject UICanvas;
-    public GameObject UIRoot;
-
     public Vector3 playerStartPosition;
     public Stage stage;
 
@@ -35,14 +32,9 @@ public class StageManager : Singleton<StageManager>
         currentStage = SceneState.Title;
         stage = new ForestVillage();
 
-        player = ObjectPool.Instance.PopPlayer(playerStartPosition);        
+        player = ObjectPool.Instance.PopPlayer(playerStartPosition);
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         fadeObject = player.GetComponentInChildren<SpriteRenderer>();
-
-        UICanvas = Instantiate(Resources.Load("Prefabs/UI Canvas"), transform) as GameObject;
-        UIRoot = Instantiate(Resources.Load("Prefabs/UI Root"), transform) as GameObject;
-
-        UICanvas.SetActive(false);
-        UIRoot.SetActive(false);
     }
 
     public void SetPlayerPosition(Vector3 startPosition)
@@ -66,8 +58,8 @@ public class StageManager : Singleton<StageManager>
 
     IEnumerator FadeOut() // 시작 // 점점 검게
     {
-        UICanvas.SetActive(false);
-        UIRoot.SetActive(false);
+        UIPresenter.Instance.UICanvas.SetActive(false);
+        UIPresenter.Instance.UIRoot.SetActive(false);
 
         float elapsedTime = 0f;
 
@@ -97,8 +89,8 @@ public class StageManager : Singleton<StageManager>
             fadeObject.color = fadeColor;
         }
 
-        UICanvas.SetActive(true);
-        UIRoot.SetActive(true);
+        UIPresenter.Instance.UICanvas.SetActive(true);
+        UIPresenter.Instance.UIRoot.SetActive(true);
     }
 }
 
