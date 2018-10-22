@@ -56,6 +56,7 @@ public abstract class abstractEnemy : MonoBehaviour
             DefaultHP + IncreaseHP * (lv - 1), 
             lv);
 
+        rigidbodyComponent.isKinematic = false;
         navMeshAgent.isStopped = true;
         isAttackable = true;
         isDead = false;

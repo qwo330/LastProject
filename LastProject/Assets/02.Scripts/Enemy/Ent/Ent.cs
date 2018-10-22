@@ -66,13 +66,13 @@ public class Ent : abstractEnemy
                 currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer, currentSpeed); 
                 break;
             case CharacterState.Attack:
-                currentState = new EnemyAttack(animatorComponent, targetPlayer, transform);
+                currentState = new EnemyAttack(animatorComponent, targetPlayer, transform, navMeshAgent, rigidbodyComponent);
                 break;
             case CharacterState.Death:
-                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent, currentSpeed);
+                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent);
                 break;
             case CharacterState.Wound:
-                currentState = new EnemyWound(animatorComponent);
+                currentState = new EnemyWound(animatorComponent, navMeshAgent, rigidbodyComponent);
                 break;
             default:
                 break;
@@ -82,11 +82,13 @@ public class Ent : abstractEnemy
 
     protected override void ONAttackExit()
     {
+        rigidbodyComponent.isKinematic = false;
         ChangeState(CharacterState.Idle);
     }
 
     protected override void OnWoundExit()
     {
+        rigidbodyComponent.isKinematic = false;
         ChangeState(CharacterState.Idle);
     }
 
