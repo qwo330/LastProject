@@ -104,11 +104,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        VerticalAxis = Input.GetAxis("Vertical");
-        HorizontalAxis = Input.GetAxis("Horizontal");
+        VerticalAxis = InputManager.VerticalAxis;
+        HorizontalAxis = InputManager.HorizontalAxis;
         //if (!EventSystem.current.IsPointerOverGameObject())
         //if (UICamera.Raycast(Input.mousePosition))
-        if (!UICamera.Raycast(Input.mousePosition) && !EventSystem.current.IsPointerOverGameObject())
+        if (!InputManager.IsUIRaycast && !InputManager.IsPointOverUIObject)
         {
             isMouseClicked = Input.GetMouseButtonDown(0);
         }

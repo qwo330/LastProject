@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //플레이어를 바라보는 카메라
 public class PlayerCamera : MonoBehaviour
