@@ -104,14 +104,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        VerticalAxis = InputManager.VerticalAxis;
-        HorizontalAxis = InputManager.HorizontalAxis;
+        VerticalAxis = InputManager.Instance.VerticalAxis;
+        HorizontalAxis = InputManager.Instance.HorizontalAxis;
         //if (!EventSystem.current.IsPointerOverGameObject())
         //if (UICamera.Raycast(Input.mousePosition))
-        if (!InputManager.IsUIRaycast && !InputManager.IsPointOverUIObject)
+#if UNITY_STANDALONE_WIN
+        if (!InputManager.Instance.IsUIRaycast && !InputManager.Instance.IsPointOverUIObject)
         {
-            isMouseClicked = Input.GetMouseButtonDown(0);
+            isMouseClicked = InputManager.Instance.IsMouseClicked;
         }
+#endif
     }
 
     private void FixedUpdate()
