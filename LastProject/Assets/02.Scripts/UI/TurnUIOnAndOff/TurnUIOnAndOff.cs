@@ -6,11 +6,11 @@ public class TurnUIOnAndOff : MonoBehaviour {
 
     public void TurnOnInventory()
     {
-        UIPresenter.Instance.Inventory.SetActive(true);
+        UIPresenter.Instance.InventoryObj.SetActive(true);
     }
     public void TurnOffInventory()
     {
-        UIPresenter.Instance.Inventory.SetActive(false);
+        UIPresenter.Instance.InventoryObj.SetActive(false);
     }
 
     public void TurnOnQuest()
@@ -33,7 +33,7 @@ public class TurnUIOnAndOff : MonoBehaviour {
 
     public void TurnOnCraft()
     {
-        UIPresenter.Instance.craft.SetActive(true);
+        UIPresenter.Instance.craftObj.SetActive(true);
     }
    
 }

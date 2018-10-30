@@ -30,18 +30,9 @@ public class CraftSystem : MonoBehaviour
 
         if (CraftSlot != null)
         {
-            if(EquipList == null)
-            {
-                EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
-            }
-            if(PotionList == null)
-            {
-                PotionList = CreateList<CraftSlot>(PotionWindowGrid, MaxPotionItemCount, CraftSlot);
-            }
-            if(NeedList == null)
-            {
-                NeedList = CreateList<NeedSlot>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
-            }
+            EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
+            PotionList = CreateList<CraftSlot>(PotionWindowGrid, MaxPotionItemCount, CraftSlot);
+            NeedList = CreateList<NeedSlot>(NeedItemWindowGrid, MaxNeedItemCount, NeedSlot);
         }
         else
             Debug.Log("Inspector 연결에 문제가 있습니다.");
@@ -149,10 +140,5 @@ public class CraftSystem : MonoBehaviour
             }
         }
         return true;
-    }
-
-    private void OnEnable()
-    {
-        Init();
     }
 } 
