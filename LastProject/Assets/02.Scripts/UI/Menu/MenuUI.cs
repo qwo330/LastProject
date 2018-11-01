@@ -7,7 +7,7 @@ public class MenuUI : MonoBehaviour
     int index = 0;
 
     [SerializeField]
-    private Animator firstButton, secondButton, thirdButton, fourthButton, fifthButton;
+    private Animator firstButton, secondButton, fifthButton;
 
     private enum AniList
     {
@@ -24,8 +24,6 @@ public class MenuUI : MonoBehaviour
         {
             firstButton.SetTrigger(AniList.FirstForward.ToString());
             secondButton.SetTrigger(AniList.SecondForward.ToString());
-            thirdButton.SetTrigger(AniList.ThirdForward.ToString());
-            fourthButton.SetTrigger(AniList.FourthForward.ToString());
             fifthButton.SetTrigger(AniList.FifthForward.ToString());
             index++;
         }
@@ -33,8 +31,6 @@ public class MenuUI : MonoBehaviour
         {
             firstButton.SetTrigger(AniList.FirstBackward.ToString());
             secondButton.SetTrigger(AniList.SecondBackward.ToString());
-            thirdButton.SetTrigger(AniList.ThirdBackward.ToString());
-            fourthButton.SetTrigger(AniList.FourthBackward.ToString());
             fifthButton.SetTrigger(AniList.FifthBackward.ToString());
             index--;
         }
