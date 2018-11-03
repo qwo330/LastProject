@@ -10,7 +10,6 @@ public abstract class Slot : MonoBehaviour
     {
         if (Item.Count == 0) return;
 
-        Debug.Log("아이템 내구도 감소");
         for (int i = 0; i < Item.Count; i++)
         {
             // List<T>.this[int i]에서 리턴시키는 임시변수에 수정 불가능

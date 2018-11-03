@@ -92,23 +92,32 @@ public class CraftSystem : MonoBehaviour
                     if(itemInDB.NeedItems[i] > 0)
                     {
                         //현재 보유 수량과 제작에 필요한 수량을 읽어와서 대입
-                        int itemIndex = InventorySystem.FindItemPosition(itemData);
-                        NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
+                        int itemIndex = InventorySystem.FindItemPosition(itemData);
+                        if (itemIndex == -1)
+                        {
+                            NeedList[index].SetCurrentCount(0);
+                        }
+                        else
+                        {
+                            NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
+                        }
+                        Debug.Log("\nitemData : " + itemData.ToString() + "\nitemIndex : " + itemIndex);
+
                         if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
                         {
-                            NeedList[index].ChangeSprite((CraftItemResource)(i+100));
+                            NeedList[index].ChangeSprite((ItemCodes)(i+60));
                         }
                         else if (itemInDB.TargetItem.ItemType == ItemTypes.Weapon
                             || itemInDB.TargetItem.ItemType == ItemTypes.Helmet
                             || itemInDB.TargetItem.ItemType == ItemTypes.Armor
                             || itemInDB.TargetItem.ItemType == ItemTypes.Shoes)
                         {
-                            NeedList[index].ChangeSprite((CraftItemResource)i);
+                            NeedList[index].ChangeSprite((ItemCodes)50+i);
                         }
                         else
                         {
-                            NeedList[index].ChangeSprite((CraftItemResource)999);
+                            NeedList[index].ChangeSprite(ItemCodes.Empty);
                         }
                         index++;
                     }

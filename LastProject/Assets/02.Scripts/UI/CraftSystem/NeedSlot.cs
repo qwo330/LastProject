@@ -69,44 +69,44 @@ public class NeedSlot : CraftSlotParent
 
     void ResetSprite()
     {
-        ChangeSprite((CraftItemResource)999);
+        ChangeSprite((ItemCodes)999);
     }
 
-    public void ChangeSprite(CraftItemResource index)
+    public void ChangeSprite(ItemCodes index)
     {
         switch (index)
         {
-            case CraftItemResource.Wood:
+            case ItemCodes.Wood:
                 sprite.spriteName = "NeedWood";
                 break;
-            case CraftItemResource.Stone:
+            case ItemCodes.Stone:
                 sprite.spriteName = "NeedStone";
                 break;
-            case CraftItemResource.Iron:
+            case ItemCodes.Iron:
                 sprite.spriteName = "NeedIron";
                 break;
-            case CraftItemResource.Adamantium:
+            case ItemCodes.Adamantium:
                 sprite.spriteName = "NeedAdamantium";
                 break;
-            case CraftItemResource.Mithrill:
+            case ItemCodes.Mithrill:
                 sprite.spriteName = "NeedMithrill";
                 break;
-            case CraftItemResource.Fabric:
+            case ItemCodes.Fabric:
                 sprite.spriteName = "NeedFabric";
                 break;
-            case CraftItemResource.Wool:
+            case ItemCodes.Wool:
                 sprite.spriteName = "NeedWool";
                 break;
-            case CraftItemResource.Leather:
+            case ItemCodes.Leather:
                 sprite.spriteName = "NeedLeather";
                 break;
-            case CraftItemResource.Water:
+            case ItemCodes.Water:
                 sprite.spriteName = "NeedWater";
                 break;
-            case CraftItemResource.Apple:
+            case ItemCodes.Apple:
                 sprite.spriteName = "NeedApple";
                 break;
-            case CraftItemResource.Empty:
+            case ItemCodes.Empty:
             default:
                 sprite.spriteName = "NeedEmpty";
                 break;
