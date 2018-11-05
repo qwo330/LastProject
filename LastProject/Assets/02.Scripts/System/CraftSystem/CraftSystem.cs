@@ -11,7 +11,8 @@ public class CraftSystem : MonoBehaviour
     [SerializeField] GameObject CraftSlot;
     [SerializeField] GameObject NeedSlot;
     CraftItemDB itemDB;
-    public ItemData SelectedItem;
+    public CraftItem SelectedItem;
+    public ItemData[] StuffItems;
 
     int MaxEquipItemCount;
     int MaxPotionItemCount;
@@ -93,17 +94,8 @@ public class CraftSystem : MonoBehaviour
                     {
                         //현재 보유 수량과 제작에 필요한 수량을 읽어와서 대입
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
-                        NeedList[index].SetCurrentCount(InventorySystem.GetItemCount(itemDB.GetItemStuff(itemInDB.TargetItem)[i]));
-                        //int itemIndex = InventorySystem.FindItemPosition(itemData);
-                        //if (itemIndex == -1)
-                        //{
-                        //    NeedList[index].SetCurrentCount(0);
-                        //}
-                        //else
-                        //{
-                        //    NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
-                        //}
-                        //Debug.Log("\nitemData : " + itemData.ToString() + "\nitemIndex : " + itemIndex);
+                        StuffItems = itemDB.GetItemStuff(itemInDB.TargetItem);
+                        NeedList[index].SetCurrentCount(InventorySystem.GetItemCount(StuffItems[i]));
 
                         if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
                         {
@@ -123,7 +115,7 @@ public class CraftSystem : MonoBehaviour
                         index++;
                     }
                 }
-                SelectedItem = itemInDB.TargetItem;
+                SelectedItem = itemInDB;
             }
         }
 

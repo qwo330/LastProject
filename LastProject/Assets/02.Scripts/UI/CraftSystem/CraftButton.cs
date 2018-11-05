@@ -17,8 +17,20 @@ public class CraftButton : MonoBehaviour
             }
             else
             {
-                Debug.Log(craftSystem.SelectedItem.ItemName + "의 제작에 성공했습니다!");
-                craftSystem.InventorySystem.AddIteminInventory(craftSystem.SelectedItem);
+                Debug.Log(craftSystem.SelectedItem.TargetItem.ItemName + "의 제작에 성공했습니다!");
+                if(craftSystem.StuffItems != null)
+                {
+                    for (int i = 0; i < craftSystem.StuffItems.Length; i++)
+                    {
+                        craftSystem.InventorySystem.RemoveIteminInventory(craftSystem.StuffItems[i], craftSystem.SelectedItem.NeedItems[i]);
+                    }
+                    craftSystem.InventorySystem.AddIteminInventory(craftSystem.SelectedItem.TargetItem);
+                }
+                else
+                {
+                    Debug.Log("제작 재료 리스트를 받지 못함");
+                }
+                
             }
         }
         else
