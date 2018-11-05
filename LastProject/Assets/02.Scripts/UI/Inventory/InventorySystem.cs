@@ -39,12 +39,6 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /*===========================================================*/
     Dictionary<ItemCodes, ItemData> itemlist;
 
-    private void Start()
-    {
-        //임시로 배치
-        Init();
-    }
-
     public void AddWoodSword()
     {
         AddIteminInventory(new ItemData(ItemList.Instance.ItemIndex[1]));
@@ -236,7 +230,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// <summary>
     /// 해당 슬롯에 아이템이 있으면 true 리턴
     /// </summary>
-    public bool CheckExistItem(int index)
+    bool CheckExistItem(int index)
     {
         if (inventorySlots[index].Item.Count == 0) return false;
         if (inventorySlots[index].Item[0].ItemCode != ItemCodes.Empty) return true;
@@ -246,7 +240,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     /// <summary>
     /// 인벤토리에서 비어있는 슬롯을 찾아 index 리턴
     /// </summary>
-    public int FindEmptySlot()
+    int FindEmptySlot()
     {
         for (int i = 0; i < Defines.InventorySize; i++)
         {
@@ -281,6 +275,41 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
     }
 
     /// <summary>
+    /// item의 소지 개수를 반환한다.
+    /// </summary>
+    public int GetItemCount(ItemData item)
+    {
+        int count = 0;
+
+        int index = FindItemPosition(item);
+        if (index == -1)
+        {
+            Debug.Log("해당 아이템이 존재하지 않습니다."); return count;
+        }
+
+        Slot slot = GetTargetSlot(index);
+        count = slot.Item.Count;
+
+        return count;
+    }
+
+    public void RemoveIteminInventory(ItemData item, int count)
+    {
+        int index = FindItemPosition(item);
+        if (index == -1)
+        {
+            Debug.Log("해당 아이템이 존재하지 않습니다."); return;
+        }
+
+        Slot slot = GetTargetSlot(index);
+        if (slot.Item.Count >= count)
+        {
+            for (int i = 0; i < count; i++)
+                slot.Item.RemoveAt(0);
+        }
+    }
+
+    /// <summary>
     /// 아이템 획득 시 인벤토리에 추가
     /// </summary>
     public void AddIteminInventory(ItemData item)
@@ -305,7 +334,10 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         index = FindEmptySlot();
         inventorySlots[index].Item.Add(item);
         SetCountText(inventorySlots[index]);
-        inventorySlots[index].gameObject.GetComponent<Image>().sprite = ImageStorage.Instance.sprites[(int)item.ItemCode];
+
+        Sprite temp = null;
+        temp = ImageStorage.Instance.sprites[(int)item.ItemCode];
+        inventorySlots[index].gameObject.GetComponent<Image>().sprite = temp;
     }
 
     void SetCountText(Slot target)
