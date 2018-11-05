@@ -48,7 +48,7 @@ public class NeedSlot : CraftSlotParent
     {
         label.text = currentCount + " / " + needCount;
 
-        if (currentCount != needCount)
+        if (currentCount < needCount)
         {
             label.effectColor = Color.red;
             isCraft = false;

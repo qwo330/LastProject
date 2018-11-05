@@ -42,6 +42,9 @@ public enum ItemCodes
     HalfRedPotion = 41,
     RedPotion = 42,
 
+    //제작 재료 순서대로 반드시 지켜야 함
+    //장비 : 나무, 돌, 철, 아다만티움, 미스릴, 천, 양모, 가죽
+    //물약 : 물, 사과
     Wood = 51,
     Stone,
     Iron,

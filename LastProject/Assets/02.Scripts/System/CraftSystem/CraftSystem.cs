@@ -93,16 +93,17 @@ public class CraftSystem : MonoBehaviour
                     {
                         //현재 보유 수량과 제작에 필요한 수량을 읽어와서 대입
                         NeedList[index].SetNeedCount(itemInDB.NeedItems[i]);
-                        int itemIndex = InventorySystem.FindItemPosition(itemData);
-                        if (itemIndex == -1)
-                        {
-                            NeedList[index].SetCurrentCount(0);
-                        }
-                        else
-                        {
-                            NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
-                        }
-                        Debug.Log("\nitemData : " + itemData.ToString() + "\nitemIndex : " + itemIndex);
+                        NeedList[index].SetCurrentCount(InventorySystem.GetItemCount(itemDB.GetItemStuff(itemInDB.TargetItem)[i]));
+                        //int itemIndex = InventorySystem.FindItemPosition(itemData);
+                        //if (itemIndex == -1)
+                        //{
+                        //    NeedList[index].SetCurrentCount(0);
+                        //}
+                        //else
+                        //{
+                        //    NeedList[index].SetCurrentCount(InventorySystem.GetTargetSlot(itemIndex).Item.Count);
+                        //}
+                        //Debug.Log("\nitemData : " + itemData.ToString() + "\nitemIndex : " + itemIndex);
 
                         if (itemInDB.TargetItem.ItemType == ItemTypes.Eat)
                         {

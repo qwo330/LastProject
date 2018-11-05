@@ -71,6 +71,40 @@ public class CraftItemDB
         }
     }
 
+    //요구 재료를 반환하는 함수
+    public ItemData[] GetItemStuff(ItemData needItem)
+    {
+        ItemData[] stuffs = null;
+
+        foreach (CraftItem item in CraftItems)
+        {
+            if (item.TargetItem.Equals(needItem))
+            {
+                if (item.TargetItem.ItemType == ItemTypes.Eat)
+                {
+                    stuffs = new ItemData[item.NeedItems.Length];
+                    for (int i = 0; i < item.NeedItems.Length; i++)
+                    {
+                        stuffs[i] = ItemList.Instance.ItemIndex[i + 60];
+                        Debug.Log(ItemList.Instance.ItemIndex[i + 60].ItemType);
+                    }
+                    return stuffs;
+                }
+                else
+                {
+                    stuffs = new ItemData[item.NeedItems.Length];
+                    for (int i = 0; i < item.NeedItems.Length; i++)
+                    {
+                        stuffs[i] = ItemList.Instance.ItemIndex[i + 51];
+                        Debug.Log(ItemList.Instance.ItemIndex[i + 51].ItemType);
+                    }
+                    return stuffs;
+                }
+            }
+        }
+        return stuffs;
+    }
+
     void ImportItemDB(string[] text, int[] count)
     {
         ItemData itemData;
@@ -89,6 +123,9 @@ public class CraftItemDB
                 {
                     itemData = ItemList.Instance.ItemIndex[i];
 
+                    //제작 재료 순서대로
+                    //장비 : 나무, 돌, 철, 아다만티움, 미스릴, 천, 양모, 가죽
+                    //물약 : 물, 사과
                     if (itemData.ItemType == ItemTypes.Eat)
                     {
                         CraftItems.Add(new CraftItem().SetItemDB(itemData, count[0], count[1]));
