@@ -117,7 +117,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         else if (distance > 15f)
         {
             int itemCode = (int)dragTarget.Item[0].ItemCode;
-            Sprite sprite = ImageStorage.Instance.sprites[itemCode];
+            Sprite sprite = UIPresenter.Instance.ImageStorage.sprites[itemCode];
             if (sprite == null) return;
 
             EmptyImg.sprite = sprite;
@@ -173,7 +173,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
 
         ItemPopUp.SetActive(true);
         itemPopUpText.text = targetItem.ItemName + "\n" + targetItem.Time.ToString();
-        ItemPopUpImg.sprite = ImageStorage.Instance.sprites[(int)targetItem.ItemCode];
+        ItemPopUpImg.sprite = UIPresenter.Instance.ImageStorage.sprites[(int)targetItem.ItemCode];
     }
 
     Slot getItemInfo()
@@ -336,7 +336,7 @@ public class InventorySystem : MonoBehaviour, IPointerClickHandler, IDragHandler
         SetCountText(inventorySlots[index]);
 
         Sprite temp = null;
-        temp = ImageStorage.Instance.sprites[(int)item.ItemCode];
+        temp = UIPresenter.Instance.ImageStorage.sprites[(int)item.ItemCode];
         inventorySlots[index].gameObject.GetComponent<Image>().sprite = temp;
     }
 

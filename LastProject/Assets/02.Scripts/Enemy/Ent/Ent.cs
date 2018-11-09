@@ -143,11 +143,12 @@ public class Ent : abstractEnemy
 
     protected override void DeadExit()
     {
-        ObjectPool.Instance.PushEnt(this);
+        PushSelf();
     }
 
     protected override void PushSelf()
     {
         ObjectPool.Instance.PushEnt(this);
+        GiveItem();
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Generator : MonoBehaviour
@@ -6,7 +8,6 @@ public class Generator : MonoBehaviour
     EnemySpawner[] enemySpawner;
     Gatherspawner[] gatherSpawner;
     
-
     private void Start()
     {
         Init();
@@ -32,7 +33,6 @@ public class Generator : MonoBehaviour
     {
         gatherSpawner[index].gameObject.SetActive(false);
         StartCoroutine(Respawn(index, Defines.GatherRespawnTime));
-        Debug.Log("GatherItem : " + item);
         UIPresenter.Instance.Inventory.AddIteminInventory(ItemList.Instance.ItemIndex[(int)item]);
     }
 

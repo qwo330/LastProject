@@ -9,6 +9,10 @@ public static class Defines
     public const int TotalMonsterCount = 5;
     public const int GatherRespawnTime = 5;
 
+    public const int DropItemListCount = 100;
+    public const int MaxDropItemCount = 3;
+    public const float DropItemProbability = 1;
+
     public const string TAG_PlayerAttackBox = "PlayerAttackBox";
     public const string TAG_PlayerHitBox = "PlayerHitBox";
     public const string TAG_EnemyAttackBox = "EnemyAttackBox";

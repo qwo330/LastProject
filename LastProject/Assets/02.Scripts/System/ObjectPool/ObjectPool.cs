@@ -11,7 +11,7 @@ public class ObjectPool : Singleton<ObjectPool>
     Player playerCharacter;
     GameObject entPrefab;
     Queue<Ent> EntQueue;
-
+    
     public AllPushEnt allPushEnt;
 
     public void Init()
@@ -24,12 +24,20 @@ public class ObjectPool : Singleton<ObjectPool>
         //-----------------------------------------
         playerCharacter.gameObject.SetActive(false);
 
+        //seed
+        int seed = unchecked((int)DateTime.Now.Ticks);
+        UnityEngine.Random.InitState(seed);
+        Debug.Log("seed" + seed);
+        
+        //ent Queue setting
         EntQueue = new Queue<Ent>(ENT_POOLCOUNT);
         entPrefab = Resources.Load("Prefabs/Ent") as GameObject;
         for (int i = 0; i < ENT_POOLCOUNT; i++)
         {
             go = Instantiate(entPrefab, transform);
-            EntQueue.Enqueue(go.GetComponent<Ent>());
+            Ent ent = go.GetComponent<Ent>();
+            ent.DropItemIndex = UnityEngine.Random.Range(0, Defines.MaxDropItemCount);
+            EntQueue.Enqueue(ent);
             go.gameObject.SetActive(false);
         }
     }

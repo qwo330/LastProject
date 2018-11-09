@@ -6,8 +6,8 @@ public class ManagerCaller : MonoBehaviour {
     {
         InputManager.Instance.Init();
         TimerManager.Instance.Init();
-        ObjectPool.Instance.Init();
         ItemList.Instance.Init();
+        ObjectPool.Instance.Init();
         StageManager.Instance.Init();
         DataManager.Instance.Init();
         UIPresenter.Instance.Init();

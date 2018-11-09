@@ -48,7 +48,7 @@ public class UIItemController : MonoBehaviour
         else if (distance > 15f)
         {
             int itemCode = (int)dragItem.Item[0].ItemCode;
-            Sprite sprite = ImageStorage.Instance.sprites[itemCode];
+            Sprite sprite = UIPresenter.Instance.ImageStorage.sprites[itemCode];
             if (sprite == null) return;
 
             EmptyImg.sprite = sprite;
@@ -92,7 +92,7 @@ public class UIItemController : MonoBehaviour
 
         ItemPopUp.SetActive(true);
         ItemPopUpText.text = itemData.ItemName + "\n" + itemData.Time.ToString();
-        ItemPopUpImg.sprite = ImageStorage.Instance.sprites[(int)itemData.ItemCode];
+        ItemPopUpImg.sprite = UIPresenter.Instance.ImageStorage.sprites[(int)itemData.ItemCode];
     }
 
     Slot getItemInfo()

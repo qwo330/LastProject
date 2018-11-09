@@ -11,7 +11,10 @@ public class UIPresenter : Singleton<UIPresenter> {
     public GameObject quest;
     public CraftSystem craft;
 
-	public void Init()
+    public ImageStorage ImageStorage;
+
+
+    public void Init()
     {
         UICanvas = Instantiate(Resources.Load("Prefabs/UI Canvas"), transform) as GameObject;
         UIRoot = Instantiate(Resources.Load("Prefabs/UI Root"), transform) as GameObject;
@@ -29,6 +32,9 @@ public class UIPresenter : Singleton<UIPresenter> {
         craft.InventorySystem = Inventory;
         craft.Init();
         craft.gameObject.SetActive(false);
+
+        ImageStorage = GameObject.FindGameObjectWithTag("ImageStorage").GetComponent<ImageStorage>();
+        ImageStorage.Init();
 
         UICanvas.SetActive(false);
         UIRoot.SetActive(false);

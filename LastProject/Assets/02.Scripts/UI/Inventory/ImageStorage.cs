@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
-public class ImageStorage : Singleton<ImageStorage> {
+public class ImageStorage : MonoBehaviour{
     public Sprite[] sprites;
+
+    public void Init() {
+        
+    }
 }

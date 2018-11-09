@@ -32,7 +32,7 @@ public abstract class Slot : MonoBehaviour
 
         if (Item.Count <= 0)
         {
-            GetComponent<Image>().sprite = ImageStorage.Instance.sprites[0];
+            GetComponent<Image>().sprite = UIPresenter.Instance.ImageStorage.sprites[0];
         }
     }
 

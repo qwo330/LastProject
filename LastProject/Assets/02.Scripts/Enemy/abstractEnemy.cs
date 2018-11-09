@@ -22,11 +22,14 @@ public abstract class abstractEnemy : MonoBehaviour
     protected GameTimer attackTimer;
     protected bool isAttackable;
     protected bool isDead;
+    public int DropItemIndex;
 
+    //ai 추적 거리
     protected float MinChaseDistance = 2f;
     protected float MaxChaseDistance = 8f;
     protected float TargetDistance;
 
+    //스텟
     protected const int DefaultAtk = 100;
     protected const int DefaultDef = 10;
     protected const int DefaultHP = 500;
@@ -51,7 +54,7 @@ public abstract class abstractEnemy : MonoBehaviour
         }
 
         status = new CharacterStatus(
-            DefaultAtk + IncreaseAtk * (lv-1), 
+            DefaultAtk + IncreaseAtk * (lv - 1), 
             DefaultDef + IncreaseDef * (lv - 1), 
             DefaultHP + IncreaseHP * (lv - 1), 
             lv);
@@ -88,13 +91,6 @@ public abstract class abstractEnemy : MonoBehaviour
         currentState.DoAction();
     }
 
-    public abstract void PlayerWound(int damage);
-    protected abstract void ONAttackExit();
-    protected abstract void OnWoundExit();
-    protected abstract void OnDeadExit();
-    protected abstract void DeadExit();
-    protected abstract void PushSelf();
-
     protected void OnTriggerStay(Collider other)
     {
         if (other.transform.tag == Defines.TAG_Player)
@@ -110,4 +106,16 @@ public abstract class abstractEnemy : MonoBehaviour
             targetPlayer = null;
         }
     }
+
+    protected void GiveItem()
+    {
+        UIPresenter.Instance.Inventory.AddIteminInventory(ItemList.Instance.ItemIndex[DropItemIndex + 51]);
+    }
+
+    public abstract void PlayerWound(int damage);
+    protected abstract void ONAttackExit();
+    protected abstract void OnWoundExit();
+    protected abstract void OnDeadExit();
+    protected abstract void DeadExit();
+    protected abstract void PushSelf();
 }
