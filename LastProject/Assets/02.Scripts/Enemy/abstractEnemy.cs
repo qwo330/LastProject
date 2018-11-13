@@ -30,12 +30,14 @@ public abstract class abstractEnemy : MonoBehaviour
     protected float TargetDistance;
 
     //스텟
-    protected const int DefaultAtk = 100;
+    protected const int DefaultAtk = 50;
     protected const int DefaultDef = 10;
     protected const int DefaultHP = 500;
     protected const int IncreaseAtk = 10;
     protected const int IncreaseDef = 1;
     protected const int IncreaseHP = 50;
+    protected int DropExp;
+    protected int DropGold;
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
@@ -58,6 +60,9 @@ public abstract class abstractEnemy : MonoBehaviour
             DefaultDef + IncreaseDef * (lv - 1), 
             DefaultHP + IncreaseHP * (lv - 1), 
             lv);
+
+        DropExp = 20 + lv * 10;
+        DropGold = lv * 5;
 
         rigidbodyComponent.isKinematic = false;
         navMeshAgent.isStopped = true;
@@ -115,7 +120,10 @@ public abstract class abstractEnemy : MonoBehaviour
     public abstract void PlayerWound(int damage);
     protected abstract void ONAttackExit();
     protected abstract void OnWoundExit();
-    protected abstract void OnDeadExit();
     protected abstract void DeadExit();
     protected abstract void PushSelf();
+    protected virtual void OnDeadExit()
+    {
+        StageManager.Instance.player.GetExpAndGold(DropExp, DropGold);
+    }
 }

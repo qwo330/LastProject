@@ -22,7 +22,7 @@ public class Ent : abstractEnemy
                     {
                         if (TargetDistance > MinChaseDistance)
                         {
-                            if (navMeshAgent.isStopped)
+                            if (targetPlayer != null && !(currentState is EnemyAttack))
                             {
                                 ChangeState(CharacterState.Running);
                             }
@@ -137,6 +137,8 @@ public class Ent : abstractEnemy
 
     protected override void OnDeadExit()
     {
+        base.OnDeadExit();
+        GiveItem();
         deadTimer.SetTimer(3f);
         deadTimer.StartTimer();
     }
@@ -149,6 +151,5 @@ public class Ent : abstractEnemy
     protected override void PushSelf()
     {
         ObjectPool.Instance.PushEnt(this);
-        GiveItem();
     }
 }

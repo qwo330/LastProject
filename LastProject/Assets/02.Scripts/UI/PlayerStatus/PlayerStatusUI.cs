@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatusUI : MonoBehaviour {
-    
-    private float HPValue;   //나중에 대원님한테 값 받아오기
-    private float EXPValue;  //나중에 대원님한테 값 받아오기
-    private int level;      //나중에 대원님한테 값 받아오기
-    private int playerGold; //나중에 대원님한테 받아오기
-
+public class PlayerStatusUI : MonoBehaviour
+{
     private float Percent = 0.01f;
 
     [SerializeField]
@@ -20,16 +15,11 @@ public class PlayerStatusUI : MonoBehaviour {
     [SerializeField]
     private UILabel goldObj;
 
-    public void ChangeStatus()
+    public void ChangeStatus(CharacterStatus status)
     {
-        playerLevel.text = level.ToString();
-        HPbar.fillAmount = HPValue * Percent;
-        EXPbar.fillAmount = EXPValue * Percent;
+        playerLevel.text = "Lv." + status.Level.ToString("00") + " 앗츄";
+        HPbar.fillAmount = status.cHealth / status.MaxHealth;
+        EXPbar.fillAmount = status.Exp / status.MaxExp;
+        goldObj.text = status.Gold.ToString();
     }
-
-    public void ShowPlayerGold()
-    {
-        goldObj.text = playerGold.ToString();
-    }
-
 }

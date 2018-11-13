@@ -91,6 +91,7 @@ public class StageManager : Singleton<StageManager>
 
         UIPresenter.Instance.UICanvas.SetActive(true);
         UIPresenter.Instance.UIRoot.SetActive(true);
+        player.GetExpAndGold(1,0);
     }
 }
 

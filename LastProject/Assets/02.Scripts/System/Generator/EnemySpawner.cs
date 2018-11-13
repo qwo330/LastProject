@@ -11,8 +11,8 @@ public class EnemySpawner : MonoBehaviour
     bool isRespawn;
     [SerializeField, Range(1, 10)] int RespawnLevel;
 
-    const float MinRandomPos = 0f;
-    const float MaxRandomPos = 0f;
+    const float MinRandomPos = -2f;
+    const float MaxRandomPos = 2f;
 
     public void Init(int maxCount)
     {

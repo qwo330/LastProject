@@ -39,4 +39,12 @@ public class UIPresenter : Singleton<UIPresenter> {
         UICanvas.SetActive(false);
         UIRoot.SetActive(false);
     }
+
+    public void DrawPlayerUI(CharacterStatus status)
+    {
+        if (PlayerStatusUI != null)
+        {
+            PlayerStatusUI.ChangeStatus(status);
+        }
+    }
 }

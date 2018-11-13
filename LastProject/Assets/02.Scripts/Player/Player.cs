@@ -8,10 +8,11 @@ public struct CharacterStatus
 {
     public int Attack;
     public int Defense;
-    public int cHealth;
-    public int MaxHealth;
+    public float cHealth;
+    public float MaxHealth;
     public int Level;
-    public int Exp;
+    public float Exp;
+    public float MaxExp;
     public int Gold;
 
     public CharacterStatus(int atk, int def, int hp)
@@ -22,6 +23,7 @@ public struct CharacterStatus
         cHealth = MaxHealth;
         Level = 1;
         Exp = 0;
+        MaxExp = 100 + Level * 200;
         Gold = 0;
     }
 
@@ -33,6 +35,7 @@ public struct CharacterStatus
         cHealth = MaxHealth;
         Level = Lv;
         Exp = 0;
+        MaxExp = 100 + Level * 200;
         Gold = 0;
     }
 }
@@ -98,6 +101,7 @@ public class Player : MonoBehaviour
         playerStates = CharacterState.Idle;
         ChangeState(playerStates);
         currentSpeed = MovingSpeed;
+        GetExpAndGold(0,0);
 
         return this;
     }
@@ -148,7 +152,7 @@ public class Player : MonoBehaviour
             }  
         }
     }
-    
+
     void ChangeState(CharacterState state)
     {
         switch (state)
@@ -166,7 +170,7 @@ public class Player : MonoBehaviour
                 CurrentState = new PlayerWound(animatorComponent, currentSpeed);
                 break;
             case CharacterState.Death:
-                CurrentState = new PlayerDeath(animatorComponent, currentSpeed);
+                CurrentState = new PlayerDeath(animatorComponent, currentSpeed, isDead);
                 break;
             default:
                 break;
@@ -198,17 +202,36 @@ public class Player : MonoBehaviour
 
         currentSpeed = 0;
         status.cHealth -= damege;
+        UIPresenter.Instance.DrawPlayerUI(status);
 
         if (status.cHealth < 0)
         {
-            playerStates = CharacterState.Death;  
+            if (!isDead)
+            {
+                isDead = true;
+                playerStates = CharacterState.Death;
+            }
         }
 
         else
         {
+            isDead = false;
             playerStates = CharacterState.Wound;
         }
 
         ChangeState(playerStates);
+    }
+
+    public void GetExpAndGold(int exp, int gold)
+    {
+        status.Exp += exp;
+        status.Gold += gold;
+        if (status.Exp > status.MaxExp)
+        {
+            status.Level++;
+            status.Exp = 0;
+        }
+        status.MaxExp = 50 + status.Level * 100;
+        UIPresenter.Instance.DrawPlayerUI(status);
     }
 }
