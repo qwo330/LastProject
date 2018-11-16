@@ -9,25 +9,37 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class abstractEnemy : MonoBehaviour
 {
-    public CharacterStatus status;
-    public EnemyState currentState;
+    public delegate void RemoveEnemy_Delegate(abstractEnemy enemy);
+    public RemoveEnemy_Delegate RemoveEnemy;
 
-    public GameObject targetPlayer;
+    public CharacterStatus status;
+    public Transform targetPlayerTransform;
     protected EnemyAttackBox[] enemyAttackBox;
-    protected CharacterState state;
-    protected Rigidbody rigidbodyComponent;
-    protected Animator animatorComponent;
-    protected NavMeshAgent navMeshAgent;
-    protected GameTimer deadTimer;
-    protected GameTimer attackTimer;
-    protected bool isAttackable;
-    protected bool isDead;
+    protected EnemyState[] states = new EnemyState[MAXCOUNT_STATE];
+    protected EnemyState previousState;
+    protected EnemyState currentState;
+    public Rigidbody rigidbodyComponent;
+    public Animator animatorComponent;
+    public NavMeshAgent navMeshAgent;
+    public GameTimer deadTimer;
+    public GameTimer attackTimer;
+    public bool isAttackable;
+    public bool isDead;
     public int DropItemIndex;
+
+    //적 캐릭터 상태
+    protected const int IDLE = 0;
+    protected const int MOVE = 1;
+    protected const int ATTACK = 2;
+    protected const int WOUNDED = 3;
+    protected const int DEATH = 4;
+    protected const int MAXCOUNT_STATE = 5;
 
     //ai 추적 거리
     protected float MinChaseDistance = 2f;
     protected float MaxChaseDistance = 8f;
     protected float TargetDistance;
+    public float chaseDistance;
 
     //스텟
     protected const int DefaultAtk = 50;
@@ -36,12 +48,12 @@ public abstract class abstractEnemy : MonoBehaviour
     protected const int IncreaseAtk = 10;
     protected const int IncreaseDef = 1;
     protected const int IncreaseHP = 50;
-    protected int DropExp;
-    protected int DropGold;
+    public int DropExp;
+    public int DropGold;
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
-    protected float currentSpeed;
+    public float currentSpeed;
 
     public virtual abstractEnemy Init(int lv)
     {
@@ -71,17 +83,22 @@ public abstract class abstractEnemy : MonoBehaviour
 
         currentSpeed = MovingSpeed;
         currentState = null;
-        targetPlayer = null;
+        previousState = null;
+        targetPlayerTransform = null;
+
+        states[IDLE] = new EnemyIdle();
+        states[MOVE] = new EnemyMove();
+        states[ATTACK] = new EnemyAttack();
+        states[WOUNDED] = new EnemyWound();
+        states[DEATH] = new EnemyDeath();
 
         deadTimer = TimerManager.Instance.GetTimer();
         deadTimer.SetTimer(3f);
-        deadTimer.Callback = DeadExit;
+        deadTimer.Callback = ReturnPool;
 
         attackTimer = TimerManager.Instance.GetTimer();
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;
-
-        ObjectPool.Instance.allPushEnt += PushSelf;
 
         return this;
     }
@@ -91,16 +108,12 @@ public abstract class abstractEnemy : MonoBehaviour
         isAttackable = true;
     }
 
-    protected virtual void ChangeState(CharacterState state)
-    {
-        currentState.DoAction();
-    }
-
+    
     protected void OnTriggerStay(Collider other)
     {
         if (other.transform.tag == Defines.TAG_Player)
         {
-            targetPlayer = other.gameObject;
+            targetPlayerTransform = other.gameObject.transform;
         }
     }
 
@@ -108,22 +121,19 @@ public abstract class abstractEnemy : MonoBehaviour
     {
         if (other.transform.tag == Defines.TAG_Player)
         {
-            targetPlayer = null;
+            targetPlayerTransform = null;
         }
     }
 
-    protected void GiveItem()
+    public void GiveItem()
     {
         UIPresenter.Instance.Inventory.AddIteminInventory(ItemList.Instance.ItemIndex[DropItemIndex + 51]);
+        StageManager.Instance.player.GetExpAndGold(DropExp, DropGold);
     }
 
     public abstract void PlayerWound(int damage);
+    protected abstract void ChangeState();
     protected abstract void ONAttackExit();
     protected abstract void OnWoundExit();
-    protected abstract void DeadExit();
-    protected abstract void PushSelf();
-    protected virtual void OnDeadExit()
-    {
-        StageManager.Instance.player.GetExpAndGold(DropExp, DropGold);
-    }
+    protected abstract void ReturnPool();
 }

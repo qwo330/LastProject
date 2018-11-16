@@ -7,9 +7,11 @@ public class EnemySpawner : MonoBehaviour
     public int MaxCount;
     GameTimer spawnTimer;
     const float spawnTime = 2f;
-    List<Ent> entList;
+    List<abstractEnemy> enemyList;
     bool isRespawn;
-    [SerializeField, Range(1, 10)] int RespawnLevel;
+    
+    [SerializeField, Range(1, 10)]
+    int RespawnLevel;
 
     const float MinRandomPos = -2f;
     const float MaxRandomPos = 2f;
@@ -20,18 +22,20 @@ public class EnemySpawner : MonoBehaviour
         spawnTimer = TimerManager.Instance.GetTimer();
         spawnTimer.SetTimer(spawnTime);
         spawnTimer.Callback = Spawn;
-        entList = new List<Ent>();
+        enemyList = new List<abstractEnemy>();
         isRespawn = false;
     }
 
     void Spawn()
     {
-        if (entList.Count < MaxCount)
+        if (enemyList.Count < MaxCount)
         {
             Vector3 randomPosition = 
                 new Vector3(Random.Range(MinRandomPos, MaxRandomPos), 
                 transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
-            entList.Add(ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, entList));
+            abstractEnemy enemy = ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, enemyList);
+            enemy.RemoveEnemy = RemoveAt;
+            enemyList.Add(enemy);
         }
     }
 
@@ -57,6 +61,19 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(spawnTime);
 
             Spawn();
+        }
+    }
+
+    void RemoveAt(abstractEnemy enemy)
+    {
+        enemyList.Remove(enemy);
+    }
+
+    public void RemoveAll()
+    {
+        for (int i = enemyList.Count; i > 0; i--)
+        {
+            enemyList.Remove(enemyList[i]);
         }
     }
 }

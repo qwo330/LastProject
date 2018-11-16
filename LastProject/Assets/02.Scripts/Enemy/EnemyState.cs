@@ -5,15 +5,6 @@ using UnityEngine.AI;
 
 public abstract class EnemyState
 {
-    protected CharacterStatus status;
-    protected EnemyAttackBox[] enemyAttackBox;
-    protected CharacterState state;
-    protected Rigidbody rigidbodyComponent;
-    protected Animator animatorComponent;
-    protected NavMeshAgent navMeshAgent;
-    protected GameObject targetPlayer;
-    protected Transform transform;
-    protected float currentSpeed;
-
-    public abstract void DoAction();
+    public abstract void EnterAction(abstractEnemy enemy);
+    public abstract void ExitAction(abstractEnemy enemy);
 }

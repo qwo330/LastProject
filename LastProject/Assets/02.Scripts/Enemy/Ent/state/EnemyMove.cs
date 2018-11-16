@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class EnemyMove : EnemyState 
+﻿public class EnemyMove : EnemyState 
 {
-    const float chaseDistance = 4f;
-
-    public EnemyMove(Animator animator, NavMeshAgent navMeshAgent, GameObject targetPlayer, float currentSpeed)
+    public override void EnterAction(abstractEnemy enemy)
     {
-        this.navMeshAgent = navMeshAgent;
-        this.animatorComponent = animator;
-        this.targetPlayer = targetPlayer;
-        this.currentSpeed = currentSpeed;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, true);
+        enemy.navMeshAgent.SetDestination(enemy.targetPlayerTransform.position);
+        enemy.navMeshAgent.speed = enemy.currentSpeed;
+        enemy.navMeshAgent.isStopped = false;
     }
 
-    public override void DoAction()
+    public override void ExitAction(abstractEnemy enemy)
     {
-        if(targetPlayer != null)
-        {
-            animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, true);
-            navMeshAgent.SetDestination(targetPlayer.transform.position);
-            navMeshAgent.speed = currentSpeed;
-            navMeshAgent.isStopped = false;
-        }
+        throw new System.NotImplementedException();
     }
 }

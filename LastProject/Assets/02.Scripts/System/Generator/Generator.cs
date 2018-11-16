@@ -27,6 +27,8 @@ public class Generator : MonoBehaviour
         {
             gatherSpawner[i].Init(i);
         }
+
+        ObjectPool.Instance.allPushEnt = new AllPushEnt(PushEntAll);
     }
 
     public void GatherItem(int index, ItemCodes item)
@@ -41,5 +43,13 @@ public class Generator : MonoBehaviour
         yield return new WaitForSeconds(time); 
 
         gatherSpawner[index].gameObject.SetActive(true);
+    }
+
+    void PushEntAll()
+    {
+        for (int i = 0; i < enemySpawner.Length; i++)
+        {
+            enemySpawner[i].RemoveAll();
+        }
     }
 }

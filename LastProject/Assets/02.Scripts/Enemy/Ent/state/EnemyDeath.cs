@@ -1,22 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class EnemyDeath : EnemyState 
+﻿public class EnemyDeath : EnemyState 
 {
-    public EnemyDeath(Animator animator, Rigidbody rigidbodyComponent, NavMeshAgent navMeshAgent)
+    public override void EnterAction(abstractEnemy enemy)
     {
-        this.animatorComponent = animator;
-        this.rigidbodyComponent = rigidbodyComponent;
-        this.navMeshAgent = navMeshAgent;
+        enemy.RemoveEnemy(enemy); //EnemySpawner에게 자신의 사망을 알림
+        StageManager.Instance.player.GetExpAndGold(enemy.DropExp, enemy.DropGold);
+        enemy.GiveItem();
+        enemy.deadTimer.SetTimer(3f);
+        enemy.deadTimer.StartTimer();
+        enemy.navMeshAgent.isStopped = true;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.DEATH, true);
     }
 
-    public override void DoAction()
+    public override void ExitAction(abstractEnemy enemy)
     {
-        rigidbodyComponent.isKinematic = true;
-        navMeshAgent.isStopped = true;
-        navMeshAgent.speed = 0;
-        animatorComponent.SetTrigger(PlayerAniTrigger.DEATH);
+        enemy.navMeshAgent.isStopped = false;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.DEATH, false);
     }
 }

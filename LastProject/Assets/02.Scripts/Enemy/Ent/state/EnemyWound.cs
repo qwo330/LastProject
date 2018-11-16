@@ -1,24 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class EnemyWound : EnemyState 
+﻿public class EnemyWound : EnemyState 
 {
-    public EnemyWound(Animator animator, NavMeshAgent navMeshAgent, Rigidbody rigidbodyComponent)
+    public override void EnterAction(abstractEnemy enemy)
     {
-        this.animatorComponent = animator;
-        this.navMeshAgent = navMeshAgent;
-        this.rigidbodyComponent = rigidbodyComponent;
+        enemy.rigidbodyComponent.isKinematic = true;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, true);
     }
 
-    public override void DoAction()
+    public override void ExitAction(abstractEnemy enemy)
     {
-        rigidbodyComponent.isKinematic = true;
-        navMeshAgent.speed = 0;
-        navMeshAgent.isStopped = true;
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
-        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, false);
-        animatorComponent.SetBool(PlayerAniTrigger.WOUND, true);
+        enemy.rigidbodyComponent.isKinematic = false;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, false);
     }
 }

@@ -1,26 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class EnemyAttack : EnemyState 
+﻿public class EnemyAttack : EnemyState 
 {
-    public EnemyAttack(Animator animator, GameObject targetPlayer, Transform transform, NavMeshAgent navMeshAgent, Rigidbody rigidbodyComponent)
+    public override void EnterAction(abstractEnemy enemy)
     {
-        this.animatorComponent = animator;
-        this.targetPlayer = targetPlayer;
-        this.transform = transform;
-        this.navMeshAgent = navMeshAgent;
-        this.rigidbodyComponent = rigidbodyComponent;
+        if (enemy.isAttackable)
+        {
+            enemy.navMeshAgent.isStopped = true;
+            enemy.isAttackable = false;
+            enemy.transform.LookAt(enemy.targetPlayerTransform);
+            enemy.attackTimer.SetTimer(2f);
+            enemy.attackTimer.StartTimer();
+            enemy.rigidbodyComponent.isKinematic = true;
+            enemy.animatorComponent.SetBool(PlayerAniTrigger.ATTACK, true);
+        }
     }
 
-    public override void DoAction()
+    public override void ExitAction(abstractEnemy enemy)
     {
-        rigidbodyComponent.isKinematic = true;
-        navMeshAgent.speed = 0;
-        navMeshAgent.isStopped = true;
-        transform.LookAt(targetPlayer.transform);
-        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, false);
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, true);
+        enemy.rigidbodyComponent.isKinematic = false;
+        enemy.animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
     }
 }

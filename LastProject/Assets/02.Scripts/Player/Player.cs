@@ -44,24 +44,20 @@ public static class PlayerAniTrigger
 {
     public const string ATTACK = "IsAttack";
     public const string ACTION = "SetAction";
-    public const string WOUND = "IsWound";
+    public const string WOUNDED = "IsWounded";
     public const string DEATH = "IsDeath";
     public const string ISRUNNING = "IsRunnig";
     public const string ISINHOME = "InHome";
     public const string ISIDLE = "IsIdle";
 }
 
-[Flags]
 public enum CharacterState
 {
-    Idle = 0,
-    Running = 2,
-    Attack = 4,
-    Death = 8,
-    Wound = 16,
-    DeathOrWound = Death | Wound,
-    DeathAndWound = Death & Wound,
-    DeathXorWound = Death ^ Wound,
+    Idle,
+    Move,
+    Attack,
+    Death,
+    Wounded
 }
 
 /// <summary>
@@ -122,7 +118,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if((playerStates != CharacterState.Wound) && (playerStates != CharacterState.Death))
+        if((playerStates != CharacterState.Wounded) && (playerStates != CharacterState.Death))
         {
             if (playerStates != CharacterState.Attack)
             {
@@ -136,7 +132,7 @@ public class Player : MonoBehaviour
                 //moving
                 else if ((VerticalAxis != 0 || HorizontalAxis != 0))
                 {
-                    playerStates = CharacterState.Running;
+                    playerStates = CharacterState.Move;
                     ChangeState(playerStates);
                 }
 
@@ -160,13 +156,13 @@ public class Player : MonoBehaviour
             case CharacterState.Idle:
                 CurrentState = new PlayerIdle(animatorComponent, playerStates, isInHome);
                 break;
-            case CharacterState.Running:
+            case CharacterState.Move:
                 CurrentState = new PlayerMove(transform, currentSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
                 break;
             case CharacterState.Attack:
                 CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
                 break;
-            case CharacterState.Wound:
+            case CharacterState.Wounded:
                 CurrentState = new PlayerWound(animatorComponent, currentSpeed);
                 break;
             case CharacterState.Death:
@@ -189,7 +185,7 @@ public class Player : MonoBehaviour
     void OnWoundExit()
     {
         playerStates = CharacterState.Idle;
-        animatorComponent.SetBool(PlayerAniTrigger.WOUND, playerStates == CharacterState.Wound);
+        animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, playerStates == CharacterState.Wounded);
         ChangeState(CharacterState.Idle);
     }
 
@@ -216,7 +212,7 @@ public class Player : MonoBehaviour
         else
         {
             isDead = false;
-            playerStates = CharacterState.Wound;
+            playerStates = CharacterState.Wounded;
         }
 
         ChangeState(playerStates);

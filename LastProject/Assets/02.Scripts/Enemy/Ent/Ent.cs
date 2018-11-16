@@ -1,95 +1,65 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Ent : abstractEnemy
 {
-    public List<Ent> MemberList;
-
     private void Update()
     {
-        if (targetPlayer != null && !isDead)
-        {
-            TargetDistance = Vector3.Distance(targetPlayer.transform.position, transform.position);
-            currentSpeed = MovingSpeed;
+        TargetDistance = Vector3.Distance(targetPlayerTransform.position, transform.position);
+        currentSpeed = MovingSpeed;
 
-            if (!(currentState is EnemyDeath))
+        SetCurrentState();
+        ChangeState();
+    }
+
+    void SetCurrentState()
+    {
+        previousState = currentState;
+
+        if (targetPlayerTransform == null)
+            return;
+
+        if (currentState == states[DEATH] || currentState == states[WOUNDED])
+            return;
+
+        if (currentState == states[ATTACK])
+            return;
+
+        if(TargetDistance < MaxChaseDistance)
+        {
+            if(MinChaseDistance < TargetDistance)
             {
-                if (!(currentState is EnemyAttack && currentState is EnemyWound))
-                {
-                    if (TargetDistance < MaxChaseDistance)
-                    {
-                        if (TargetDistance > MinChaseDistance)
-                        {
-                            if (targetPlayer != null && !(currentState is EnemyAttack))
-                            {
-                                ChangeState(CharacterState.Running);
-                            }
-                        }
-                        else
-                        {
-                            if ((currentState is EnemyIdle || currentState is EnemyMove))
-                            {
-                                if (isAttackable)
-                                {
-                                    navMeshAgent.isStopped = true;
-                                    isAttackable = false;
-                                    attackTimer.SetTimer(2f);
-                                    attackTimer.StartTimer();
-                                    ChangeState(CharacterState.Attack);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ChangeState(CharacterState.Idle);
-                    }
-                }
+                currentState = states[MOVE];
+            }
+            else
+            {
+                currentState = states[ATTACK];
             }
         }
         else
         {
-            ChangeState(CharacterState.Idle);
+            currentState = states[IDLE];
         }
     }
-
-    protected override void ChangeState(CharacterState state)
+    
+    protected override void ChangeState()
     {
-        switch (state)
-        {
-            case CharacterState.Idle:
-                currentState = new EnemyIdle(animatorComponent, navMeshAgent, transform);
-                break;
-            case CharacterState.Running:
-                currentState = new EnemyMove(animatorComponent, navMeshAgent, targetPlayer, currentSpeed); 
-                break;
-            case CharacterState.Attack:
-                currentState = new EnemyAttack(animatorComponent, targetPlayer, transform, navMeshAgent, rigidbodyComponent);
-                break;
-            case CharacterState.Death:
-                currentState = new EnemyDeath(animatorComponent, rigidbodyComponent, navMeshAgent);
-                break;
-            case CharacterState.Wound:
-                currentState = new EnemyWound(animatorComponent, navMeshAgent, rigidbodyComponent);
-                break;
-            default:
-                break;
-        }
-        base.ChangeState(state); 
+        if (previousState == currentState)
+            return;
+
+        previousState.ExitAction(this);
+        currentState.EnterAction(this);
     }
 
     protected override void ONAttackExit()
     {
         rigidbodyComponent.isKinematic = false;
-        ChangeState(CharacterState.Idle);
+        currentState = currentState = states[IDLE];
     }
 
     protected override void OnWoundExit()
     {
         rigidbodyComponent.isKinematic = false;
-        ChangeState(CharacterState.Idle);
+        currentState = currentState = states[IDLE];
     }
 
     private void OnStartLeftAttack()
@@ -110,45 +80,24 @@ public class Ent : abstractEnemy
     private void OnEndRightAttack()
     {
         enemyAttackBox[1].colliderComponent.enabled = false;
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
+        currentState = currentState = states[IDLE];
     }
 
     public override void PlayerWound(int damage)
     {
         status.cHealth -= damage;
 
-        if(status.cHealth <= 0 && !isDead)
+        if (status.cHealth <= 0 && !isDead)
         {
-            if(MemberList != null && MemberList.Contains(this))
-            {
-                MemberList.Remove(this);
-            }
-
-            isDead = true;
-            currentSpeed = 0;
-            ChangeState(CharacterState.Death);
+            currentState = currentState = states[DEATH];
         }
-
         else
         {
-            ChangeState(CharacterState.Wound);
+            currentState = currentState = states[WOUNDED];
         }
     }
 
-    protected override void OnDeadExit()
-    {
-        base.OnDeadExit();
-        GiveItem();
-        deadTimer.SetTimer(3f);
-        deadTimer.StartTimer();
-    }
-
-    protected override void DeadExit()
-    {
-        PushSelf();
-    }
-
-    protected override void PushSelf()
+    protected override void ReturnPool()
     {
         ObjectPool.Instance.PushEnt(this);
     }
