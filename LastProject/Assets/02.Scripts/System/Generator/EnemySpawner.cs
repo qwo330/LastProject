@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     public int MaxCount;
     GameTimer spawnTimer;
     const float spawnTime = 2f;
-    List<abstractEnemy> enemyList;
+    List<GameObject> enemyList;
     bool isRespawn;
     
     [SerializeField, Range(1, 10)]
@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
         spawnTimer = TimerManager.Instance.GetTimer();
         spawnTimer.SetTimer(spawnTime);
         spawnTimer.Callback = Spawn;
-        enemyList = new List<abstractEnemy>();
+        enemyList = new List<GameObject>();
         isRespawn = false;
     }
 
@@ -33,9 +33,9 @@ public class EnemySpawner : MonoBehaviour
             Vector3 randomPosition = 
                 new Vector3(Random.Range(MinRandomPos, MaxRandomPos), 
                 transform.position.y, Random.Range(MinRandomPos, MaxRandomPos));
-            abstractEnemy enemy = ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel, enemyList);
-            enemy.RemoveEnemy = RemoveAt;
-            enemyList.Add(enemy);
+            abstractEnemy enemy = ObjectPool.Instance.PopEnt(transform.position + randomPosition, RespawnLevel);
+            enemy.RemoveEnemy_Delegate = RemoveAt;
+            enemyList.Add(enemy.gameObject);
         }
     }
 
@@ -50,8 +50,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        isRespawn = false;
-        StopCoroutine(respawn());
+        if (other.tag == Defines.TAG_Player)
+        {
+            isRespawn = false;
+            StopCoroutine(respawn());
+        }
     }
 
     IEnumerator respawn()
@@ -64,16 +67,17 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    void RemoveAt(abstractEnemy enemy)
+    void RemoveAt(GameObject enemy)
     {
         enemyList.Remove(enemy);
+        enemy.GetComponent<abstractEnemy>().ReturnPool();
     }
 
     public void RemoveAll()
     {
         for (int i = enemyList.Count; i > 0; i--)
         {
-            enemyList.Remove(enemyList[i]);
+            RemoveAt(enemyList[i]);
         }
     }
 }

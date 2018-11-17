@@ -1,14 +1,19 @@
-﻿public class EnemyWound : EnemyState 
+﻿using UnityEngine;
+using UnityEngine.AI;
+
+public class EnemyWound : EnemyState 
 {
-    public override void EnterAction(abstractEnemy enemy)
+    public EnemyWound(Transform transform, Transform targetTransform, Rigidbody rigidbody, Animator animator, NavMeshAgent navMeshAgent, bool isAttackAble, 
+        int dropExp, int dropGold, GameTimer deadTimer, GameTimer attackTimer, RemoveEnemy_Delegate removeEnemy_Delegate, GiveItem_Delegate giveItem_Delegate) 
+        : base(transform, targetTransform, rigidbody, animator, navMeshAgent, isAttackAble, dropExp, dropGold, deadTimer, attackTimer, removeEnemy_Delegate, giveItem_Delegate)
     {
-        enemy.rigidbodyComponent.isKinematic = true;
-        enemy.animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, true);
+        this.rigidbody = rigidbody;
+        this.animator = animator;
     }
 
-    public override void ExitAction(abstractEnemy enemy)
+    protected override void PlayAnimation(bool triggerValue)
     {
-        enemy.rigidbodyComponent.isKinematic = false;
-        enemy.animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, false);
+        rigidbody.isKinematic = triggerValue;
+        animator.SetBool(PlayerAniTrigger.WOUNDED, triggerValue);
     }
 }

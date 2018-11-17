@@ -52,7 +52,7 @@ public class ObjectPool : Singleton<ObjectPool>
         return playerCharacter;
     }
 
-    public abstractEnemy PopEnt(Vector3 position, int lv, List<abstractEnemy> list = null)
+    public abstractEnemy PopEnt(Vector3 position, int lv)
     {
         abstractEnemy ent = EntQueue.Dequeue();
         ent.gameObject.SetActive(true);

@@ -1,22 +1,42 @@
-﻿public class EnemyAttack : EnemyState 
+﻿using UnityEngine;
+using UnityEngine.AI;
+
+public class EnemyAttack : EnemyState 
 {
-    public override void EnterAction(abstractEnemy enemy)
+    public EnemyAttack(Transform transform, Transform targetTransform, Rigidbody rigidbody, Animator animator, NavMeshAgent navMeshAgent, bool isAttackAble, 
+        int dropExp, int dropGold, GameTimer deadTimer, GameTimer attackTimer, RemoveEnemy_Delegate removeEnemy_Delegate, GiveItem_Delegate giveItem_Delegate) 
+        : base(transform, targetTransform, rigidbody, animator, navMeshAgent, isAttackAble, dropExp, dropGold, deadTimer, attackTimer, removeEnemy_Delegate, giveItem_Delegate)
     {
-        if (enemy.isAttackable)
+        this.transform = transform;
+        this.targetTransform = targetTransform;
+        this.rigidbody = rigidbody;
+        this.animator = animator;
+        this.navMeshAgent = navMeshAgent;
+        this.isAttackAble = isAttackAble;
+        this.dropExp = dropExp;
+        this.dropGold = dropGold;
+        this.deadTimer = deadTimer;
+        this.attackTimer = attackTimer;
+        this.RemoveEnemy_Delegate = removeEnemy_Delegate;
+        this.giveItem_Delegate = giveItem_Delegate;
+    }
+
+    public override void Enter()
+    {
+        if (isAttackAble)
         {
-            enemy.navMeshAgent.isStopped = true;
-            enemy.isAttackable = false;
-            enemy.transform.LookAt(enemy.targetPlayerTransform);
-            enemy.attackTimer.SetTimer(2f);
-            enemy.attackTimer.StartTimer();
-            enemy.rigidbodyComponent.isKinematic = true;
-            enemy.animatorComponent.SetBool(PlayerAniTrigger.ATTACK, true);
+            navMeshAgent.isStopped = true;
+            isAttackAble = false;
+            transform.LookAt(targetTransform);
+            attackTimer.SetTimer(2f);
+            attackTimer.StartTimer();
+            base.Enter();
         }
     }
 
-    public override void ExitAction(abstractEnemy enemy)
+    protected override void PlayAnimation(bool triggerValue)
     {
-        enemy.rigidbodyComponent.isKinematic = false;
-        enemy.animatorComponent.SetBool(PlayerAniTrigger.ATTACK, false);
+        rigidbody.isKinematic = triggerValue;
+        animator.SetBool(PlayerAniTrigger.ATTACK, triggerValue);
     }
 }

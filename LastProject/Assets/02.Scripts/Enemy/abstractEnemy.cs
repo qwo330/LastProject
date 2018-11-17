@@ -4,30 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-/// <summary>
-/// 생성 직후 바로 SetStatus()로 스텟 설정해줘야 합니다.
-/// </summary>
+public delegate void RemoveEnemy_Delegate(GameObject enemy);
+public delegate void GiveItem_Delegate();
 public abstract class abstractEnemy : MonoBehaviour
 {
-    public delegate void RemoveEnemy_Delegate(abstractEnemy enemy);
-    public RemoveEnemy_Delegate RemoveEnemy;
-
-    public CharacterStatus status;
-    public Transform targetPlayerTransform;
+    protected GiveItem_Delegate GiveItem_Delegate;
+    protected Transform targetTransform;
     protected EnemyAttackBox[] enemyAttackBox;
-    protected EnemyState[] states = new EnemyState[MAXCOUNT_STATE];
+    protected EnemyState[] states;
     protected EnemyState previousState;
     protected EnemyState currentState;
-    public Rigidbody rigidbodyComponent;
-    public Animator animatorComponent;
-    public NavMeshAgent navMeshAgent;
-    public GameTimer deadTimer;
-    public GameTimer attackTimer;
-    public bool isAttackable;
-    public bool isDead;
+    protected Rigidbody rigidbodyComponent;
+    protected Animator animatorComponent;
+    protected NavMeshAgent navMeshAgent;
+    protected GameTimer deadTimer;
+    protected GameTimer attackTimer;
+    protected bool isAttackable;
+    protected bool isDead;
+    public RemoveEnemy_Delegate RemoveEnemy_Delegate;
+    public CharacterStatus status;
     public int DropItemIndex;
 
-    //적 캐릭터 상태
+    //상태
     protected const int IDLE = 0;
     protected const int MOVE = 1;
     protected const int ATTACK = 2;
@@ -36,10 +34,10 @@ public abstract class abstractEnemy : MonoBehaviour
     protected const int MAXCOUNT_STATE = 5;
 
     //ai 추적 거리
-    protected float MinChaseDistance = 2f;
-    protected float MaxChaseDistance = 8f;
+    protected const float MinChaseDistance = 2f;
+    protected const float MaxChaseDistance = 8f;
     protected float TargetDistance;
-    public float chaseDistance;
+    protected float chaseDistance;
 
     //스텟
     protected const int DefaultAtk = 50;
@@ -48,12 +46,11 @@ public abstract class abstractEnemy : MonoBehaviour
     protected const int IncreaseAtk = 10;
     protected const int IncreaseDef = 1;
     protected const int IncreaseHP = 50;
-    public int DropExp;
-    public int DropGold;
+    protected int DropExp;
+    protected int DropGold;
 
     [SerializeField, Range(0, 10)]
     public float MovingSpeed;
-    public float currentSpeed;
 
     public virtual abstractEnemy Init(int lv)
     {
@@ -81,16 +78,9 @@ public abstract class abstractEnemy : MonoBehaviour
         isAttackable = true;
         isDead = false;
 
-        currentSpeed = MovingSpeed;
         currentState = null;
         previousState = null;
-        targetPlayerTransform = null;
-
-        states[IDLE] = new EnemyIdle();
-        states[MOVE] = new EnemyMove();
-        states[ATTACK] = new EnemyAttack();
-        states[WOUNDED] = new EnemyWound();
-        states[DEATH] = new EnemyDeath();
+        targetTransform = null;
 
         deadTimer = TimerManager.Instance.GetTimer();
         deadTimer.SetTimer(3f);
@@ -100,6 +90,22 @@ public abstract class abstractEnemy : MonoBehaviour
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;
 
+        states = new EnemyState[MAXCOUNT_STATE];
+        states[IDLE] = 
+            new EnemyIdle(null, null, null, animatorComponent, null, false, 0, 0, null, null, null, null);
+
+        states[MOVE] = 
+            new EnemyMove(null, null, null, animatorComponent, navMeshAgent, false, 0, 0, null, null, null, null);
+
+        states[ATTACK] = 
+            new EnemyAttack(transform, targetTransform, rigidbodyComponent, animatorComponent, navMeshAgent, isAttackable, 0, 0, null, attackTimer, null, null);
+
+        states[WOUNDED] = 
+            new EnemyWound(null, null, rigidbodyComponent, animatorComponent, null, false, 0, 0, null, null, null, null);
+
+        states[DEATH] = 
+            new EnemyDeath(null, null, null, animatorComponent, navMeshAgent, false, DropGold, DropExp, deadTimer, null, RemoveEnemy_Delegate, GiveItem_Delegate);
+
         return this;
     }
 
@@ -107,13 +113,12 @@ public abstract class abstractEnemy : MonoBehaviour
     {
         isAttackable = true;
     }
-
     
     protected void OnTriggerStay(Collider other)
     {
         if (other.transform.tag == Defines.TAG_Player)
         {
-            targetPlayerTransform = other.gameObject.transform;
+            targetTransform = other.gameObject.transform;
         }
     }
 
@@ -121,7 +126,7 @@ public abstract class abstractEnemy : MonoBehaviour
     {
         if (other.transform.tag == Defines.TAG_Player)
         {
-            targetPlayerTransform = null;
+            targetTransform = null;
         }
     }
 
@@ -132,8 +137,8 @@ public abstract class abstractEnemy : MonoBehaviour
     }
 
     public abstract void PlayerWound(int damage);
+    public abstract void ReturnPool();
     protected abstract void ChangeState();
     protected abstract void ONAttackExit();
     protected abstract void OnWoundExit();
-    protected abstract void ReturnPool();
 }

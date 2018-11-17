@@ -27,8 +27,6 @@ public class Generator : MonoBehaviour
         {
             gatherSpawner[i].Init(i);
         }
-
-        ObjectPool.Instance.allPushEnt = new AllPushEnt(PushEntAll);
     }
 
     public void GatherItem(int index, ItemCodes item)

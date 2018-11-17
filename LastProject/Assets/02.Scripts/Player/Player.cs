@@ -51,26 +51,17 @@ public static class PlayerAniTrigger
     public const string ISIDLE = "IsIdle";
 }
 
-public enum CharacterState
-{
-    Idle,
-    Move,
-    Attack,
-    Death,
-    Wounded
-}
-
 /// <summary>
-/// SetStatus()으로 스텟 설정 꼭 해야함,
 /// 마을 안과 밖일때 isInHome 변수 꼭 조정해줘야함
 /// </summary>
 public class Player : MonoBehaviour
 {
-    public PlayerState CurrentState;
     public bool isInHome;
     public CharacterStatus status;
-    
-    CharacterState playerStates;
+
+    PlayerState currentState;
+    PlayerState previousState;
+    PlayerState[] states;
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
     PlayerAttackBox attackBoxCollider;
@@ -84,6 +75,13 @@ public class Player : MonoBehaviour
     public float MovingSpeed;
     float currentSpeed;
 
+    const int IDLE = 0;
+    const int MOVE = 1;
+    const int ATTACK = 2;
+    const int WOUNDED = 3;
+    const int DEATH = 4;
+    const int STATE_COUNT = 5;
+
     public Player Init(int atk, int def, int hp)
     {
         rigidbodyComponent = GetComponent<Rigidbody>();
@@ -94,10 +92,19 @@ public class Player : MonoBehaviour
 
         isInHome = false;
         status = new CharacterStatus(atk, def, hp);
-        playerStates = CharacterState.Idle;
-        ChangeState(playerStates);
+
+        currentState = null;
+        previousState = null;
+
         currentSpeed = MovingSpeed;
         GetExpAndGold(0,0);
+
+        states = new PlayerState[STATE_COUNT];
+        states[IDLE] = new PlayerIdle(status, null, null, animatorComponent, null, isInHome, 0, 0, 0);
+        states[MOVE] = new PlayerMove(status, transform, rigidbodyComponent, animatorComponent, null, isInHome, VerticalAxis, HorizontalAxis, currentSpeed);
+        states[ATTACK] = new PlayerAttack(status, null, rigidbodyComponent, animatorComponent, attackBoxCollider, false, 0, 0, 0);
+        states[WOUNDED] = new PlayerWound(status, null, null, animatorComponent, null, false, 0, 0, currentSpeed);
+        states[DEATH] = new PlayerDeath(status, null, null, animatorComponent, null, false, 0, 0, currentSpeed);
 
         return this;
     }
@@ -106,116 +113,69 @@ public class Player : MonoBehaviour
     {
         VerticalAxis = InputManager.Instance.VerticalAxis;
         HorizontalAxis = InputManager.Instance.HorizontalAxis;
-        //if (!EventSystem.current.IsPointerOverGameObject())
-        //if (UICamera.Raycast(Input.mousePosition))
-#if UNITY_STANDALONE_WIN
-        if (!InputManager.Instance.IsUIRaycast && !InputManager.Instance.IsPointOverUIObject)
-        {
-            isMouseClicked = InputManager.Instance.IsMouseClicked;
-        }
-#endif
+        isMouseClicked = InputManager.Instance.IsMouseClicked;
     }
 
     private void FixedUpdate()
     {
-        if((playerStates != CharacterState.Wounded) && (playerStates != CharacterState.Death))
-        {
-            if (playerStates != CharacterState.Attack)
-            {
-                //attack
-                if (isMouseClicked && !isInHome)
-                {
-                    playerStates = CharacterState.Attack;
-                    ChangeState(playerStates);
-                }
-                
-                //moving
-                else if ((VerticalAxis != 0 || HorizontalAxis != 0))
-                {
-                    playerStates = CharacterState.Move;
-                    ChangeState(playerStates);
-                }
+        currentSpeed = MovingSpeed;
 
-                //idle
-                else if(playerStates != CharacterState.Idle)
-                {
-                    transform.LookAt(transform);
-                    playerStates = CharacterState.Idle;
-                    ChangeState(playerStates);
-                }
-
-                currentSpeed = MovingSpeed;
-            }  
-        }
+        previousState = currentState;
+        SetCurrentState();
+        ChangeState();
     }
 
-    void ChangeState(CharacterState state)
+    void SetCurrentState()
     {
-        switch (state)
-        {
-            case CharacterState.Idle:
-                CurrentState = new PlayerIdle(animatorComponent, playerStates, isInHome);
-                break;
-            case CharacterState.Move:
-                CurrentState = new PlayerMove(transform, currentSpeed, rigidbodyComponent, animatorComponent, playerStates, isInHome, VerticalAxis, HorizontalAxis);
-                break;
-            case CharacterState.Attack:
-                CurrentState = new PlayerAttack(animatorComponent, playerStates, attackBoxCollider, rigidbodyComponent);
-                break;
-            case CharacterState.Wounded:
-                CurrentState = new PlayerWound(animatorComponent, currentSpeed);
-                break;
-            case CharacterState.Death:
-                CurrentState = new PlayerDeath(animatorComponent, currentSpeed, isDead);
-                break;
-            default:
-                break;
-        }
-        CurrentState.DoAction();
+        if (currentState == states[WOUNDED] || currentState == states[DEATH])
+            return;
+
+        if (currentState == states[ATTACK])
+            return;
+
+        if (isMouseClicked && !isInHome)
+            currentState = states[ATTACK];
+
+        else if ((VerticalAxis != 0 || HorizontalAxis != 0))
+            currentState = states[MOVE];
+
+        else
+            currentState = states[IDLE];
+    }
+
+    void ChangeState()
+    {
+        if (previousState == currentState)
+            return;
+
+        previousState.Exit();
+        currentState.Enter();
     }
 
     void OnAttackExit()
     {
-        playerStates = CharacterState.Idle;
-        attackBoxCollider.Collider.enabled = false;
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, playerStates == CharacterState.Attack);
-        ChangeState(CharacterState.Idle);
+        currentState = states[IDLE];
     }
 
     void OnWoundExit()
     {
-        playerStates = CharacterState.Idle;
-        animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, playerStates == CharacterState.Wounded);
-        ChangeState(CharacterState.Idle);
+        currentState = states[IDLE];
     }
 
     public void PlayerWound(int damege)
     {
-        if(playerStates == CharacterState.Death)
-        {
-            return;
-        }
-
-        currentSpeed = 0;
         status.cHealth -= damege;
         UIPresenter.Instance.DrawPlayerUI(status);
 
-        if (status.cHealth < 0)
+        if (status.cHealth < 0 && currentState == states[DEATH])
         {
-            if (!isDead)
-            {
-                isDead = true;
-                playerStates = CharacterState.Death;
-            }
+            currentState = states[DEATH];
         }
 
         else
         {
-            isDead = false;
-            playerStates = CharacterState.Wounded;
+            currentState = states[WOUNDED];
         }
-
-        ChangeState(playerStates);
     }
 
     public void GetExpAndGold(int exp, int gold)

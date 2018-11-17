@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class PlayerWound : PlayerState
 {
-    public PlayerWound(Animator animator, float currentSpeed)
+    public PlayerWound(CharacterStatus status, Transform transformComponent, Rigidbody rigidbodyComponent, Animator animatorComponent, 
+        PlayerAttackBox attackBoxCollider, bool isInHome, float verticalAxis, float horizontalAxis, float currentSpeed) 
+        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, verticalAxis, horizontalAxis, currentSpeed)
     {
-        this.animatorComponent = animator;
+        this.animatorComponent = animatorComponent;
         this.currentSpeed = currentSpeed;
     }
 
-    public override void DoAction()
+    public override void Enter()
     {
         currentSpeed = 0;
+        base.Enter();
+    }
+
+    protected override void PlayAnimation(bool triggerValue)
+    {
         animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
-        animatorComponent.SetBool(PlayerAniTrigger.WOUND, true);
+        animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, triggerValue);
     }
 }

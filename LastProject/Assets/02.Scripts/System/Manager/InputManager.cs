@@ -32,13 +32,17 @@ public class InputManager : Singleton<InputManager>
         HorizontalAxis = Input.GetAxis("Horizontal");
         IsUIRaycast = UICamera.Raycast(Input.mousePosition);
         IsPointOverUIObject = EventSystem.current.IsPointerOverGameObject();
-        IsMouseClicked = Input.GetMouseButtonDown(0);
+
+        if (!Instance.IsUIRaycast && !Instance.IsPointOverUIObject)
+            IsMouseClicked = Input.GetMouseButtonDown(0);
+        else
+            IsMouseClicked = false;
 
 #elif UNITY_ANDROID || UNITY_IPHONE
-
         if (Input.touchCount > 0)
         {
             touch = Input.GetTouch(0);
+
             if(touch.phase == TouchPhase.Began)
             {
                 touchBeganPos = touch.position;
@@ -49,8 +53,6 @@ public class InputManager : Singleton<InputManager>
                 touchVector = touchMovedPos - touchBeganPos;
                 VerticalAxis = GetInputRange(touchVector.y);
                 HorizontalAxis = GetInputRange(touchVector.x);
-
-                Debug.Log(VerticalAxis + ", " + HorizontalAxis);
             }
             else
             {
@@ -62,7 +64,6 @@ public class InputManager : Singleton<InputManager>
             IsUIRaycast = UICamera.Raycast(touchPos);
             IsPointOverUIObject = EventSystem.current.IsPointerOverGameObject();
         }
-
 #endif
     }
 

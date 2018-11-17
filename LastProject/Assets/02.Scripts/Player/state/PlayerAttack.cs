@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class PlayerAttack : PlayerState
 {
-    public PlayerAttack(Animator animator, CharacterState playerState, PlayerAttackBox attackBoxCollider, Rigidbody rigidbody)
+    public PlayerAttack(CharacterStatus status, Transform transformComponent, Rigidbody rigidbodyComponent, Animator animatorComponent, 
+        PlayerAttackBox attackBoxCollider, bool isInHome, float verticalAxis, float horizontalAxis, float currentSpeed) 
+        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, verticalAxis, horizontalAxis, currentSpeed)
     {
-        this.animatorComponent = animator;
-        this.playerStates = playerState;
+        this.animatorComponent = animatorComponent;
         this.attackBoxCollider = attackBoxCollider;
-        this.rigidbodyComponent = rigidbody;   
+        this.rigidbodyComponent = rigidbodyComponent;
     }
 
-    public override void DoAction()
+    public override void Enter()
     {
-        attackBoxCollider.Collider.enabled = true;
         rigidbodyComponent.velocity = Vector3.zero;
-        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, playerStates == CharacterState.Attack);
+        base.Enter();
+    }
+
+    protected override void PlayAnimation(bool triggerValue)
+    {
+        attackBoxCollider.Collider.enabled = triggerValue;
+        animatorComponent.SetBool(PlayerAniTrigger.ATTACK, triggerValue);
         animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }
 }

@@ -4,8 +4,8 @@ public class Ent : abstractEnemy
 {
     private void Update()
     {
-        TargetDistance = Vector3.Distance(targetPlayerTransform.position, transform.position);
-        currentSpeed = MovingSpeed;
+        TargetDistance = Vector3.Distance(targetTransform.position, transform.position);
+        navMeshAgent.speed = MovingSpeed;
 
         SetCurrentState();
         ChangeState();
@@ -15,7 +15,7 @@ public class Ent : abstractEnemy
     {
         previousState = currentState;
 
-        if (targetPlayerTransform == null)
+        if (targetTransform == null)
             return;
 
         if (currentState == states[DEATH] || currentState == states[WOUNDED])
@@ -46,10 +46,16 @@ public class Ent : abstractEnemy
         if (previousState == currentState)
             return;
 
-        previousState.ExitAction(this);
-        currentState.EnterAction(this);
+        previousState.Exit();
+        currentState.Enter();
     }
 
+    public override void ReturnPool()
+    {
+        ObjectPool.Instance.PushEnt(this);
+    }
+
+    //이하 애니메이션 이벤트
     protected override void ONAttackExit()
     {
         rigidbodyComponent.isKinematic = false;
@@ -95,10 +101,5 @@ public class Ent : abstractEnemy
         {
             currentState = currentState = states[WOUNDED];
         }
-    }
-
-    protected override void ReturnPool()
-    {
-        ObjectPool.Instance.PushEnt(this);
     }
 }
