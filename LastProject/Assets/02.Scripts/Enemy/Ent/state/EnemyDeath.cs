@@ -13,6 +13,8 @@ public class EnemyDeath : EnemyState
         this.dropExp = dropExp;
         this.dropGold = dropGold;
         this.deadTimer = deadTimer;
+        this.RemoveEnemy_Delegate = removeEnemy_Delegate;
+        this.giveItem_Delegate = giveItem_Delegate;
     }
 
     public override void Enter()
