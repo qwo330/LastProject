@@ -38,6 +38,7 @@ public class Ent : abstractEnemy
             else
             {
                 currentState = states[ATTACK];
+                currentState.isAttackAble = isAttackable;
             }
         }
         else
@@ -54,11 +55,12 @@ public class Ent : abstractEnemy
         if (previousState == currentState)
         {
             currentState.Update();
-            return;
         }
-
-        previousState.Exit();
-        currentState.Enter();
+        else
+        {
+            previousState.Exit();
+            currentState.Enter();
+        }
     }
 
     public override void ReturnPool()
@@ -70,7 +72,7 @@ public class Ent : abstractEnemy
     protected override void ONAttackExit()
     {
         rigidbodyComponent.isKinematic = false;
-        currentState = currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     protected override void OnWoundExit()
@@ -97,7 +99,6 @@ public class Ent : abstractEnemy
     private void OnEndRightAttack()
     {
         enemyAttackBox[1].colliderComponent.enabled = false;
-        SetPlayerState(states[IDLE]);
     }
 
     public override void PlayerWound(int damage)
@@ -106,7 +107,11 @@ public class Ent : abstractEnemy
 
         if (status.cHealth <= 0 && !isDead)
         {
-            SetPlayerState(states[DEATH]);
+            previousState = currentState;
+            currentState = states[DEATH];
+            currentState.RemoveEnemy_Delegate = RemoveEnemy_Delegate;
+            ChangeState();
+            
         }
         else
         {

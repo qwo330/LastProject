@@ -7,7 +7,6 @@ public class EnemyIdle : EnemyState
         int dropExp, int dropGold, GameTimer deadTimer, GameTimer attackTimer, RemoveEnemy_Delegate removeEnemy_Delegate, GiveItem_Delegate giveItem_Delegate) 
         : base(transform, targetTransform, rigidbody, animator, navMeshAgent, isAttackAble, dropExp, dropGold, deadTimer, attackTimer, removeEnemy_Delegate, giveItem_Delegate)
     {
-        this.navMeshAgent = navMeshAgent;
         this.animator = animator;
     }
 

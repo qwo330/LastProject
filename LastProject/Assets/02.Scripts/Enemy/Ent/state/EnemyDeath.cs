@@ -13,17 +13,16 @@ public class EnemyDeath : EnemyState
         this.dropExp = dropExp;
         this.dropGold = dropGold;
         this.deadTimer = deadTimer;
-        this.RemoveEnemy_Delegate = removeEnemy_Delegate;
+        //this.RemoveEnemy_Delegate = removeEnemy_Delegate;
         this.giveItem_Delegate = giveItem_Delegate;
     }
 
     public override void Enter()
     {
-        RemoveEnemy_Delegate(transform.gameObject);
-        StageManager.Instance.player.GetExpAndGold(dropExp, dropGold);
         giveItem_Delegate();
         deadTimer.SetTimer(3f);
         deadTimer.StartTimer();
+        // RemoveEnemy_Delegate(); //<- 없어도 잘 동작 하는듯?
         base.Enter();
     }
 

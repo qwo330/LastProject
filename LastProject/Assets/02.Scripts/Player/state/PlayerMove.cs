@@ -32,7 +32,6 @@ public class PlayerMove : PlayerState
         transformComponent.position =
             new Vector3(transformComponent.position.x + rotation * TimerManager.Instance.DeltaTime,
             transformComponent.position.y, transformComponent.position.z + traslation * TimerManager.Instance.DeltaTime);
-
     }
 
     protected override void PlayAnimation(bool triggerValue)

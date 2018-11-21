@@ -65,7 +65,6 @@ public class Player : MonoBehaviour
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
     PlayerAttackBox attackBoxCollider;
-    bool isDead;
 
     float VerticalAxis;
     float HorizontalAxis;
@@ -134,13 +133,11 @@ public class Player : MonoBehaviour
         {
             currentState = states[ATTACK];
         }
-
         else if ((VerticalAxis != 0 || HorizontalAxis != 0))
         {
             currentState = states[MOVE];
             currentState.currentSpeed = currentSpeed;
         }
-
         else
         {
             currentState = states[IDLE];
@@ -156,11 +153,12 @@ public class Player : MonoBehaviour
         if (previousState == currentState)
         {
             currentState.Update();
-            return;
         }
-
-        previousState.Exit();
-        currentState.Enter();
+        else
+        {
+            previousState.Exit();
+            currentState.Enter();
+        }
     }
 
     void OnAttackExit()
