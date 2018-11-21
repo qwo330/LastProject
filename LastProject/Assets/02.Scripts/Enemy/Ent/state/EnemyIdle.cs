@@ -13,7 +13,6 @@ public class EnemyIdle : EnemyState
 
     protected override void PlayAnimation(bool triggerValue)
     {
-        //navMeshAgent.isStopped = true;
         animator.SetBool(PlayerAniTrigger.ISIDLE, triggerValue);
     }
 }

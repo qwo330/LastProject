@@ -38,6 +38,8 @@ public abstract class EnemyState
         PlayAnimation(true);
     }
 
+    public virtual void Update() { }
+
     public virtual void Exit()
     {
         PlayAnimation(false);

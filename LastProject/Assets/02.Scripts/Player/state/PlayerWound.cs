@@ -12,12 +12,6 @@ public class PlayerWound : PlayerState
         this.currentSpeed = currentSpeed;
     }
 
-    public override void Enter()
-    {
-        currentSpeed = 0;
-        base.Enter();
-    }
-
     protected override void PlayAnimation(bool triggerValue)
     {
         animatorComponent.SetBool(PlayerAniTrigger.WOUNDED, triggerValue);

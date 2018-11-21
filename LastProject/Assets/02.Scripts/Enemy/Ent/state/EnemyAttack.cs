@@ -32,6 +32,14 @@ public class EnemyAttack : EnemyState
             attackTimer.StartTimer();
             base.Enter();
         }
+        else
+            Exit();
+    }
+
+    public override void Exit()
+    {
+        navMeshAgent.isStopped = false;
+        base.Exit();
     }
 
     protected override void PlayAnimation(bool triggerValue)

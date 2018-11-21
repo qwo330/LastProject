@@ -12,10 +12,10 @@ public class EnemyMove : EnemyState
         this.navMeshAgent = navMeshAgent;
     }
 
-    public override void Enter()
+    public override void Update()
     {
         navMeshAgent.SetDestination(targetTransform.position);
-        base.Enter();
+        base.Update();
     }
 
     protected override void PlayAnimation(bool triggerValue)

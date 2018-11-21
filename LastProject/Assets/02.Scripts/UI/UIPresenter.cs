@@ -24,18 +24,16 @@ public class UIPresenter : Singleton<UIPresenter> {
         craft = UIRoot.GetComponentInChildren<CraftSystem>();
         quest = UIRoot.GetComponentInChildren<QuestUI>().gameObject;
 
-        Inventory.Init();
-        Inventory.gameObject.SetActive(false);
-
         quest.transform.position = new Vector3(0, -2, 0);
-
+        Inventory.Init();
         craft.InventorySystem = Inventory;
         craft.Init();
-        craft.gameObject.SetActive(false);
 
         ImageStorage = GameObject.FindGameObjectWithTag("ImageStorage").GetComponent<ImageStorage>();
         ImageStorage.Init();
 
+        craft.gameObject.SetActive(false);
+        Inventory.gameObject.SetActive(false);
         UICanvas.SetActive(false);
         UIRoot.SetActive(false);
     }

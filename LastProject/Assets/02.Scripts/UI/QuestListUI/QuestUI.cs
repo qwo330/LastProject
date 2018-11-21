@@ -22,7 +22,7 @@ public class QuestUI : MonoBehaviour
     private List<UIToggle> questToggle = new List<UIToggle>();
 
 
-    void Start()
+    void Init()
     {
         EventDelegate.Add(questPrefab.GetComponent<UIToggle>().onChange, OnClickedQuestButton);
         LoadQuestInfoData();

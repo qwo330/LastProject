@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
         states[DEATH] = new PlayerDeath(status, null, null, animatorComponent, null, false, currentSpeed);
 
         previousState = null;
-        currentState = null;
+        currentState = states[IDLE];
 
         return this;
     }
@@ -165,15 +165,12 @@ public class Player : MonoBehaviour
 
     void OnAttackExit()
     {
-        previousState = currentState;
-        currentState = states[IDLE];
-        previousState.Exit();
-        currentState.Enter();
+        SetPlayerState(states[IDLE]);
     }
 
     void OnWoundExit()
     {
-        currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     public void PlayerWound(int damege)
@@ -183,12 +180,12 @@ public class Player : MonoBehaviour
 
         if (status.cHealth < 0 && currentState == states[DEATH])
         {
-            currentState = states[DEATH];
+            SetPlayerState(states[DEATH]);
         }
 
         else
         {
-            currentState = states[WOUNDED];
+            SetPlayerState(states[WOUNDED]);
         }
     }
 
@@ -206,10 +203,17 @@ public class Player : MonoBehaviour
     }
 
     //플레이어를 풀에서 꺼낼 때 Idle로 초기화 시킴
-    public void SetPlayerIdleState()
+    public void SetPlayerState()
     {
-        previousState = null;
+        previousState = currentState;
         currentState = states[IDLE];
-        currentState.Enter();
+        ChangeState();
+    }
+
+    void SetPlayerState(PlayerState state)
+    {
+        previousState = currentState;
+        currentState = state;
+        ChangeState();
     }
 }
