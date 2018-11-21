@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerAttack : PlayerState
 {
     public PlayerAttack(CharacterStatus status, Transform transformComponent, Rigidbody rigidbodyComponent, Animator animatorComponent, 
-        PlayerAttackBox attackBoxCollider, bool isInHome, float verticalAxis, float horizontalAxis, float currentSpeed) 
-        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, verticalAxis, horizontalAxis, currentSpeed)
+        PlayerAttackBox attackBoxCollider, bool isInHome, float currentSpeed) 
+        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, currentSpeed)
     {
         this.animatorComponent = animatorComponent;
         this.attackBoxCollider = attackBoxCollider;
@@ -23,6 +23,5 @@ public class PlayerAttack : PlayerState
     {
         attackBoxCollider.Collider.enabled = triggerValue;
         animatorComponent.SetBool(PlayerAniTrigger.ATTACK, triggerValue);
-        animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }
 }

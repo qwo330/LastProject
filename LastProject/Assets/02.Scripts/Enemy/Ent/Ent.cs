@@ -4,7 +4,8 @@ public class Ent : abstractEnemy
 {
     private void Update()
     {
-        TargetDistance = Vector3.Distance(targetTransform.position, transform.position);
+        if(targetTransform != null)
+            TargetDistance = Vector3.Distance(targetTransform.position, transform.position);
         navMeshAgent.speed = MovingSpeed;
 
         SetCurrentState();
@@ -28,6 +29,7 @@ public class Ent : abstractEnemy
         {
             if(MinChaseDistance < TargetDistance)
             {
+                currentState.targetTransform = targetTransform;
                 currentState = states[MOVE];
             }
             else
@@ -43,6 +45,9 @@ public class Ent : abstractEnemy
     
     protected override void ChangeState()
     {
+        if (previousState == null || currentState == null)
+            return;
+
         if (previousState == currentState)
             return;
 
@@ -86,7 +91,10 @@ public class Ent : abstractEnemy
     private void OnEndRightAttack()
     {
         enemyAttackBox[1].colliderComponent.enabled = false;
-        currentState = currentState = states[IDLE];
+        previousState = currentState;
+        currentState = states[IDLE];
+        previousState.Exit();
+        currentState.Enter();
     }
 
     public override void PlayerWound(int damage)

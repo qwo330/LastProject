@@ -48,6 +48,7 @@ public class ObjectPool : Singleton<ObjectPool>
     {
         playerCharacter.gameObject.SetActive(true);
         playerCharacter.gameObject.transform.position = Position;
+        playerCharacter.SetPlayerIdleState();
 
         return playerCharacter;
     }

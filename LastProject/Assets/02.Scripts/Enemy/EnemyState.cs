@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public abstract class EnemyState
 {
     protected Transform transform;
-    protected Transform targetTransform;
+    public Transform targetTransform;
     protected Rigidbody rigidbody;
     protected Animator animator;
     protected NavMeshAgent navMeshAgent;
