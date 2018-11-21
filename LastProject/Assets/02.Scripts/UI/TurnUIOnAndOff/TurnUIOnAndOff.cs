@@ -15,7 +15,7 @@ public class TurnUIOnAndOff : MonoBehaviour {
 
     public void TurnOnQuest()
     {
-        UIPresenter.Instance.quest.transform.position = new Vector3(0,0,0);
+        UIPresenter.Instance.quest.transform.localPosition = new Vector3(101,-103,0);
     }
     public void TurnOffQuest()
     {

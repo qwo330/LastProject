@@ -10,7 +10,7 @@ public class QuestUI : MonoBehaviour
     [SerializeField]
     private GameObject grid;
     [SerializeField]
-    private GameObject questPrefab, nameObj, infoObj, EXPObj, iconObj;
+    private GameObject questPrefab, nameObj, infoObj, EXPObj /*iconObj*/;
 
     [SerializeField]
     private Animator listButtonAnimator, listPanelAnimator;
@@ -49,9 +49,9 @@ public class QuestUI : MonoBehaviour
         experience.transform.localPosition = new Vector3(-110, -29, 0);
         experience.GetComponent<UILabel>().text = exp;
 
-        GameObject questImage = obj.AddChild(iconObj);
-        questImage.transform.localPosition = new Vector3(-196, 0, 0);
-        questImage.GetComponent<UISprite>().spriteName = spriteName;
+        //GameObject questImage = obj.AddChild(iconObj);
+        //questImage.transform.localPosition = new Vector3(-196, 0, 0);
+        //questImage.GetComponent<UISprite>().spriteName = spriteName;
 
         int qusetID = ID;
 
@@ -116,6 +116,7 @@ public class QuestUI : MonoBehaviour
                 selectedQuest[i].text = "";
             }
         }
+        Debug.Log("Test");
     }
 
     //퀘스트 진행상황 창을 열고 닫는 함수
