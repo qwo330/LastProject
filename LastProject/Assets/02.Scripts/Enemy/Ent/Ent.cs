@@ -30,22 +30,20 @@ public class Ent : abstractEnemy
 
         if(TargetDistance < MaxChaseDistance)
         {
-            if(MinChaseDistance < TargetDistance)
+            if (MinChaseDistance < TargetDistance)
             {
                 currentState = states[MOVE];
                 currentState.targetTransform = targetTransform;
             }
+            else if (isAttackable)
+            {
+                currentState = states[ATTACK];
+                currentState.targetTransform = targetTransform;
+                isAttackable = false;
+            }
             else
             {
-                if (isAttackable)
-                {
-                    currentState = states[ATTACK];
-                    currentState.isAttackAble = isAttackable;
-                }
-                else
-                {
-                    currentState = states[IDLE];
-                }
+                return;
             }
         }
         else
@@ -128,15 +126,14 @@ public class Ent : abstractEnemy
 
     public void SetPlayerState()
     {
-        previousState = currentState;
-        currentState = states[IDLE];
-        ChangeState();
+        SetPlayerState(states[IDLE]);
     }
 
     void SetPlayerState(EnemyState state)
     {
         previousState = currentState;
         currentState = state;
-        ChangeState();
+        previousState.Exit();
+        currentState.Enter();
     }
 }

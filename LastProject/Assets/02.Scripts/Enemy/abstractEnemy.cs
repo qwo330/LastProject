@@ -19,6 +19,7 @@ public abstract class abstractEnemy : MonoBehaviour
     protected NavMeshAgent navMeshAgent;
     protected GameTimer deadTimer;
     protected GameTimer attackTimer;
+    [SerializeField]
     protected bool isAttackable;
     protected bool isDead;
     public RemoveEnemy_Delegate RemoveEnemy_Delegate;
@@ -114,7 +115,6 @@ public abstract class abstractEnemy : MonoBehaviour
     protected virtual void AttackTick()
     {
         isAttackable = true;
-        Debug.Log("isAttackable : true");
     }
     
     protected void OnTriggerStay(Collider other)

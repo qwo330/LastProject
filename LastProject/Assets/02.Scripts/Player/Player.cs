@@ -182,10 +182,7 @@ public class Player : MonoBehaviour
 
         else
         {
-            previousState = currentState;
-            currentState = states[WOUNDED];
-            previousState.Exit();
-            currentState.Enter();
+            SetPlayerState(states[WOUNDED]);
         }
     }
 
@@ -212,6 +209,7 @@ public class Player : MonoBehaviour
     {
         previousState = currentState;
         currentState = state;
-        ChangeState();
+        previousState.Exit();
+        currentState.Enter();
     }
 }

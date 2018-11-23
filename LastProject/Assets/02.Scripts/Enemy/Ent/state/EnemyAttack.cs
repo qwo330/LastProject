@@ -19,19 +19,10 @@ public class EnemyAttack : EnemyState
 
     public override void Enter()
     {
-        if (isAttackAble)
-        {
-            transform.LookAt(targetTransform);
-            attackTimer.SetTimer(4f);
-            attackTimer.StartTimer();
-            Debug.Log("isAttackable : false");
-            isAttackAble = false;
-            base.Enter();
-        }
-        else
-        {
-            Exit();
-        }
+        transform.LookAt(targetTransform);
+        attackTimer.SetTimer(4f);
+        attackTimer.StartTimer();
+        base.Enter();
     }
 
     protected override void PlayAnimation(bool triggerValue)
