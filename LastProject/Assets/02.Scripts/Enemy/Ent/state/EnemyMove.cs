@@ -18,6 +18,12 @@ public class EnemyMove : EnemyState
         base.Enter();
     }
 
+    public override void Update()
+    {
+        navMeshAgent.SetDestination(targetTransform.position);
+        base.Update();
+    }
+
     protected override void PlayAnimation(bool triggerValue)
     {
         animator.SetBool(PlayerAniTrigger.ISRUNNING, triggerValue);

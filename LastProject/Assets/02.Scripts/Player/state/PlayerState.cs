@@ -9,13 +9,11 @@ public abstract class PlayerState
     protected Rigidbody rigidbodyComponent;
     protected Animator animatorComponent;
     protected PlayerAttackBox attackBoxCollider;
-    protected bool isInHome;
-    protected float VerticalAxis;
-    protected float HorizontalAxis;
-    protected float currentSpeed;
+    public bool isInHome;
+    public float currentSpeed;
 
     public PlayerState(CharacterStatus status, Transform transformComponent, Rigidbody rigidbodyComponent, Animator animatorComponent, 
-        PlayerAttackBox attackBoxCollider, bool isInHome, float verticalAxis, float horizontalAxis, float currentSpeed)
+        PlayerAttackBox attackBoxCollider, bool isInHome, float currentSpeed)
     {
         this.status = status;
         this.transformComponent = transformComponent;
@@ -23,14 +21,17 @@ public abstract class PlayerState
         this.animatorComponent = animatorComponent;
         this.attackBoxCollider = attackBoxCollider;
         this.isInHome = isInHome;
-        VerticalAxis = verticalAxis;
-        HorizontalAxis = horizontalAxis;
         this.currentSpeed = currentSpeed;
     }
 
     public virtual void Enter()
     {
         PlayAnimation(true);
+    }
+
+    public virtual void Update()
+    {
+
     }
 
     public virtual void Exit()

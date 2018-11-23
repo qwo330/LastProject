@@ -65,13 +65,12 @@ public class Player : MonoBehaviour
     Rigidbody rigidbodyComponent;
     Animator animatorComponent;
     PlayerAttackBox attackBoxCollider;
-    bool isDead;
 
     float VerticalAxis;
     float HorizontalAxis;
     bool isMouseClicked;
 
-    [SerializeField, Range(0, 10)]
+    [SerializeField, Range(0, 20)]
     public float MovingSpeed;
     float currentSpeed;
 
@@ -93,18 +92,18 @@ public class Player : MonoBehaviour
         isInHome = false;
         status = new CharacterStatus(atk, def, hp);
 
-        currentState = null;
-        previousState = null;
-
         currentSpeed = MovingSpeed;
         GetExpAndGold(0,0);
 
         states = new PlayerState[STATE_COUNT];
-        states[IDLE] = new PlayerIdle(status, null, null, animatorComponent, null, isInHome, 0, 0, 0);
-        states[MOVE] = new PlayerMove(status, transform, rigidbodyComponent, animatorComponent, null, isInHome, VerticalAxis, HorizontalAxis, currentSpeed);
-        states[ATTACK] = new PlayerAttack(status, null, rigidbodyComponent, animatorComponent, attackBoxCollider, false, 0, 0, 0);
-        states[WOUNDED] = new PlayerWound(status, null, null, animatorComponent, null, false, 0, 0, currentSpeed);
-        states[DEATH] = new PlayerDeath(status, null, null, animatorComponent, null, false, 0, 0, currentSpeed);
+        states[IDLE] = new PlayerIdle(status, null, null, animatorComponent, null, isInHome, 0);
+        states[MOVE] = new PlayerMove(status, transform, rigidbodyComponent, animatorComponent, null, isInHome, currentSpeed);
+        states[ATTACK] = new PlayerAttack(status, null, rigidbodyComponent, animatorComponent, attackBoxCollider, false, 0);
+        states[WOUNDED] = new PlayerWound(status, null, null, animatorComponent, null, false, currentSpeed);
+        states[DEATH] = new PlayerDeath(status, null, null, animatorComponent, null, false, currentSpeed);
+
+        previousState = null;
+        currentState = states[IDLE];
 
         return this;
     }
@@ -114,10 +113,7 @@ public class Player : MonoBehaviour
         VerticalAxis = InputManager.Instance.VerticalAxis;
         HorizontalAxis = InputManager.Instance.HorizontalAxis;
         isMouseClicked = InputManager.Instance.IsMouseClicked;
-    }
 
-    private void FixedUpdate()
-    {
         currentSpeed = MovingSpeed;
 
         previousState = currentState;
@@ -134,32 +130,45 @@ public class Player : MonoBehaviour
             return;
 
         if (isMouseClicked && !isInHome)
+        {
             currentState = states[ATTACK];
-
+        }
         else if ((VerticalAxis != 0 || HorizontalAxis != 0))
+        {
             currentState = states[MOVE];
-
+            currentState.currentSpeed = currentSpeed;
+        }
         else
+        {
             currentState = states[IDLE];
+            currentState.isInHome = isInHome;
+        }
     }
 
     void ChangeState()
     {
-        if (previousState == currentState)
+        if (previousState == null || currentState == null)
             return;
 
-        previousState.Exit();
-        currentState.Enter();
+        if (previousState == currentState)
+        {
+            currentState.Update();
+        }
+        else
+        {
+            previousState.Exit();
+            currentState.Enter();
+        }
     }
 
     void OnAttackExit()
     {
-        currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     void OnWoundExit()
     {
-        currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     public void PlayerWound(int damege)
@@ -169,12 +178,12 @@ public class Player : MonoBehaviour
 
         if (status.cHealth < 0 && currentState == states[DEATH])
         {
-            currentState = states[DEATH];
+            SetPlayerState(states[DEATH]);
         }
 
         else
         {
-            currentState = states[WOUNDED];
+            SetPlayerState(states[WOUNDED]);
         }
     }
 
@@ -189,5 +198,20 @@ public class Player : MonoBehaviour
         }
         status.MaxExp = 50 + status.Level * 100;
         UIPresenter.Instance.DrawPlayerUI(status);
+    }
+
+    //플레이어를 풀에서 꺼낼 때 Idle로 초기화 시킴
+    public void SetPlayerState()
+    {
+        previousState = currentState;
+        currentState = states[IDLE];
+        ChangeState();
+    }
+
+    void SetPlayerState(PlayerState state)
+    {
+        previousState = currentState;
+        currentState = state;
+        ChangeState();
     }
 }

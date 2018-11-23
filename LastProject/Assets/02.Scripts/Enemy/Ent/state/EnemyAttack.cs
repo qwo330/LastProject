@@ -21,22 +21,25 @@ public class EnemyAttack : EnemyState
         this.giveItem_Delegate = giveItem_Delegate;
     }
 
-    public override void Enter()
+    public override void Update()
     {
         if (isAttackAble)
         {
-            navMeshAgent.isStopped = true;
-            isAttackAble = false;
             transform.LookAt(targetTransform);
             attackTimer.SetTimer(2f);
             attackTimer.StartTimer();
-            base.Enter();
+            isAttackAble = false;
+            base.Update();
+        }
+        else
+        {
+            Exit();
         }
     }
 
     protected override void PlayAnimation(bool triggerValue)
     {
-        rigidbody.isKinematic = triggerValue;
+        navMeshAgent.isStopped = triggerValue;
         animator.SetBool(PlayerAniTrigger.ATTACK, triggerValue);
     }
 }

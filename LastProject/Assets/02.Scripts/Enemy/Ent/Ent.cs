@@ -4,19 +4,23 @@ public class Ent : abstractEnemy
 {
     private void Update()
     {
-        TargetDistance = Vector3.Distance(targetTransform.position, transform.position);
+        if(targetTransform != null)
+            TargetDistance = Vector3.Distance(targetTransform.position, transform.position);
         navMeshAgent.speed = MovingSpeed;
 
+        previousState = currentState;
         SetCurrentState();
         ChangeState();
     }
 
     void SetCurrentState()
     {
-        previousState = currentState;
-
         if (targetTransform == null)
+        {
+            navMeshAgent.destination = transform.position;
+            currentState = states[IDLE];
             return;
+        }
 
         if (currentState == states[DEATH] || currentState == states[WOUNDED])
             return;
@@ -29,10 +33,12 @@ public class Ent : abstractEnemy
             if(MinChaseDistance < TargetDistance)
             {
                 currentState = states[MOVE];
+                currentState.targetTransform = targetTransform;
             }
             else
             {
                 currentState = states[ATTACK];
+                currentState.isAttackAble = isAttackable;
             }
         }
         else
@@ -43,11 +49,18 @@ public class Ent : abstractEnemy
     
     protected override void ChangeState()
     {
-        if (previousState == currentState)
+        if (previousState == null || currentState == null)
             return;
 
-        previousState.Exit();
-        currentState.Enter();
+        if (previousState == currentState)
+        {
+            currentState.Update();
+        }
+        else
+        {
+            previousState.Exit();
+            currentState.Enter();
+        }
     }
 
     public override void ReturnPool()
@@ -59,13 +72,13 @@ public class Ent : abstractEnemy
     protected override void ONAttackExit()
     {
         rigidbodyComponent.isKinematic = false;
-        currentState = currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     protected override void OnWoundExit()
     {
         rigidbodyComponent.isKinematic = false;
-        currentState = currentState = states[IDLE];
+        SetPlayerState(states[IDLE]);
     }
 
     private void OnStartLeftAttack()
@@ -86,7 +99,6 @@ public class Ent : abstractEnemy
     private void OnEndRightAttack()
     {
         enemyAttackBox[1].colliderComponent.enabled = false;
-        currentState = currentState = states[IDLE];
     }
 
     public override void PlayerWound(int damage)
@@ -95,11 +107,29 @@ public class Ent : abstractEnemy
 
         if (status.cHealth <= 0 && !isDead)
         {
-            currentState = currentState = states[DEATH];
+            previousState = currentState;
+            currentState = states[DEATH];
+            currentState.RemoveEnemy_Delegate = RemoveEnemy_Delegate;
+            ChangeState();
+            
         }
         else
         {
-            currentState = currentState = states[WOUNDED];
+            SetPlayerState(states[WOUNDED]);
         }
+    }
+
+    public void SetPlayerState()
+    {
+        previousState = currentState;
+        currentState = states[IDLE];
+        ChangeState();
+    }
+
+    void SetPlayerState(EnemyState state)
+    {
+        previousState = currentState;
+        currentState = state;
+        ChangeState();
     }
 }

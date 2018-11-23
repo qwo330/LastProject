@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerIdle : PlayerState
 {
     public PlayerIdle(CharacterStatus status, Transform transformComponent, Rigidbody rigidbodyComponent, Animator animatorComponent, 
-        PlayerAttackBox attackBoxCollider, bool isInHome, float verticalAxis, float horizontalAxis, float currentSpeed) 
-        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, verticalAxis, horizontalAxis, currentSpeed)
+        PlayerAttackBox attackBoxCollider, bool isInHome, float currentSpeed) 
+        : base(status, transformComponent, rigidbodyComponent, animatorComponent, attackBoxCollider, isInHome, currentSpeed)
     {
         this.animatorComponent = animatorComponent;
         this.isInHome = isInHome;
@@ -14,8 +14,7 @@ public class PlayerIdle : PlayerState
 
     protected override void PlayAnimation(bool triggerValue)
     {
-        animatorComponent.SetBool(PlayerAniTrigger.ISRUNNING, triggerValue);
+        animatorComponent.SetBool(PlayerAniTrigger.ISIDLE, triggerValue);
         animatorComponent.SetBool(PlayerAniTrigger.ISINHOME, isInHome);
-        animatorComponent.SetTrigger(PlayerAniTrigger.ACTION);
     }
 }

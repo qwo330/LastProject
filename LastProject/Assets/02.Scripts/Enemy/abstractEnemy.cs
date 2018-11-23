@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public delegate void RemoveEnemy_Delegate(GameObject enemy);
+public delegate void RemoveEnemy_Delegate(GameObject Enemy);
 public delegate void GiveItem_Delegate();
 public abstract class abstractEnemy : MonoBehaviour
 {
@@ -77,9 +77,6 @@ public abstract class abstractEnemy : MonoBehaviour
         navMeshAgent.isStopped = true;
         isAttackable = true;
         isDead = false;
-
-        currentState = null;
-        previousState = null;
         targetTransform = null;
 
         deadTimer = TimerManager.Instance.GetTimer();
@@ -90,12 +87,14 @@ public abstract class abstractEnemy : MonoBehaviour
         attackTimer.SetTimer(2f);
         attackTimer.Callback = AttackTick;
 
+        GiveItem_Delegate = GiveItem;
+
         states = new EnemyState[MAXCOUNT_STATE];
         states[IDLE] = 
             new EnemyIdle(null, null, null, animatorComponent, null, false, 0, 0, null, null, null, null);
 
         states[MOVE] = 
-            new EnemyMove(null, null, null, animatorComponent, navMeshAgent, false, 0, 0, null, null, null, null);
+            new EnemyMove(null, targetTransform, null, animatorComponent, navMeshAgent, false, 0, 0, null, null, null, null);
 
         states[ATTACK] = 
             new EnemyAttack(transform, targetTransform, rigidbodyComponent, animatorComponent, navMeshAgent, isAttackable, 0, 0, null, attackTimer, null, null);
@@ -104,7 +103,10 @@ public abstract class abstractEnemy : MonoBehaviour
             new EnemyWound(null, null, rigidbodyComponent, animatorComponent, null, false, 0, 0, null, null, null, null);
 
         states[DEATH] = 
-            new EnemyDeath(null, null, null, animatorComponent, navMeshAgent, false, DropGold, DropExp, deadTimer, null, RemoveEnemy_Delegate, GiveItem_Delegate);
+            new EnemyDeath(transform, null, null, animatorComponent, navMeshAgent, false, DropGold, DropExp, deadTimer, null, RemoveEnemy_Delegate, GiveItem_Delegate);
+
+        previousState = null;
+        currentState = states[IDLE];
 
         return this;
     }

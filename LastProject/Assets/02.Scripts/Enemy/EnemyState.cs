@@ -3,17 +3,17 @@ using UnityEngine.AI;
 
 public abstract class EnemyState
 {
+    public bool isAttackAble;
+    public Transform targetTransform;
+    public RemoveEnemy_Delegate RemoveEnemy_Delegate;
     protected Transform transform;
-    protected Transform targetTransform;
     protected Rigidbody rigidbody;
     protected Animator animator;
     protected NavMeshAgent navMeshAgent;
-    protected bool isAttackAble;
     protected int dropExp;
     protected int dropGold;
     protected GameTimer deadTimer;
     protected GameTimer attackTimer;
-    protected RemoveEnemy_Delegate RemoveEnemy_Delegate;
     protected GiveItem_Delegate giveItem_Delegate;
 
     public EnemyState(Transform transform, Transform targetTransform, Rigidbody rigidbody, Animator animator, NavMeshAgent navMeshAgent, bool isAttackAble, 
@@ -37,6 +37,8 @@ public abstract class EnemyState
     {
         PlayAnimation(true);
     }
+
+    public virtual void Update() { }
 
     public virtual void Exit()
     {
