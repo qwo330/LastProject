@@ -114,6 +114,7 @@ public abstract class abstractEnemy : MonoBehaviour
     protected virtual void AttackTick()
     {
         isAttackable = true;
+        Debug.Log("isAttackable : true");
     }
     
     protected void OnTriggerStay(Collider other)

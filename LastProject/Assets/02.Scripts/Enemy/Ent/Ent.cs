@@ -37,8 +37,15 @@ public class Ent : abstractEnemy
             }
             else
             {
-                currentState = states[ATTACK];
-                currentState.isAttackAble = isAttackable;
+                if (isAttackable)
+                {
+                    currentState = states[ATTACK];
+                    currentState.isAttackAble = isAttackable;
+                }
+                else
+                {
+                    currentState = states[IDLE];
+                }
             }
         }
         else
@@ -71,14 +78,12 @@ public class Ent : abstractEnemy
     //이하 애니메이션 이벤트
     protected override void ONAttackExit()
     {
-        rigidbodyComponent.isKinematic = false;
-        SetPlayerState(states[IDLE]);
+        SetPlayerState();
     }
 
     protected override void OnWoundExit()
     {
-        rigidbodyComponent.isKinematic = false;
-        SetPlayerState(states[IDLE]);
+        SetPlayerState();
     }
 
     private void OnStartLeftAttack()
@@ -103,15 +108,17 @@ public class Ent : abstractEnemy
 
     public override void PlayerWound(int damage)
     {
+        if (currentState == states[DEATH])
+            return;
+
         status.cHealth -= damage;
 
-        if (status.cHealth <= 0 && !isDead)
+        if (status.cHealth <= 0)
         {
             previousState = currentState;
             currentState = states[DEATH];
             currentState.RemoveEnemy_Delegate = RemoveEnemy_Delegate;
             ChangeState();
-            
         }
         else
         {

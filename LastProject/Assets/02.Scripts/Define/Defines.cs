@@ -6,7 +6,7 @@ public static class Defines
     public const int InventoryColunm = 6;
     public const int InventorySize = 30;
     public const int TownCount = 2;
-    public const int TotalMonsterCount = 5;
+    public const int TotalMonsterCount = 1;
     public const int GatherRespawnTime = 5;
 
     public const int DropItemListCount = 100;

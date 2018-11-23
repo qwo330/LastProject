@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class ManagerCaller : MonoBehaviour {
-
+public class ManagerCaller : MonoBehaviour
+{
     private void Awake()
     {
         InputManager.Instance.Init();

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 public struct CharacterStatus
 {
@@ -173,17 +169,23 @@ public class Player : MonoBehaviour
 
     public void PlayerWound(int damege)
     {
+        if (currentState == states[DEATH])
+            return;
+
         status.cHealth -= damege;
         UIPresenter.Instance.DrawPlayerUI(status);
 
-        if (status.cHealth < 0 && currentState == states[DEATH])
+        if (status.cHealth < 0)
         {
             SetPlayerState(states[DEATH]);
         }
 
         else
         {
-            SetPlayerState(states[WOUNDED]);
+            previousState = currentState;
+            currentState = states[WOUNDED];
+            previousState.Exit();
+            currentState.Enter();
         }
     }
 
@@ -203,9 +205,7 @@ public class Player : MonoBehaviour
     //플레이어를 풀에서 꺼낼 때 Idle로 초기화 시킴
     public void SetPlayerState()
     {
-        previousState = currentState;
-        currentState = states[IDLE];
-        ChangeState();
+        SetPlayerState(states[IDLE]);
     }
 
     void SetPlayerState(PlayerState state)

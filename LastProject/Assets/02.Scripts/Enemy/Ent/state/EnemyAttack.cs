@@ -9,27 +9,24 @@ public class EnemyAttack : EnemyState
     {
         this.transform = transform;
         this.targetTransform = targetTransform;
-        this.rigidbody = rigidbody;
         this.animator = animator;
         this.navMeshAgent = navMeshAgent;
         this.isAttackAble = isAttackAble;
         this.dropExp = dropExp;
         this.dropGold = dropGold;
-        this.deadTimer = deadTimer;
         this.attackTimer = attackTimer;
-        this.RemoveEnemy_Delegate = removeEnemy_Delegate;
-        this.giveItem_Delegate = giveItem_Delegate;
     }
 
-    public override void Update()
+    public override void Enter()
     {
         if (isAttackAble)
         {
             transform.LookAt(targetTransform);
-            attackTimer.SetTimer(2f);
+            attackTimer.SetTimer(4f);
             attackTimer.StartTimer();
+            Debug.Log("isAttackable : false");
             isAttackAble = false;
-            base.Update();
+            base.Enter();
         }
         else
         {

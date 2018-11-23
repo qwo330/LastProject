@@ -29,7 +29,7 @@ public class UIPresenter : Singleton<UIPresenter> {
         craft.InventorySystem = Inventory;
         craft.Init();
 
-        ImageStorage = GameObject.FindGameObjectWithTag("ImageStorage").GetComponent<ImageStorage>();
+        ImageStorage = UICanvas.GetComponentInChildren<ImageStorage>();
         ImageStorage.Init();
 
         craft.gameObject.SetActive(false);
