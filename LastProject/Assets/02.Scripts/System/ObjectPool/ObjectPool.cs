@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ObjectPool : Singleton<ObjectPool>
 {
     public delegate void AllPushEnt();
     public AllPushEnt allPushEnt;
-    const int ENT_POOLCOUNT = 30;
+    
     Player playerCharacter;
     GameObject entPrefab;
     Queue<abstractEnemy> EntQueue;
-    
+
+    const int ENT_POOLCOUNT = 30;
+    const string PATH_PREFAB_ARCHU = "Prefabs/Archu";
+    const string PATH_PREFAB_ENT = "Prefabs/Ent";
+
     public void Init()
     {
-        GameObject go = Instantiate(Resources.Load("Prefabs/Archu"), transform) as GameObject;
+        GameObject go = Instantiate(Resources.Load(PATH_PREFAB_ARCHU), transform) as GameObject;
         playerCharacter = go.GetComponent<Player>();
         //test용 코드, data 작업 이후 수정/삭제----------
         int playerAtk = 500;
@@ -29,11 +32,11 @@ public class ObjectPool : Singleton<ObjectPool>
         //seed
         int seed = unchecked((int)DateTime.Now.Ticks);
         UnityEngine.Random.InitState(seed);
-        Debug.Log("seed" + seed);
+        Debug.Log("seed : " + seed);
         
         //ent Queue setting
         EntQueue = new Queue<abstractEnemy>(ENT_POOLCOUNT);
-        entPrefab = Resources.Load("Prefabs/Ent") as GameObject;
+        entPrefab = Resources.Load(PATH_PREFAB_ENT) as GameObject;
         for (int i = 0; i < ENT_POOLCOUNT; i++)
         {
             go = Instantiate(entPrefab, transform);
@@ -53,12 +56,12 @@ public class ObjectPool : Singleton<ObjectPool>
         return playerCharacter;
     }
 
-    public abstractEnemy PopEnt(Vector3 position, int lv)
+    public abstractEnemy PopEnt(Vector3 position, int level)
     {
         abstractEnemy ent = EntQueue.Dequeue();
         ent.gameObject.SetActive(true);
         ent.transform.position = position;
-        ent.Init(lv);
+        ent.Init(level);
 
         return ent;
     }

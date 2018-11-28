@@ -27,8 +27,6 @@ public class CraftSystem : MonoBehaviour
         MaxEquipItemCount = ItemList.Instance.EquipmentCount;
         MaxPotionItemCount = ItemList.Instance.FoodCount;
 
-        Debug.Log(MaxEquipItemCount + ", " + MaxPotionItemCount);
-
         if (CraftSlot != null)
         {
             EquipList = CreateList<CraftSlot>(EpuipmentWindowGrid, MaxEquipItemCount, CraftSlot);
